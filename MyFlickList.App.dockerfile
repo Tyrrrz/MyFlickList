@@ -5,8 +5,8 @@ WORKDIR /app
 
 # React app can't access env vars after it's built
 # so we need to set parameters before the build
-ARG API_URL=http://localhost:5000/
-ARG APP_URL=http://localhost:3000/
+ARG API_URL=http://localhost:5001/
+ARG APP_URL=http://localhost:5000/
 
 ENV REACT_APP_API_URL=${API_URL}
 ENV PUBLIC_URL=${APP_URL}

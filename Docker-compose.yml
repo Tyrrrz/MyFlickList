@@ -1,7 +1,17 @@
-
 version: '3.7'
 
 services:
+
+  mfl.app:
+    build:
+      context: .
+      dockerfile: "MyFlickList.App.dockerfile"
+    environment:
+      ConnectionStrings__Database: "Server=mfl.db;Port=5432;Database=postgres;Password=mysecretpassword"
+    ports:
+      - "5000:80"
+    depends_on:
+      - "mfl.api"
 
   mfl.api:
     build:
@@ -10,11 +20,9 @@ services:
     ports:
       - "5001:80"
     depends_on:
-      - "mfl.app"
+      - "mfl.db"
 
-  mfl.app:
-    build:
-      context: .
-      dockerfile: "MyFlickList.App.dockerfile"
-    ports:
-      - "5000:80"
+  mfl.db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "mysecretpassword"

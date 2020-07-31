@@ -17,3 +17,5 @@ The simplest way to run the frontend, backend, and all their dependencies is via
 ```sh
 docker-compose up --build
 ```
+
+Once the containers are running, you can access the frontend on `localhost:5000` and backend on `localhost:5001`.
