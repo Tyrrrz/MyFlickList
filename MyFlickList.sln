@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFlickList.Api", "MyFlickList.Api\MyFlickList.Api.csproj", "{9A0D7153-53F7-446C-AFD9-ACDB83052ACF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFlickList.CatalogUpdater", "MyFlickList.CatalogUpdater\MyFlickList.CatalogUpdater.csproj", "{43D57355-04D1-49A9-8C5D-B5F33921ABB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFlickList.Data.CatalogPopulator", "MyFlickList.Data.CatalogPopulator\MyFlickList.Data.CatalogPopulator.csproj", "{43D57355-04D1-49A9-8C5D-B5F33921ABB6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFlickList.Data", "MyFlickList.Data\MyFlickList.Data.csproj", "{47612B13-E4FD-4770-B58F-3A1124C3E31C}"
 EndProject

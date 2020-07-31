@@ -19,7 +19,15 @@ namespace MyFlickList.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var flicks = await _dbContext.Flicks.ToArrayAsync();
+            // Temporary
+            var flicks = await _dbContext.Flicks
+                .Include(f => f.Image)
+                .Include(f => f.TagLinks)
+                .Include(f => f.Resources)
+                .Include(f => f.Characters)
+                .Include(f => f.Listed)
+                .ToArrayAsync();
+
             return Ok(flicks);
         }
     }

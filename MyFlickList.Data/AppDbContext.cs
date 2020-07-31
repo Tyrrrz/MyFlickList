@@ -11,5 +11,18 @@ namespace MyFlickList.Data
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Catalog
+
+            modelBuilder.Entity<TagLinkEntity>(
+                e => e.HasKey(o => new {o.FlickId, o.TagId})
+            );
+
+            modelBuilder.Entity<ImageEntity>(
+                e => e.Property(o => o.Data).HasColumnType("blob")
+            );
+        }
     }
 }

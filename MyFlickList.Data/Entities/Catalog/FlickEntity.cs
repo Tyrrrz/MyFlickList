@@ -9,8 +9,14 @@ namespace MyFlickList.Data.Entities.Catalog
 
     public class FlickEntity
     {
-        [Key]
         public Guid Id { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string ImdbId { get; set; } = default!;
+
+        public Guid ImageId { get; set; }
+
+        public ImageEntity? Image { get; set; }
 
         public FlickKind Kind { get; set; }
 
@@ -21,14 +27,15 @@ namespace MyFlickList.Data.Entities.Catalog
 
         public TimeSpan? Runtime { get; set; }
 
-        [Range(1, int.MaxValue)]
         public int? EpisodeCount { get; set; }
 
-        public ICollection<FlickLinkEntity> Links { get; set; } = new List<FlickLinkEntity>();
+        public string? Synopsis { get; set; }
 
-        public ICollection<FlickMemberEntity> Members { get; set; } = new List<FlickMemberEntity>();
+        public ICollection<ExternalResourceEntity> Resources { get; set; } = new List<ExternalResourceEntity>();
 
-        public ICollection<FlickCharacterEntity> Characters { get; set; } = new List<FlickCharacterEntity>();
+        public ICollection<CharacterEntity> Characters { get; set; } = new List<CharacterEntity>();
+
+        public ICollection<TagLinkEntity> TagLinks { get; set; } = new List<TagLinkEntity>();
 
         public ICollection<ListedFlickEntity> Listed { get; set; } = new List<ListedFlickEntity>();
     }

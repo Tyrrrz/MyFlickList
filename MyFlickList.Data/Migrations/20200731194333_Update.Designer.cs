@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyFlickList.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyFlickList.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200731194333_Update")]
+    partial class Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,13 +93,6 @@ namespace MyFlickList.Data.Migrations
                     b.Property<int?>("EpisodeCount")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("ImageId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("ImdbId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<int>("Kind")
                         .HasColumnType("integer");
 
@@ -110,30 +105,18 @@ namespace MyFlickList.Data.Migrations
                     b.Property<string>("Synopsis")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("TagEntityId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ImageId");
+                    b.HasIndex("TagEntityId");
 
                     b.ToTable("Flicks");
-                });
-
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.ImageEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasColumnType("blob");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ImageEntity");
                 });
 
             modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.TagEntity", b =>
@@ -208,11 +191,9 @@ namespace MyFlickList.Data.Migrations
 
             modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.FlickEntity", b =>
                 {
-                    b.HasOne("MyFlickList.Data.Entities.Catalog.ImageEntity", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("MyFlickList.Data.Entities.Catalog.TagEntity", null)
+                        .WithMany("Flicks")
+                        .HasForeignKey("TagEntityId");
                 });
 
             modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.TagLinkEntity", b =>
@@ -224,7 +205,7 @@ namespace MyFlickList.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("MyFlickList.Data.Entities.Catalog.TagEntity", "Tag")
-                        .WithMany("TagLinks")
+                        .WithMany()
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
