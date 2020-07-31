@@ -1,23 +1,37 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using MyFlickList.Data;
 
 namespace MyFlickList.Api
 {
-    public class Program
+    public static class Program
     {
-        public static void Main(string[] args)
+        private static IHostBuilder CreateHostBuilder(string[] args) => Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(b => b.UseStartup<Startup>());
+
+        private static async Task ApplyMigrationsAsync(IHost host)
         {
-            CreateHostBuilder(args).Build().Run();
+            using var scope = host.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+            await dbContext.Database.MigrateAsync();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        public static async Task Main(string[] args)
+        {
+            var host = CreateHostBuilder(args).Build();
+
+            // Apply migrations automatically when running on dev
+            if (host.Services.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
+            {
+                await ApplyMigrationsAsync(host);
+            }
+
+            await host.RunAsync();
+        }
     }
 }
