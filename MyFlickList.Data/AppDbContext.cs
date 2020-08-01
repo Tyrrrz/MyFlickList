@@ -5,7 +5,19 @@ namespace MyFlickList.Data
 {
     public class AppDbContext : DbContext
     {
+        public DbSet<ActorEntity> Actors { get; set; } = default!;
+
+        public DbSet<CharacterEntity> Characters { get; set; } = default!;
+
+        public DbSet<ExternalResourceEntity> ExternalResources { get; set; } = default!;
+
         public DbSet<FlickEntity> Flicks { get; set; } = default!;
+
+        public DbSet<ImageEntity> Images { get; set; } = default!;
+
+        public DbSet<TagEntity> Tags { get; set; } = default!;
+
+        public DbSet<TagLinkEntity> TagLinks { get; set; } = default!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -17,11 +29,7 @@ namespace MyFlickList.Data
             // Catalog
 
             modelBuilder.Entity<TagLinkEntity>(
-                e => e.HasKey(o => new {o.FlickId, o.TagId})
-            );
-
-            modelBuilder.Entity<ImageEntity>(
-                e => e.Property(o => o.Data).HasColumnType("blob")
+                e => e.HasKey(o => new {o.FlickId, o.TagName})
             );
         }
     }

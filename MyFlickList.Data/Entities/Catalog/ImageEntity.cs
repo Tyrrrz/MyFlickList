@@ -9,5 +9,8 @@ namespace MyFlickList.Data.Entities.Catalog
 
         [Required]
         public byte[] Data { get; set; } = Array.Empty<byte>();
+
+        [Required(AllowEmptyStrings = false)]
+        public string ContentType { get; set; } = default!;
     }
 }

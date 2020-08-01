@@ -12,13 +12,14 @@ namespace MyFlickList.Data.Entities.Catalog
     {
         public Guid Id { get; set; }
 
-        public Guid FlickId { get; set; }
-
-        public FlickEntity? Flick { get; set; }
-
         public ExternalResourceKind Kind { get; set; }
 
         [Required(AllowEmptyStrings = false)]
         public string Url { get; set; } = default!;
+
+        [Required(AllowEmptyStrings = false)]
+        public string FlickId { get; set; } = default!;
+
+        public FlickEntity? Flick { get; set; }
     }
 }

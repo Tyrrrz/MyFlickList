@@ -9,14 +9,8 @@ namespace MyFlickList.Data.Entities.Catalog
 
     public class FlickEntity
     {
-        public Guid Id { get; set; }
-
         [Required(AllowEmptyStrings = false)]
-        public string ImdbId { get; set; } = default!;
-
-        public Guid ImageId { get; set; }
-
-        public ImageEntity? Image { get; set; }
+        public string Id { get; set; } = default!;
 
         public FlickKind Kind { get; set; }
 
@@ -30,6 +24,8 @@ namespace MyFlickList.Data.Entities.Catalog
         public int? EpisodeCount { get; set; }
 
         public string? Synopsis { get; set; }
+
+        public Guid? ImageId { get; set; }
 
         public ICollection<ExternalResourceEntity> Resources { get; set; } = new List<ExternalResourceEntity>();
 

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyFlickList.Data.Entities.Catalog
 {
     public class TagEntity
     {
-        public Guid Id { get; set; }
-
+        [Key]
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; } = default!;
 

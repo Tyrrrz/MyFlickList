@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyFlickList.Data;
@@ -21,7 +22,6 @@ namespace MyFlickList.Api.Controllers
         {
             // Temporary
             var flicks = await _dbContext.Flicks
-                .Include(f => f.Image)
                 .Include(f => f.TagLinks)
                 .Include(f => f.Resources)
                 .Include(f => f.Characters)
@@ -29,6 +29,16 @@ namespace MyFlickList.Api.Controllers
                 .ToArrayAsync();
 
             return Ok(flicks);
+        }
+
+        [HttpGet("images/{imageId}")]
+        public async Task<IActionResult> GetImage(Guid imageId)
+        {
+            var image = await _dbContext.Images.FindAsync(imageId);
+            if (image == null)
+                return NotFound();
+
+            return File(image.Data, image.ContentType);
         }
     }
 }
