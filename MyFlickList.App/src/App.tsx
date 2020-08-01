@@ -19,7 +19,7 @@ export default function App() {
           <div>
             <div>{e.title}</div>
             <div>
-              <img src={env.getRelativeApiUrl(`catalog/images/${e.imageId}`)} />
+              <img alt={e.title} src={env.getRelativeApiUrl(`catalog/images/${e.imageId}`)} />
             </div>
           </div>
         ))}
