@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,12 @@ namespace MyFlickList.Api
             Configuration = configuration;
 
         private string GetDatabaseConnectionString() =>
-            Configuration.GetConnectionString("Database");
+            Configuration.GetConnectionString("Database") ??
+            throw new InvalidOperationException("Database connection string not set.");
 
         private string[] GetAllowedOrigins() =>
-            Configuration.GetSection("AllowedOrigins").Get<string[]>();
+            Configuration.GetSection("AllowedOrigins").Get<string[]?>() ??
+            throw new InvalidOperationException("Allowed origins not set.");
 
         public void ConfigureServices(IServiceCollection services)
         {
