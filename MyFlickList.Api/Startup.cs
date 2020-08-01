@@ -32,6 +32,8 @@ namespace MyFlickList.Api
             services.AddOpenApiDocument();
 
             services.AddCors();
+            services.AddResponseCaching();
+            services.AddResponseCompression();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,6 +49,8 @@ namespace MyFlickList.Api
 
             app.UseRouting();
             app.UseCors(c => c.WithOrigins(GetAllowedOrigins()));
+            app.UseResponseCaching();
+            app.UseResponseCompression();
             app.UseAuthorization();
             app.UseEndpoints(e => e.MapControllers());
             app.UseOpenApi();

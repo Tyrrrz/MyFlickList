@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MyFlickList.Api.Internal;
 using MyFlickList.Data;
 
 namespace MyFlickList.Api.Controllers
@@ -32,6 +33,7 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpGet("images/{imageId}")]
+        [ResponseCache(Duration = CacheDurations.OneDay)]
         public async Task<IActionResult> GetImage(Guid imageId)
         {
             var image = await _dbContext.Images.FindAsync(imageId);
