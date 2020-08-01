@@ -9,7 +9,7 @@ services:
     environment:
       ConnectionStrings__Database: "Server=mfl.db;Port=5432;Database=postgres;User ID=postgres;Password=mysecretpassword"
     ports:
-      - "5000:80"
+      - "3000:80"
     depends_on:
       - "mfl.api"
 
@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: "MyFlickList.Api.dockerfile"
     ports:
-      - "5001:80"
+      - "5000:80"
     depends_on:
       - "mfl.db"
 

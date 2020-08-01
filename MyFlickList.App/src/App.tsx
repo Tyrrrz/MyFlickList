@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import env from './env';
+import api from './api';
 
-function App() {
+export default function App() {
+  const [catalog, setCatalog] = useState<any>(null);
+
+  useEffect(() => {
+    api
+      .getCatalog()
+      .then(setCatalog)
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {catalog &&
+        catalog.map((e: any) => (
+          <div>
+            <div>{e.title}</div>
+            <div>
+              <img src={env.getRelativeApiUrl(`catalog/images/${e.imageId}`)} />
+            </div>
+          </div>
+        ))}
     </div>
   );
 }
-
-export default App;

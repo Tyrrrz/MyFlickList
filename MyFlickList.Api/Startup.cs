@@ -18,8 +18,11 @@ namespace MyFlickList.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<AppDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("Database")));
+
             services.AddControllers().AddNewtonsoftJson();
             services.AddOpenApiDocument();
+
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -27,10 +30,14 @@ namespace MyFlickList.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(p => p.AllowAnyOrigin());
             }
             else
             {
                 app.UseHttpsRedirection();
+
+                // Temp, until we have a domain
+                app.UseCors(p => p.AllowAnyOrigin());
             }
 
             app.UseRouting();

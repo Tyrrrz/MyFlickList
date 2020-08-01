@@ -10,14 +10,29 @@
 
 To build and run MFL locally you will need the latest versions of [.NET SDK](https://dotnet.microsoft.com/download/dotnet-core), [Node](https://nodejs.org/en/download) and [Docker](https://docs.docker.com/desktop).
 
-### Running everything in Docker
+### Running in Docker
 
-The simplest way to run all services is via Docker Compose. To do that, use the `Run compose.ps1` script or execute the command inside manually.
+To run all services in Docker, use Docker Compose. You can use the `Run compose.ps1` script to do it.
 
-Once the containers are running, you can access the app on `localhost:5000`, api on `localhost:5001`, and database on `localhost:5432`. 
+Once the containers are running, the app will be on `localhost:3000`, API on `localhost:5000`, and database on `localhost:5432`.
 
-### Running only database in Docker
+### Running in Docker (database only)
 
-When working on the project, it may be more convenient to run some of the services locally for debugging purposes, while relying on a database running in Docker. To do that, use the `Run compose (db only).ps1` script.
+Sometimes it's more convenient to run only the database in Docker and then debug the other services directly. You can use the `Run compose (db only).ps1` script to do that.
 
-The database will be accessible on `localhost:5432`.
+The database will be on `localhost:5432`.
+
+### Running the API on host
+
+- Change directory to `MyFlickList.Api`
+- Execute `dotnet run`
+
+The API will be on `localhost:5000`.
+
+### Running the app on host
+
+- Change directory to `MyFlickList.App`
+- Execute `npm install`
+- Execute `npm start`
+
+The app will be on `localhost:3000`.
