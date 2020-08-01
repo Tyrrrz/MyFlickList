@@ -15,9 +15,15 @@ namespace MyFlickList.Api
         public Startup(IConfiguration configuration) =>
             Configuration = configuration;
 
+        private string GetDatabaseConnectionString() =>
+            Configuration.GetConnectionString("Database");
+
+        private string[] GetAllowedOrigins() =>
+            Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<AppDbContext>(o => o.UseNpgsql(Configuration.GetConnectionString("Database")));
+            services.AddDbContextPool<AppDbContext>(o => o.UseNpgsql(GetDatabaseConnectionString()));
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddOpenApiDocument();
@@ -30,17 +36,14 @@ namespace MyFlickList.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(p => p.AllowAnyOrigin());
             }
             else
             {
                 app.UseHttpsRedirection();
-
-                // Temp, until we have a domain
-                app.UseCors(p => p.AllowAnyOrigin());
             }
 
             app.UseRouting();
+            app.UseCors(c => c.WithOrigins(GetAllowedOrigins()));
             app.UseAuthorization();
             app.UseEndpoints(e => e.MapControllers());
             app.UseOpenApi();
