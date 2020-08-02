@@ -30,7 +30,7 @@ namespace MyFlickList.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<AppDbContext>(o => o.UseNpgsql(GetDatabaseConnectionString()));
+            services.AddDbContextPool<AppDbContext>(o => o.UseNpgsql(GetDatabaseConnectionString()), 20);
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddOpenApiDocument();
