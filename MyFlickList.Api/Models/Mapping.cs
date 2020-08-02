@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MyFlickList.Api.Responses.Catalog;
+using MyFlickList.Api.Models.Catalog;
 using MyFlickList.Data.Entities.Catalog;
 
 namespace MyFlickList.Api.Models
@@ -8,6 +8,7 @@ namespace MyFlickList.Api.Models
     {
         public Mapping()
         {
+            CreateMap<FlickEntity, FlickListingResponse>();
             CreateMap<FlickEntity, FlickResponse>();
         }
     }

@@ -57,7 +57,7 @@ export class CatalogClient {
         return Promise.resolve<void>(<any>null);
     }
 
-    getTopFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickResponse[]> {
+    getTopFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickListingResponse[]> {
         let url_ = this.baseUrl + "/catalog/flicks/top?";
         if (offset === null)
             throw new Error("The parameter 'offset' cannot be null.");
@@ -81,7 +81,7 @@ export class CatalogClient {
         });
     }
 
-    protected processGetTopFlicks(response: Response): Promise<FlickResponse[]> {
+    protected processGetTopFlicks(response: Response): Promise<FlickListingResponse[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -91,7 +91,7 @@ export class CatalogClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(FlickResponse.fromJS(item));
+                    result200!.push(FlickListingResponse.fromJS(item));
             }
             return result200;
             });
@@ -100,10 +100,10 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FlickResponse[]>(<any>null);
+        return Promise.resolve<FlickListingResponse[]>(<any>null);
     }
 
-    getTrendingFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickResponse[]> {
+    getTrendingFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickListingResponse[]> {
         let url_ = this.baseUrl + "/catalog/flicks/trending?";
         if (offset === null)
             throw new Error("The parameter 'offset' cannot be null.");
@@ -127,7 +127,7 @@ export class CatalogClient {
         });
     }
 
-    protected processGetTrendingFlicks(response: Response): Promise<FlickResponse[]> {
+    protected processGetTrendingFlicks(response: Response): Promise<FlickListingResponse[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -137,7 +137,7 @@ export class CatalogClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(FlickResponse.fromJS(item));
+                    result200!.push(FlickListingResponse.fromJS(item));
             }
             return result200;
             });
@@ -146,10 +146,10 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FlickResponse[]>(<any>null);
+        return Promise.resolve<FlickListingResponse[]>(<any>null);
     }
 
-    getNewFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickResponse[]> {
+    getNewFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickListingResponse[]> {
         let url_ = this.baseUrl + "/catalog/flicks/new?";
         if (offset === null)
             throw new Error("The parameter 'offset' cannot be null.");
@@ -173,7 +173,7 @@ export class CatalogClient {
         });
     }
 
-    protected processGetNewFlicks(response: Response): Promise<FlickResponse[]> {
+    protected processGetNewFlicks(response: Response): Promise<FlickListingResponse[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -183,7 +183,7 @@ export class CatalogClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(FlickResponse.fromJS(item));
+                    result200!.push(FlickListingResponse.fromJS(item));
             }
             return result200;
             });
@@ -192,7 +192,7 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FlickResponse[]>(<any>null);
+        return Promise.resolve<FlickListingResponse[]>(<any>null);
     }
 }
 
@@ -246,14 +246,13 @@ export class ProblemDetails {
     }
 }
 
-export class FlickResponse {
+export class FlickListingResponse {
     id?: string;
     kind?: FlickKind;
     title?: string;
     premiereDate?: Date | undefined;
     runtime?: string | undefined;
     episodeCount?: number | undefined;
-    synopsis?: string | undefined;
     imageId?: string | undefined;
 
     init(_data?: any) {
@@ -264,14 +263,13 @@ export class FlickResponse {
             this.premiereDate = _data["premiereDate"] ? new Date(_data["premiereDate"].toString()) : <any>undefined;
             this.runtime = _data["runtime"];
             this.episodeCount = _data["episodeCount"];
-            this.synopsis = _data["synopsis"];
             this.imageId = _data["imageId"];
         }
     }
 
-    static fromJS(data: any): FlickResponse {
+    static fromJS(data: any): FlickListingResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new FlickResponse();
+        let result = new FlickListingResponse();
         result.init(data);
         return result;
     }
@@ -284,7 +282,6 @@ export class FlickResponse {
         data["premiereDate"] = this.premiereDate ? this.premiereDate.toISOString() : <any>undefined;
         data["runtime"] = this.runtime;
         data["episodeCount"] = this.episodeCount;
-        data["synopsis"] = this.synopsis;
         data["imageId"] = this.imageId;
         return data; 
     }

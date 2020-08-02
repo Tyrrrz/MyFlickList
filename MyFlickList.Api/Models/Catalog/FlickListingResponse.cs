@@ -3,7 +3,7 @@ using MyFlickList.Data.Entities.Catalog;
 
 namespace MyFlickList.Api.Models.Catalog
 {
-    public class FlickResponse
+    public class FlickListingResponse
     {
         public string Id { get; set; } = default!;
 
@@ -16,8 +16,6 @@ namespace MyFlickList.Api.Models.Catalog
         public TimeSpan? Runtime { get; set; }
 
         public int? EpisodeCount { get; set; }
-
-        public string? Synopsis { get; set; }
 
         public Guid? ImageId { get; set; }
     }

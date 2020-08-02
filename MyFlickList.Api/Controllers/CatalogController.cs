@@ -7,7 +7,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Internal;
-using MyFlickList.Api.Responses.Catalog;
+using MyFlickList.Api.Models.Catalog;
 using MyFlickList.Data;
 
 namespace MyFlickList.Api.Controllers
@@ -39,7 +39,7 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpGet("flicks/top")]
-        [ProducesResponseType(typeof(FlickResponse[]), 200)]
+        [ProducesResponseType(typeof(FlickListingResponse[]), 200)]
         public async Task<IActionResult> GetTopFlicks(int offset = 0, [Range(1, 20)] int count = 20)
         {
             // TODO: order by rating
@@ -53,7 +53,7 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpGet("flicks/trending")]
-        [ProducesResponseType(typeof(FlickResponse[]), 200)]
+        [ProducesResponseType(typeof(FlickListingResponse[]), 200)]
         public async Task<IActionResult> GetTrendingFlicks(int offset = 0, [Range(1, 20)] int count = 20)
         {
             // TODO: order by trendiness
@@ -67,7 +67,7 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpGet("flicks/new")]
-        [ProducesResponseType(typeof(FlickResponse[]), 200)]
+        [ProducesResponseType(typeof(FlickListingResponse[]), 200)]
         public async Task<IActionResult> GetNewFlicks(int offset = 0, [Range(1, 20)] int count = 20)
         {
             var flicks = await _dbContext.Flicks

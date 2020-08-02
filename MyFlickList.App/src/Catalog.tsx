@@ -5,10 +5,10 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import Link from './shared/Link';
-import { FlickResponse, FlickKind } from './infra/api.generated';
+import { FlickListingResponse, FlickKind } from './infra/api.generated';
 import api from './infra/api';
 
-function FlickListings({ flicks }: { flicks?: FlickResponse[] }) {
+function FlickListings({ flicks }: { flicks?: FlickListingResponse[] }) {
   if (!flicks) return <div>Loading...</div>;
 
   return (
@@ -62,7 +62,7 @@ function FlickListings({ flicks }: { flicks?: FlickResponse[] }) {
 }
 
 export default function Catalog() {
-  const [catalog, setCatalog] = useState<FlickResponse[] | undefined>(undefined);
+  const [catalog, setCatalog] = useState<FlickListingResponse[] | undefined>(undefined);
 
   useEffect(() => {
     api.catalog.getTopFlicks().then(setCatalog);
