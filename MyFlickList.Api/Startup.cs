@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyFlickList.Api.Internal;
+using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Data;
 
 namespace MyFlickList.Api
@@ -18,6 +20,8 @@ namespace MyFlickList.Api
 
         private string GetDatabaseConnectionString() =>
             Configuration.GetConnectionString("Database") ??
+            // The following is set by Heroku directly
+            Environment.GetEnvironmentVariable("DATABASE_URL")?.Pipe(PostgresUrl.ToConnectionString!) ??
             throw new InvalidOperationException("Database connection string not set.");
 
         private string[] GetAllowedOrigins() =>
