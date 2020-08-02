@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyFlickList.Api.Internal;
 using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Data;
 

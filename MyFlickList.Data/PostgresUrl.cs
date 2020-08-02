@@ -1,9 +1,9 @@
 ﻿using System;
 using Npgsql;
 
-namespace MyFlickList.Api.Internal
+namespace MyFlickList.Data
 {
-    internal static class PostgresUrl
+    public static class PostgresUrl
     {
         public static string ToConnectionString(string url)
         {
@@ -20,6 +20,7 @@ namespace MyFlickList.Api.Internal
             builder.Port = uri.Port;
             builder.Database = uri.AbsolutePath.TrimStart('/');
             builder.SslMode = SslMode.Prefer;
+            builder.TrustServerCertificate = true;
 
             return builder.ConnectionString;
         }

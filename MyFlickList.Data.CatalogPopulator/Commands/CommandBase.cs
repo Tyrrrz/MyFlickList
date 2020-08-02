@@ -14,13 +14,11 @@ namespace MyFlickList.CatalogUpdater.Commands
 
         protected AppDbContext GetDbContext()
         {
-            var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseNpgsql(ConnectionString, o =>
-                {
-                    // Workaround for connecting to AWS/Heroku database directly without installing their certificate locally
-                    o.RemoteCertificateValidationCallback((s, crt, chn, err) => true);
-                })
-                .Options;
+            var connectionString = !string.IsNullOrWhiteSpace(ConnectionString) && ConnectionString.StartsWith("postgres://")
+                ? PostgresUrl.ToConnectionString(ConnectionString)
+                : ConnectionString;
+
+            var options = new DbContextOptionsBuilder<AppDbContext>().UseNpgsql(connectionString).Options;
 
             return new AppDbContext(options);
         }
