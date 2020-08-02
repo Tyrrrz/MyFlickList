@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
+import Link from './shared/Link';
 import { FlickResponse, FlickKind } from './infra/api.generated';
 import api from './infra/api';
 
@@ -70,8 +71,12 @@ export default function Catalog() {
   return (
     <div>
       <Breadcrumb>
-        <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
-        <Breadcrumb.Item active>Catalog</Breadcrumb.Item>
+        <Breadcrumb.Item href="/" linkAs={Link}>
+          Home
+        </Breadcrumb.Item>
+        <Breadcrumb.Item linkAs={Link} active>
+          Catalog
+        </Breadcrumb.Item>
       </Breadcrumb>
 
       <FlickListings flicks={catalog} />
