@@ -8,6 +8,6 @@ const apiUrl = _.trimEnd(env.apiUrl.toString(), '/');
 export default {
   catalog: new generated.CatalogClient(apiUrl),
   utils: {
-    getImageUrl: (imageId: string) => env.getRelativeApiUrl('catalog/images' + imageId)
+    getImageUrl: (imageId: string) => env.getRelativeApiUrl('catalog/images/' + imageId)
   }
 };
