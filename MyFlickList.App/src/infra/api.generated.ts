@@ -17,7 +17,7 @@ export class CatalogClient {
         this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
     }
 
-    getAll(): Promise<FlickEntity[]> {
+    getAll(): Promise<FlickResponse[]> {
         let url_ = this.baseUrl + "/catalog";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -33,7 +33,7 @@ export class CatalogClient {
         });
     }
 
-    protected processGetAll(response: Response): Promise<FlickEntity[]> {
+    protected processGetAll(response: Response): Promise<FlickResponse[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -43,7 +43,7 @@ export class CatalogClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(FlickEntity.fromJS(item));
+                    result200!.push(FlickResponse.fromJS(item));
             }
             return result200;
             });
@@ -52,7 +52,7 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FlickEntity[]>(<any>null);
+        return Promise.resolve<FlickResponse[]>(<any>null);
     }
 
     getImage(imageId: string): Promise<void> {
@@ -96,28 +96,15 @@ export class CatalogClient {
     }
 }
 
-export class FlickEntity implements IFlickEntity {
-    id!: string;
+export class FlickResponse {
+    id?: string;
     kind?: FlickKind;
-    title!: string;
+    title?: string;
     premiereDate?: Date | undefined;
     runtime?: string | undefined;
     episodeCount?: number | undefined;
     synopsis?: string | undefined;
     imageId?: string | undefined;
-    resources?: ExternalResourceEntity[];
-    characters?: CharacterEntity[];
-    tagLinks?: TagLinkEntity[];
-    listed?: ListedFlickEntity[];
-
-    constructor(data?: IFlickEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
 
     init(_data?: any) {
         if (_data) {
@@ -129,32 +116,12 @@ export class FlickEntity implements IFlickEntity {
             this.episodeCount = _data["episodeCount"];
             this.synopsis = _data["synopsis"];
             this.imageId = _data["imageId"];
-            if (Array.isArray(_data["resources"])) {
-                this.resources = [] as any;
-                for (let item of _data["resources"])
-                    this.resources!.push(ExternalResourceEntity.fromJS(item));
-            }
-            if (Array.isArray(_data["characters"])) {
-                this.characters = [] as any;
-                for (let item of _data["characters"])
-                    this.characters!.push(CharacterEntity.fromJS(item));
-            }
-            if (Array.isArray(_data["tagLinks"])) {
-                this.tagLinks = [] as any;
-                for (let item of _data["tagLinks"])
-                    this.tagLinks!.push(TagLinkEntity.fromJS(item));
-            }
-            if (Array.isArray(_data["listed"])) {
-                this.listed = [] as any;
-                for (let item of _data["listed"])
-                    this.listed!.push(ListedFlickEntity.fromJS(item));
-            }
         }
     }
 
-    static fromJS(data: any): FlickEntity {
+    static fromJS(data: any): FlickResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new FlickEntity();
+        let result = new FlickResponse();
         result.init(data);
         return result;
     }
@@ -169,370 +136,22 @@ export class FlickEntity implements IFlickEntity {
         data["episodeCount"] = this.episodeCount;
         data["synopsis"] = this.synopsis;
         data["imageId"] = this.imageId;
-        if (Array.isArray(this.resources)) {
-            data["resources"] = [];
-            for (let item of this.resources)
-                data["resources"].push(item.toJSON());
-        }
-        if (Array.isArray(this.characters)) {
-            data["characters"] = [];
-            for (let item of this.characters)
-                data["characters"].push(item.toJSON());
-        }
-        if (Array.isArray(this.tagLinks)) {
-            data["tagLinks"] = [];
-            for (let item of this.tagLinks)
-                data["tagLinks"].push(item.toJSON());
-        }
-        if (Array.isArray(this.listed)) {
-            data["listed"] = [];
-            for (let item of this.listed)
-                data["listed"].push(item.toJSON());
-        }
         return data; 
     }
-}
-
-export interface IFlickEntity {
-    id: string;
-    kind?: FlickKind;
-    title: string;
-    premiereDate?: Date | undefined;
-    runtime?: string | undefined;
-    episodeCount?: number | undefined;
-    synopsis?: string | undefined;
-    imageId?: string | undefined;
-    resources?: ExternalResourceEntity[];
-    characters?: CharacterEntity[];
-    tagLinks?: TagLinkEntity[];
-    listed?: ListedFlickEntity[];
 }
 
 export enum FlickKind {
-    Movie = 0,
-    Series = 1,
+    Movie = "Movie",
+    Series = "Series",
 }
 
-export class ExternalResourceEntity implements IExternalResourceEntity {
-    id?: string;
-    kind?: ExternalResourceKind;
-    url!: string;
-    flickId!: string;
-    flick?: FlickEntity | undefined;
-
-    constructor(data?: IExternalResourceEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.kind = _data["kind"];
-            this.url = _data["url"];
-            this.flickId = _data["flickId"];
-            this.flick = _data["flick"] ? FlickEntity.fromJS(_data["flick"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ExternalResourceEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new ExternalResourceEntity();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["kind"] = this.kind;
-        data["url"] = this.url;
-        data["flickId"] = this.flickId;
-        data["flick"] = this.flick ? this.flick.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IExternalResourceEntity {
-    id?: string;
-    kind?: ExternalResourceKind;
-    url: string;
-    flickId: string;
-    flick?: FlickEntity | undefined;
-}
-
-export enum ExternalResourceKind {
-    Trailer = 0,
-}
-
-export class CharacterEntity implements ICharacterEntity {
-    id?: string;
-    name!: string;
-    flickId!: string;
-    flick?: FlickEntity | undefined;
-    actorId!: string;
-    actor?: ActorEntity | undefined;
-
-    constructor(data?: ICharacterEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.flickId = _data["flickId"];
-            this.flick = _data["flick"] ? FlickEntity.fromJS(_data["flick"]) : <any>undefined;
-            this.actorId = _data["actorId"];
-            this.actor = _data["actor"] ? ActorEntity.fromJS(_data["actor"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): CharacterEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new CharacterEntity();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["flickId"] = this.flickId;
-        data["flick"] = this.flick ? this.flick.toJSON() : <any>undefined;
-        data["actorId"] = this.actorId;
-        data["actor"] = this.actor ? this.actor.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ICharacterEntity {
-    id?: string;
-    name: string;
-    flickId: string;
-    flick?: FlickEntity | undefined;
-    actorId: string;
-    actor?: ActorEntity | undefined;
-}
-
-export class ActorEntity implements IActorEntity {
-    id?: string;
-    name!: string;
-    characters?: CharacterEntity[];
-
-    constructor(data?: IActorEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            if (Array.isArray(_data["characters"])) {
-                this.characters = [] as any;
-                for (let item of _data["characters"])
-                    this.characters!.push(CharacterEntity.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ActorEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new ActorEntity();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        if (Array.isArray(this.characters)) {
-            data["characters"] = [];
-            for (let item of this.characters)
-                data["characters"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IActorEntity {
-    id?: string;
-    name: string;
-    characters?: CharacterEntity[];
-}
-
-export class TagLinkEntity implements ITagLinkEntity {
-    flickId!: string;
-    flick?: FlickEntity | undefined;
-    tagName!: string;
-    tag?: TagEntity | undefined;
-
-    constructor(data?: ITagLinkEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.flickId = _data["flickId"];
-            this.flick = _data["flick"] ? FlickEntity.fromJS(_data["flick"]) : <any>undefined;
-            this.tagName = _data["tagName"];
-            this.tag = _data["tag"] ? TagEntity.fromJS(_data["tag"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): TagLinkEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new TagLinkEntity();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["flickId"] = this.flickId;
-        data["flick"] = this.flick ? this.flick.toJSON() : <any>undefined;
-        data["tagName"] = this.tagName;
-        data["tag"] = this.tag ? this.tag.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface ITagLinkEntity {
-    flickId: string;
-    flick?: FlickEntity | undefined;
-    tagName: string;
-    tag?: TagEntity | undefined;
-}
-
-export class TagEntity implements ITagEntity {
-    name!: string;
-    tagLinks?: TagLinkEntity[];
-
-    constructor(data?: ITagEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            if (Array.isArray(_data["tagLinks"])) {
-                this.tagLinks = [] as any;
-                for (let item of _data["tagLinks"])
-                    this.tagLinks!.push(TagLinkEntity.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): TagEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new TagEntity();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        if (Array.isArray(this.tagLinks)) {
-            data["tagLinks"] = [];
-            for (let item of this.tagLinks)
-                data["tagLinks"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface ITagEntity {
-    name: string;
-    tagLinks?: TagLinkEntity[];
-}
-
-export class ListedFlickEntity implements IListedFlickEntity {
-    id?: string;
-    flickId!: string;
-    flick?: FlickEntity | undefined;
-
-    constructor(data?: IListedFlickEntity) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.flickId = _data["flickId"];
-            this.flick = _data["flick"] ? FlickEntity.fromJS(_data["flick"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): ListedFlickEntity {
-        data = typeof data === 'object' ? data : {};
-        let result = new ListedFlickEntity();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["flickId"] = this.flickId;
-        data["flick"] = this.flick ? this.flick.toJSON() : <any>undefined;
-        return data; 
-    }
-}
-
-export interface IListedFlickEntity {
-    id?: string;
-    flickId: string;
-    flick?: FlickEntity | undefined;
-}
-
-export class ProblemDetails implements IProblemDetails {
+export class ProblemDetails {
     type?: string | undefined;
     title?: string | undefined;
     status?: number | undefined;
     detail?: string | undefined;
     instance?: string | undefined;
     extensions?: { [key: string]: any; } | undefined;
-
-    constructor(data?: IProblemDetails) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
 
     init(_data?: any) {
         if (_data) {
@@ -574,15 +193,6 @@ export class ProblemDetails implements IProblemDetails {
         }
         return data; 
     }
-}
-
-export interface IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-    extensions?: { [key: string]: any; } | undefined;
 }
 
 export class ApiException extends Error {

@@ -1,28 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import api from './infra/api';
-import { FlickEntity } from './infra/api.generated';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import Catalog from './pages/Catalog';
+import Home from './pages/Home';
 
 export default function App() {
-  const [catalog, setCatalog] = useState<FlickEntity[]>([]);
-
-  useEffect(() => {
-    api.catalog
-      .getAll()
-      .then(setCatalog)
-      .catch((e) => console.error(e));
-  }, []);
-
   return (
-    <div>
-      {catalog &&
-        catalog.map((f) => (
-          <div key={f.id}>
-            <div>{f.title}</div>
-            <div>
-              <img alt={f.title} src={api.utils.getImageUrl(f.imageId!)} />
-            </div>
-          </div>
-        ))}
-    </div>
+    <Router>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/catalog">Catalog</Link>
+          </li>
+        </ul>
+      </nav>
+
+      <Switch>
+        <Route path="/catalog">
+          <Catalog />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </Router>
   );
 }

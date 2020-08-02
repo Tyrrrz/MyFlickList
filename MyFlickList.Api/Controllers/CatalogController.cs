@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Internal;
+using MyFlickList.Api.Responses.Catalog;
 using MyFlickList.Data;
-using MyFlickList.Data.Entities.Catalog;
 
 namespace MyFlickList.Api.Controllers
 {
@@ -13,22 +15,21 @@ namespace MyFlickList.Api.Controllers
     public class CatalogController : ControllerBase
     {
         private readonly AppDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public CatalogController(AppDbContext dbContext)
+        public CatalogController(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(FlickEntity[]), 200)]
+        [ProducesResponseType(typeof(FlickResponse[]), 200)]
         public async Task<IActionResult> GetAll()
         {
             // Temporary
             var flicks = await _dbContext.Flicks
-                .Include(f => f.TagLinks)
-                .Include(f => f.Resources)
-                .Include(f => f.Characters)
-                .Include(f => f.Listed)
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
                 .ToArrayAsync();
 
             return Ok(flicks);

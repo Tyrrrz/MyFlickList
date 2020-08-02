@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyFlickList.Api.Internal.Extensions;
+using MyFlickList.Api.Models;
 using MyFlickList.Data;
+using Newtonsoft.Json.Converters;
 
 namespace MyFlickList.Api
 {
@@ -34,8 +37,9 @@ namespace MyFlickList.Api
             services.AddResponseCaching();
             services.AddResponseCompression();
             services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
-            services.AddControllers().AddNewtonsoftJson();
-            services.AddOpenApiDocument();
+            services.AddControllers().AddNewtonsoftJson(s => s.SerializerSettings.Converters.Add(new StringEnumConverter()));
+            services.AddOpenApiDocument(d => d.Title = "MyFlickList API");
+            services.AddAutoMapper(typeof(Mapping));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -62,7 +66,7 @@ namespace MyFlickList.Api
             });
 
             app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi3(s => s.DocumentTitle = "MyFlickList API");
         }
     }
 }
