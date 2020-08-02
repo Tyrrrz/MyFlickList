@@ -4,8 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
-import { FlickResponse, FlickKind } from '../infra/api.generated';
-import api from '../infra/api';
+import { FlickResponse, FlickKind } from './infra/api.generated';
+import api from './infra/api';
 
 function FlickListings({ flicks }: { flicks?: FlickResponse[] }) {
   if (!flicks) return <div>Loading...</div>;

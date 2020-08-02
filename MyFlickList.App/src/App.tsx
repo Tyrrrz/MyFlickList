@@ -1,11 +1,14 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import Catalog from './pages/Catalog';
-import Home from './pages/Home';
+import { Switch, Route, Link } from 'react-router-dom';
+import useTracking from './shared/useTracking';
+import Catalog from './Catalog';
+import Home from './Home';
 
 export default function App() {
+  useTracking();
+
   return (
-    <Router>
+    <>
       <nav>
         <ul>
           <li>
@@ -25,6 +28,6 @@ export default function App() {
           <Home />
         </Route>
       </Switch>
-    </Router>
+    </>
   );
 }
