@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Internal;
 using MyFlickList.Data;
+using MyFlickList.Data.Entities.Catalog;
 
 namespace MyFlickList.Api.Controllers
 {
@@ -19,6 +20,7 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(FlickEntity[]), 200)]
         public async Task<IActionResult> GetAll()
         {
             // Temporary
@@ -33,6 +35,8 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpGet("images/{imageId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         [ResponseCache(Duration = CacheDurations.OneDay)]
         public async Task<IActionResult> GetImage(Guid imageId)
         {

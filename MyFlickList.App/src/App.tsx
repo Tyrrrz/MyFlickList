@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import env from './env';
-import api from './api';
+import api from './infra/api';
+import { FlickEntity } from './infra/api.generated';
 
 export default function App() {
-  const [catalog, setCatalog] = useState<any>(null);
+  const [catalog, setCatalog] = useState<FlickEntity[]>([]);
 
   useEffect(() => {
-    api
-      .getCatalog()
+    api.catalog
+      .getAll()
       .then(setCatalog)
       .catch((e) => console.error(e));
   }, []);
@@ -15,11 +15,11 @@ export default function App() {
   return (
     <div>
       {catalog &&
-        catalog.map((e: any) => (
-          <div>
-            <div>{e.title}</div>
+        catalog.map((f) => (
+          <div key={f.id}>
+            <div>{f.title}</div>
             <div>
-              <img alt={e.title} src={env.getRelativeApiUrl(`catalog/images/${e.imageId}`)} />
+              <img alt={f.title} src={api.utils.getImageUrl(f.imageId!)} />
             </div>
           </div>
         ))}
