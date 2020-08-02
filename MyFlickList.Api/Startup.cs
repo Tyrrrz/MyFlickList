@@ -30,13 +30,12 @@ namespace MyFlickList.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<AppDbContext>(o => o.UseNpgsql(GetDatabaseConnectionString()), 20);
-
-            services.AddControllers().AddNewtonsoftJson();
-            services.AddOpenApiDocument();
-
             services.AddCors();
             services.AddResponseCaching();
             services.AddResponseCompression();
+            services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddOpenApiDocument();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -55,7 +54,13 @@ namespace MyFlickList.Api
             app.UseResponseCaching();
             app.UseResponseCompression();
             app.UseAuthorization();
-            app.UseEndpoints(e => e.MapControllers());
+
+            app.UseEndpoints(e =>
+            {
+                e.MapControllers();
+                e.MapHealthChecks("/health");
+            });
+
             app.UseOpenApi();
             app.UseSwaggerUi3();
         }
