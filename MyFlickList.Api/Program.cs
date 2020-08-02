@@ -24,13 +24,7 @@ namespace MyFlickList.Api
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-
-            // Apply migrations automatically when running on dev
-            if (host.Services.GetRequiredService<IWebHostEnvironment>().IsDevelopment())
-            {
-                await ApplyMigrationsAsync(host);
-            }
-
+            await ApplyMigrationsAsync(host);
             await host.RunAsync();
         }
     }
