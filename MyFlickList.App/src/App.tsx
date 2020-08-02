@@ -1,6 +1,7 @@
 import React from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import useTracking from './shared/useTracking';
+import Link from './shared/Link';
 import Catalog from './Catalog';
 import Home from './Home';
 
