@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -23,18 +25,6 @@ namespace MyFlickList.Api.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [ProducesResponseType(typeof(FlickResponse[]), 200)]
-        public async Task<IActionResult> GetAll()
-        {
-            // Temporary
-            var flicks = await _dbContext.Flicks
-                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
-
-            return Ok(flicks);
-        }
-
         [HttpGet("images/{imageId}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
@@ -46,6 +36,49 @@ namespace MyFlickList.Api.Controllers
                 return NotFound();
 
             return File(image.Data, image.ContentType);
+        }
+
+        [HttpGet("flicks/top")]
+        [ProducesResponseType(typeof(FlickResponse[]), 200)]
+        public async Task<IActionResult> GetTopFlicks(int offset = 0, [Range(1, 20)] int count = 20)
+        {
+            // TODO: order by rating
+            var flicks = await _dbContext.Flicks
+                .Skip(offset)
+                .Take(count)
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return Ok(flicks);
+        }
+
+        [HttpGet("flicks/trending")]
+        [ProducesResponseType(typeof(FlickResponse[]), 200)]
+        public async Task<IActionResult> GetTrendingFlicks(int offset = 0, [Range(1, 20)] int count = 20)
+        {
+            // TODO: order by trendiness
+            var flicks = await _dbContext.Flicks
+                .Skip(offset)
+                .Take(count)
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return Ok(flicks);
+        }
+
+        [HttpGet("flicks/new")]
+        [ProducesResponseType(typeof(FlickResponse[]), 200)]
+        public async Task<IActionResult> GetNewFlicks(int offset = 0, [Range(1, 20)] int count = 20)
+        {
+            var flicks = await _dbContext.Flicks
+                .Where(f => f.PremiereDate != null)
+                .OrderByDescending(f => f.PremiereDate)
+                .Skip(offset)
+                .Take(count)
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
+                .ToArrayAsync();
+
+            return Ok(flicks);
         }
     }
 }

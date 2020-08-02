@@ -62,7 +62,7 @@ export default function Catalog() {
   const [catalog, setCatalog] = useState<FlickResponse[] | undefined>(undefined);
 
   useEffect(() => {
-    api.catalog.getAll().then(setCatalog);
+    api.catalog.getTopFlicks().then(setCatalog);
   }, []);
 
   return (
