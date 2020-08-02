@@ -21,11 +21,13 @@ function FlickListings({ flicks }: { flicks?: FlickResponse[] }) {
       </colgroup>
 
       <thead>
-        <th style={{ textAlign: 'center' }}>#</th>
-        <th>Flick</th>
-        <th>Avg. Rating</th>
-        <th>Your Rating</th>
-        <th>Listing</th>
+        <tr>
+          <th style={{ textAlign: 'center' }}>#</th>
+          <th>Flick</th>
+          <th>Avg. Rating</th>
+          <th>Your Rating</th>
+          <th>Listing</th>
+        </tr>
       </thead>
 
       <tbody>
