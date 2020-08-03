@@ -1,6 +1,7 @@
 import React from 'react';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
+import Meta from '../../shared/Meta';
 import Link from '../../shared/Link';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 import FlickList from './FlickList';
@@ -11,6 +12,8 @@ export default function TrendingFlicks() {
 
   return (
     <div>
+      <Meta title="Trending Flicks" />
+
       <Breadcrumb>
         <Breadcrumb.Item href="/" linkAs={Link}>
           Home

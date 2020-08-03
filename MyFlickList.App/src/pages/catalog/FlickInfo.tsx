@@ -3,6 +3,7 @@ import { useParams } from 'react-router';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import LoadingSpinner from '../../shared/LoadingSpinner';
+import Meta from '../../shared/Meta';
 import Link from '../../shared/Link';
 import { FlickResponse } from '../../infra/api.generated';
 import api from '../../infra/api';
@@ -37,6 +38,8 @@ export default function FlickInfo() {
 
   return (
     <div>
+      <Meta title={flick?.title} description={flick?.synopsis} />
+
       <Breadcrumb>
         <Breadcrumb.Item href="/" linkAs={Link}>
           Home

@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <div>
       {/* Top */}
-      <div className="mt-3">
+      <div className="mt-4 mb-2">
         <Link className="text-body" href="/catalog/flicks/top">
           <h3>Top Flicks</h3>
         </Link>
@@ -45,7 +45,7 @@ export default function Home() {
       </div>
 
       {/* Trending */}
-      <div className="mt-3">
+      <div className="mt-4 mb-2">
         <Link className="text-body" href="/catalog/flicks/trending">
           <h3>Trending Flicks</h3>
         </Link>
@@ -55,7 +55,7 @@ export default function Home() {
       </div>
 
       {/* New */}
-      <div className="mt-3">
+      <div className="mt-4 mb-2">
         <Link className="text-body" href="/catalog/flicks/new">
           <h3>New Flicks</h3>
         </Link>

@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import useTracking from './shared/useTracking';
+import Meta from './shared/Meta';
 import Link from './shared/Link';
 import FlickInfo from './pages/catalog/FlickInfo';
 import TopFlicks from './pages/catalog/TopFlicks';
@@ -50,6 +51,7 @@ export default function App() {
 
   return (
     <div className="min-vh-100 vw-70 mx-auto d-flex flex-column" style={{ maxWidth: '70em' }}>
+      <Meta />
       <Header />
 
       <main className="flex-grow-1">
