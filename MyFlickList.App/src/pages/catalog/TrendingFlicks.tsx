@@ -12,11 +12,14 @@ export default function TrendingFlicks() {
 
   return (
     <div>
-      <Meta title="Trending Flicks" />
+      <Meta title="Trending" />
 
       <Breadcrumb>
         <Breadcrumb.Item href="/" linkAs={Link}>
           Home
+        </Breadcrumb.Item>
+        <Breadcrumb.Item href="/catalog" linkAs={Link}>
+          Catalog
         </Breadcrumb.Item>
         <Breadcrumb.Item linkAs={Link} active>
           Trending

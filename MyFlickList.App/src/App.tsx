@@ -50,7 +50,7 @@ export default function App() {
   useTracking();
 
   return (
-    <div className="min-vh-100 vw-70 mx-auto d-flex flex-column" style={{ maxWidth: '70em' }}>
+    <div className="min-vh-100 vw-70 mx-auto d-flex flex-column" style={{ maxWidth: '70rem' }}>
       <Meta />
       <Header />
 

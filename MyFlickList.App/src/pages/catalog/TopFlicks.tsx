@@ -12,11 +12,14 @@ export default function TopFlicks() {
 
   return (
     <div>
-      <Meta title="Top Flicks" />
+      <Meta title="Top" />
 
       <Breadcrumb>
         <Breadcrumb.Item href="/" linkAs={Link}>
           Home
+        </Breadcrumb.Item>
+        <Breadcrumb.Item href="/catalog" linkAs={Link}>
+          Catalog
         </Breadcrumb.Item>
         <Breadcrumb.Item linkAs={Link} active>
           Top
