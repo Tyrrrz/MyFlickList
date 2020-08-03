@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
-import { mdiCalendarBlank, mdiMovieOpenOutline, mdiClockOutline, mdiOpenInNew } from '@mdi/js';
+import { mdiCalendarBlank, mdiMovieOpenOutline, mdiClockOutline, mdiOpenInNew, mdiShareVariantOutline } from '@mdi/js';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 import Meta from '../../shared/Meta';
@@ -43,7 +43,73 @@ function formatRuntime(flick: FlickResponse) {
       ? `${hours} ${hoursSuffix}`
       : `${minutes} ${minutesSuffix}`;
 
-  return flick.kind === FlickKind.Series ? `${formatted} (per episode)` : formatted;
+  return flick.kind === FlickKind.Series ? `${formatted} / episode` : formatted;
+}
+
+function NetworkLinks({ flick }: { flick: FlickResponse }) {
+  return (
+    <div>
+      <div className="my-1">
+        <Icon path={mdiOpenInNew} />{' '}
+        <Link href={`https://imdb.com/title/${flick.id}`} target="_blank">
+          Find on IMDB
+        </Link>
+      </div>
+      <div className="my-1">
+        <Icon path={mdiOpenInNew} />{' '}
+        <Link href={`https://themoviedb.org/search?query=${encodeURIComponent(flick.title!)}`} target="_blank">
+          Find on TMDB
+        </Link>
+      </div>
+      <div className="my-1">
+        <Icon path={mdiOpenInNew} />{' '}
+        <Link href={`https://netflix.com/search?q=${encodeURIComponent(flick.title!)}`} target="_blank">
+          Find on Netflix
+        </Link>
+      </div>
+      <div className="my-1">
+        <Icon path={mdiOpenInNew} />{' '}
+        <Link href={`https://hbo.com/searchresults?q=${encodeURIComponent(flick.title!)}`} target="_blank">
+          Find on HBO
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function SocialShareLinks({ flick }: { flick: FlickResponse }) {
+  const selfUrl = window.location.origin + window.location.pathname;
+
+  return (
+    <div className="mt-4">
+      <div className="my-1">
+        <Icon path={mdiShareVariantOutline} />{' '}
+        <Link
+          href={`https://twitter.com/share?related=myflicklist.net&via=myflicklist&url=${encodeURIComponent(
+            selfUrl
+          )}&text=${encodeURIComponent(flick.title!)}&hashtags=myflicklist`}
+          target="_blank"
+        >
+          Share on Twitter
+        </Link>
+      </div>
+      <div className="my-1">
+        <Icon path={mdiShareVariantOutline} />{' '}
+        <Link
+          href={`https://reddit.com/submit?url=${encodeURIComponent(selfUrl)}&title=${encodeURIComponent(flick.title!)}`}
+          target="_blank"
+        >
+          Share on Reddit
+        </Link>
+      </div>
+      <div className="my-1">
+        <Icon path={mdiShareVariantOutline} />{' '}
+        <Link href={`https://facebook.com/share.php?u=${encodeURIComponent(selfUrl)}`} target="_blank">
+          Share on Facebook
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 function FlickData({ flick }: { flick: FlickResponse }) {
@@ -70,30 +136,8 @@ function FlickData({ flick }: { flick: FlickResponse }) {
 
             <hr className="w-75" />
 
-            <div className="my-1">
-              <Icon path={mdiOpenInNew} />{' '}
-              <Link href={`https://imdb.com/title/${flick.id}`} target="_blank">
-                Find on IMDB
-              </Link>
-            </div>
-            <div className="my-1">
-              <Icon path={mdiOpenInNew} />{' '}
-              <Link href={`https://themoviedb.org/search?query=${encodeURIComponent(flick.title!)}`} target="_blank">
-                Find on TMDB
-              </Link>
-            </div>
-            <div className="my-1">
-              <Icon path={mdiOpenInNew} />{' '}
-              <Link href={`https://netflix.com/search?q=${encodeURIComponent(flick.title!)}`} target="_blank">
-                Find on Netflix
-              </Link>
-            </div>
-            <div className="my-1">
-              <Icon path={mdiOpenInNew} />{' '}
-              <Link href={`https://hbo.com/searchresults?q=${encodeURIComponent(flick.title!)}`} target="_blank">
-                Find on HBO
-              </Link>
-            </div>
+            <NetworkLinks flick={flick} />
+            <SocialShareLinks flick={flick} />
           </Col>
           <Col>
             <Jumbotron>
