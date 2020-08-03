@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import useTracking from './shared/useTracking';
 import Link from './shared/Link';
+import FlickInfo from './pages/catalog/FlickInfo';
 import TopFlicks from './pages/catalog/TopFlicks';
 import TrendingFlicks from './pages/catalog/TrendingFlicks';
 import Home from './pages/Home';
@@ -59,15 +60,19 @@ export default function App() {
           <Route path="/catalog/flicks/trending">
             <TrendingFlicks />
           </Route>
+          <Route path="/catalog/flicks/:flickId">
+            <FlickInfo />
+          </Route>
+          <Route path="/catalog">
+            <TopFlicks />
+          </Route>
           <Route path="/">
             <Home />
           </Route>
         </Switch>
       </main>
 
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }

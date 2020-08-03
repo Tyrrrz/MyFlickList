@@ -38,9 +38,9 @@ function FlickRow({ flick, number }: { flick: FlickListingResponse; number: numb
           </Row>
         </Container>
       </td>
-      <td className="h5 text-muted align-middle">10</td>
-      <td className="h5 text-muted align-middle">N/A</td>
-      <td className="h5 text-muted align-middle">N/A</td>
+      <td className="h5 text-center text-muted align-middle">10</td>
+      <td className="h5 text-center text-muted align-middle">N/A</td>
+      <td className="h5 text-center text-muted align-middle">N/A</td>
     </tr>
   );
 }
@@ -60,9 +60,9 @@ export default function FlickList({ flicks }: { flicks: FlickListingResponse[] }
         <tr>
           <th className="text-center">#</th>
           <th>Flick</th>
-          <th>Avg. Rating</th>
-          <th>Your Rating</th>
-          <th>Listing</th>
+          <th className="text-center">Avg. Rating</th>
+          <th className="text-center">Your Rating</th>
+          <th className="text-center">Listing</th>
         </tr>
       </thead>
 

@@ -194,6 +194,50 @@ export class CatalogClient {
         }
         return Promise.resolve<FlickListingResponse[]>(<any>null);
     }
+
+    getFlick(flickId: string | null): Promise<FlickResponse> {
+        let url_ = this.baseUrl + "/catalog/flicks/{flickId}";
+        if (flickId === undefined || flickId === null)
+            throw new Error("The parameter 'flickId' must be defined.");
+        url_ = url_.replace("{flickId}", encodeURIComponent("" + flickId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetFlick(_response);
+        });
+    }
+
+    protected processGetFlick(response: Response): Promise<FlickResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = FlickResponse.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FlickResponse>(<any>null);
+    }
 }
 
 export class ProblemDetails {
@@ -290,6 +334,50 @@ export class FlickListingResponse {
 export enum FlickKind {
     Movie = "Movie",
     Series = "Series",
+}
+
+export class FlickResponse {
+    id?: string;
+    kind?: FlickKind;
+    title?: string;
+    premiereDate?: Date | undefined;
+    runtime?: string | undefined;
+    episodeCount?: number | undefined;
+    synopsis?: string | undefined;
+    imageId?: string | undefined;
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.kind = _data["kind"];
+            this.title = _data["title"];
+            this.premiereDate = _data["premiereDate"] ? new Date(_data["premiereDate"].toString()) : <any>undefined;
+            this.runtime = _data["runtime"];
+            this.episodeCount = _data["episodeCount"];
+            this.synopsis = _data["synopsis"];
+            this.imageId = _data["imageId"];
+        }
+    }
+
+    static fromJS(data: any): FlickResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new FlickResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["kind"] = this.kind;
+        data["title"] = this.title;
+        data["premiereDate"] = this.premiereDate ? this.premiereDate.toISOString() : <any>undefined;
+        data["runtime"] = this.runtime;
+        data["episodeCount"] = this.episodeCount;
+        data["synopsis"] = this.synopsis;
+        data["imageId"] = this.imageId;
+        return data; 
+    }
 }
 
 export class ApiException extends Error {

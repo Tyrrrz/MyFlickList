@@ -82,5 +82,17 @@ namespace MyFlickList.Api.Controllers
 
             return Ok(flicks);
         }
+
+        [HttpGet("flicks/{flickId}")]
+        [ProducesResponseType(typeof(FlickResponse), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetFlick(string flickId)
+        {
+            var flick = await _dbContext.Flicks.FindAsync(flickId);
+            if (flick == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<FlickResponse>(flick));
+        }
     }
 }
