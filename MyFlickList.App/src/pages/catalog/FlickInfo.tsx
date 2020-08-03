@@ -15,8 +15,35 @@ import Link from '../../shared/Link';
 import { FlickResponse, FlickKind } from '../../infra/api.generated';
 import api from '../../infra/api';
 
-function formatEpisodeCount(flick: FlickResponse) {
-  return flick.episodeCount && `(${flick.episodeCount} episodes)`;
+function formatKind(flick: FlickResponse) {
+  return flick.episodeCount && flick.episodeCount > 0
+    ? `${flick.kind?.toString()} (${flick.episodeCount} episodes)`
+    : flick.kind?.toString();
+}
+
+function formatPremiereDate(flick: FlickResponse) {
+  if (!flick.premiereDate) return '--';
+  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).format(flick.premiereDate);
+}
+
+function formatRuntime(flick: FlickResponse) {
+  if (!flick.runtime) return '--';
+
+  const components = flick.runtime.split(':');
+  const hours = parseInt(components[0]);
+  const minutes = parseInt(components[1]);
+
+  const hoursSuffix = hours === 1 ? 'hour' : 'hours';
+  const minutesSuffix = minutes === 1 ? 'minute' : 'minutes';
+
+  const formatted =
+    hours > 0 && minutes > 0
+      ? `${hours} ${hoursSuffix} ${minutes} ${minutesSuffix}`
+      : hours > 0
+      ? `${hours} ${hoursSuffix}`
+      : `${minutes} ${minutesSuffix}`;
+
+  return flick.kind === FlickKind.Series ? `${formatted} (per episode)` : formatted;
 }
 
 function FlickData({ flick }: { flick: FlickResponse }) {
@@ -30,20 +57,15 @@ function FlickData({ flick }: { flick: FlickResponse }) {
         <Row>
           <Col className="col-3">
             <img className="mw-100" alt={flick.title} src={flickImageUrl} />
+
             <div className="my-1 mt-3">
-              <Icon path={mdiCalendarBlank} /> <span>{flick.premiereDate?.toLocaleDateString('en-US')}</span>
+              <Icon path={mdiCalendarBlank} /> <span>{formatPremiereDate(flick)}</span>
             </div>
             <div className="my-1">
-              <Icon path={mdiMovieOpenOutline} />{' '}
-              <span>
-                {flick.kind?.toString()} {formatEpisodeCount(flick)}
-              </span>
+              <Icon path={mdiMovieOpenOutline} /> <span>{formatKind(flick)}</span>
             </div>
             <div className="my-1">
-              <Icon path={mdiClockOutline} />{' '}
-              <span>
-                {flick.runtime?.toString()} {flick.kind === FlickKind.Series && '(per episode)'}
-              </span>
+              <Icon path={mdiClockOutline} /> <span>{formatRuntime(flick)}</span>
             </div>
 
             <hr className="w-75" />
