@@ -44,6 +44,7 @@ namespace MyFlickList.Api.Controllers
         {
             // TODO: order by rating
             var flicks = await _dbContext.Flicks
+                .OrderBy(f => f.Id)
                 .Skip(offset)
                 .Take(count)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
@@ -58,6 +59,7 @@ namespace MyFlickList.Api.Controllers
         {
             // TODO: order by trendiness
             var flicks = await _dbContext.Flicks
+                .OrderByDescending(f => f.Id)
                 .Skip(offset)
                 .Take(count)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)

@@ -12,7 +12,7 @@ To work on MFL locally you will need the latest versions of [.NET SDK](https://d
 
 ### Run the database
 
-- Execute `docker-compose up mfl.db --build`
+- Execute `docker-compose up mfl.db`
 
 The database will be available on `localhost:5432`.
 
@@ -41,7 +41,7 @@ The app will be on `localhost:3000`.
 
 ### Generate OpenAPI client
 
-- [Run the API](#Run-the-api)
+- Run the API
 - Change directory to `MyFlickList.App`
 - Execute `npm run update-client`
 

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router';
 import GoogleAnalytics from 'react-ga';
 import config from '../infra/config';
-import { useLocation } from 'react-router';
 
 export default function useTracking() {
   const token = config.secrets.googleAnalyticsToken;
