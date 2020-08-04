@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Api.Models;
+using MyFlickList.Api.Services;
 using MyFlickList.Data;
 using Newtonsoft.Json.Converters;
 
@@ -40,6 +41,8 @@ namespace MyFlickList.Api
             services.AddControllers().AddNewtonsoftJson(s => s.SerializerSettings.Converters.Add(new StringEnumConverter()));
             services.AddOpenApiDocument(d => d.Title = "MyFlickList API");
             services.AddAutoMapper(typeof(Mapping));
+
+            services.AddHttpClient<ICatalogPopulator, TmdbCatalogPopulator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

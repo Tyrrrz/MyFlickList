@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyFlickList.Api.Internal;
 using MyFlickList.Api.Models;
 using MyFlickList.Api.Models.Catalog;
+using MyFlickList.Api.Services;
 using MyFlickList.Data;
 
 namespace MyFlickList.Api.Controllers
@@ -17,11 +18,13 @@ namespace MyFlickList.Api.Controllers
     {
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ICatalogPopulator _catalogPopulator;
 
-        public CatalogController(AppDbContext dbContext, IMapper mapper)
+        public CatalogController(AppDbContext dbContext, IMapper mapper, ICatalogPopulator catalogPopulator)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _catalogPopulator = catalogPopulator;
         }
 
         [HttpGet("images/{imageId}")]
@@ -91,6 +94,21 @@ namespace MyFlickList.Api.Controllers
             var response = _mapper.Map<FlickResponse>(flick);
 
             return Ok(response);
+        }
+
+        [HttpPost("flicks/{flickId}")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(409)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> RequestFlick(string flickId)
+        {
+            var existingFlick = await _dbContext.Flicks.FindAsync(flickId);
+            if (existingFlick != null)
+                return Conflict();
+
+            await _catalogPopulator.PopulateFlickAsync(flickId);
+
+            return CreatedAtAction(nameof(GetFlick), new {flickId}, null);
         }
     }
 }
