@@ -21,9 +21,13 @@ interface PageButtonProps {
 function PageButton({ href, active, children }: PageButtonProps) {
   return (
     <li className={`page-item ${active && 'active'}`}>
-      <Link className="page-link" href={href}>
-        {children}
-      </Link>
+      {!active ? (
+        <Link className="page-link" href={href}>
+          {children}
+        </Link>
+      ) : (
+        <span className="page-link">{children}</span>
+      )}
     </li>
   );
 }
