@@ -2,10 +2,12 @@ import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import useTracking from './shared/useTracking';
 import Meta from './shared/Meta';
 import Link from './shared/Link';
 import FlickInfo from './pages/catalog/FlickInfo';
+import FlickRequest from './pages/catalog/FlickRequest';
 import { TopFlicksIndex, TrendingFlicksIndex, NewFlicksIndex } from './pages/catalog/FlicksIndex';
 import Home from './pages/Home';
 
@@ -21,12 +23,20 @@ function Header() {
           <Nav.Link href="/" as={Link}>
             Home
           </Nav.Link>
-          <Nav.Link href="/catalog/flicks/top" as={Link}>
-            Top
-          </Nav.Link>
-          <Nav.Link href="/catalog/flicks/trending" as={Link}>
-            Trending
-          </Nav.Link>
+          <NavDropdown title="Catalog" id="catalog-dropdown">
+            <NavDropdown.Item href="/catalog/flicks/top" as={Link}>
+              Top Flicks
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/catalog/flicks/trending" as={Link}>
+              Trending Flicks
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/catalog/flicks/new" as={Link}>
+              New Flicks
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/catalog/flicks/request" as={Link}>
+              Request Flick
+            </NavDropdown.Item>
+          </NavDropdown>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
@@ -63,6 +73,9 @@ export default function App() {
           </Route>
           <Route path="/catalog/flicks/new">
             <NewFlicksIndex />
+          </Route>
+          <Route path="/catalog/flicks/request">
+            <FlickRequest />
           </Route>
           <Route path="/catalog/flicks/:flickId">
             <FlickInfo />
