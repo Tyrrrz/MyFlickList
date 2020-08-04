@@ -30,9 +30,9 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
 }
 
 export default function Home() {
-  const topFlicks = useAsyncStateEffect(() => api.catalog.getTopFlicks(0, 5), []);
-  const trendingFlicks = useAsyncStateEffect(() => api.catalog.getTrendingFlicks(0, 5), []);
-  const newFlicks = useAsyncStateEffect(() => api.catalog.getNewFlicks(0, 5), []);
+  const topFlicks = useAsyncStateEffect(() => api.catalog.getTopFlicks(), []);
+  const trendingFlicks = useAsyncStateEffect(() => api.catalog.getTrendingFlicks(), []);
+  const newFlicks = useAsyncStateEffect(() => api.catalog.getNewFlicks(), []);
 
   return (
     <div>
@@ -46,7 +46,7 @@ export default function Home() {
           <h3>Top Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {topFlicks?.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          {topFlicks?.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
         </div>
       </div>
 
@@ -56,7 +56,7 @@ export default function Home() {
           <h3>Trending Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {trendingFlicks?.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          {trendingFlicks?.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
         </div>
       </div>
 
@@ -66,7 +66,7 @@ export default function Home() {
           <h3>New Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {newFlicks?.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          {newFlicks?.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
         </div>
       </div>
     </div>

@@ -1,14 +1,18 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using MyFlickList.Data.Entities.Catalog;
 
 namespace MyFlickList.Api.Models.Catalog
 {
     public class FlickListingResponse
     {
+        [Required]
         public string Id { get; set; } = default!;
 
+        [Required]
         public FlickKind Kind { get; set; }
 
+        [Required]
         public string Title { get; set; } = default!;
 
         public DateTimeOffset? PremiereDate { get; set; }

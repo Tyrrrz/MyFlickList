@@ -57,16 +57,12 @@ export class CatalogClient {
         return Promise.resolve<void>(<any>null);
     }
 
-    getTopFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickListingResponse[]> {
+    getTopFlicks(page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
         let url_ = this.baseUrl + "/catalog/flicks/top?";
-        if (offset === null)
-            throw new Error("The parameter 'offset' cannot be null.");
-        else if (offset !== undefined)
-            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
-        if (count === null)
-            throw new Error("The parameter 'count' cannot be null.");
-        else if (count !== undefined)
-            url_ += "count=" + encodeURIComponent("" + count) + "&";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -81,18 +77,14 @@ export class CatalogClient {
         });
     }
 
-    protected processGetTopFlicks(response: Response): Promise<FlickListingResponse[]> {
+    protected processGetTopFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(FlickListingResponse.fromJS(item));
-            }
+            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -100,19 +92,15 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FlickListingResponse[]>(<any>null);
+        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
     }
 
-    getTrendingFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickListingResponse[]> {
+    getTrendingFlicks(page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
         let url_ = this.baseUrl + "/catalog/flicks/trending?";
-        if (offset === null)
-            throw new Error("The parameter 'offset' cannot be null.");
-        else if (offset !== undefined)
-            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
-        if (count === null)
-            throw new Error("The parameter 'count' cannot be null.");
-        else if (count !== undefined)
-            url_ += "count=" + encodeURIComponent("" + count) + "&";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -127,18 +115,14 @@ export class CatalogClient {
         });
     }
 
-    protected processGetTrendingFlicks(response: Response): Promise<FlickListingResponse[]> {
+    protected processGetTrendingFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(FlickListingResponse.fromJS(item));
-            }
+            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -146,19 +130,15 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FlickListingResponse[]>(<any>null);
+        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
     }
 
-    getNewFlicks(offset?: number | undefined, count?: number | undefined): Promise<FlickListingResponse[]> {
+    getNewFlicks(page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
         let url_ = this.baseUrl + "/catalog/flicks/new?";
-        if (offset === null)
-            throw new Error("The parameter 'offset' cannot be null.");
-        else if (offset !== undefined)
-            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
-        if (count === null)
-            throw new Error("The parameter 'count' cannot be null.");
-        else if (count !== undefined)
-            url_ += "count=" + encodeURIComponent("" + count) + "&";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -173,18 +153,14 @@ export class CatalogClient {
         });
     }
 
-    protected processGetNewFlicks(response: Response): Promise<FlickListingResponse[]> {
+    protected processGetNewFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(FlickListingResponse.fromJS(item));
-            }
+            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -192,7 +168,7 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<FlickListingResponse[]>(<any>null);
+        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
     }
 
     getFlick(flickId: string | null): Promise<FlickResponse> {
@@ -290,10 +266,47 @@ export class ProblemDetails {
     }
 }
 
+export class PaginatedResponseOfFlickListingResponse {
+    items!: FlickListingResponse[];
+    page!: number;
+    totalPageCount!: number;
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(FlickListingResponse.fromJS(item));
+            }
+            this.page = _data["page"];
+            this.totalPageCount = _data["totalPageCount"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedResponseOfFlickListingResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedResponseOfFlickListingResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["page"] = this.page;
+        data["totalPageCount"] = this.totalPageCount;
+        return data; 
+    }
+}
+
 export class FlickListingResponse {
-    id?: string;
-    kind?: FlickKind;
-    title?: string;
+    id!: string;
+    kind!: FlickKind;
+    title!: string;
     premiereDate?: Date | undefined;
     runtime?: string | undefined;
     episodeCount?: number | undefined;
@@ -337,9 +350,9 @@ export enum FlickKind {
 }
 
 export class FlickResponse {
-    id?: string;
-    kind?: FlickKind;
-    title?: string;
+    id!: string;
+    kind!: FlickKind;
+    title!: string;
     premiereDate?: Date | undefined;
     runtime?: string | undefined;
     episodeCount?: number | undefined;

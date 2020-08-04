@@ -57,19 +57,19 @@ function NetworkLinks({ flick }: { flick: FlickResponse }) {
       </div>
       <div className="my-1">
         <Icon path={mdiOpenInNew} />{' '}
-        <Link href={`https://themoviedb.org/search?query=${encodeURIComponent(flick.title!)}`} target="_blank">
+        <Link href={`https://themoviedb.org/search?query=${encodeURIComponent(flick.title)}`} target="_blank">
           Find on TMDB
         </Link>
       </div>
       <div className="my-1">
         <Icon path={mdiOpenInNew} />{' '}
-        <Link href={`https://netflix.com/search?q=${encodeURIComponent(flick.title!)}`} target="_blank">
+        <Link href={`https://netflix.com/search?q=${encodeURIComponent(flick.title)}`} target="_blank">
           Find on Netflix
         </Link>
       </div>
       <div className="my-1">
         <Icon path={mdiOpenInNew} />{' '}
-        <Link href={`https://hbo.com/searchresults?q=${encodeURIComponent(flick.title!)}`} target="_blank">
+        <Link href={`https://hbo.com/searchresults?q=${encodeURIComponent(flick.title)}`} target="_blank">
           Find on HBO
         </Link>
       </div>
@@ -87,7 +87,7 @@ function SocialShareLinks({ flick }: { flick: FlickResponse }) {
         <Link
           href={`https://twitter.com/share?related=myflicklist.net&via=myflicklist&url=${encodeURIComponent(
             selfUrl
-          )}&text=${encodeURIComponent(flick.title!)}&hashtags=myflicklist`}
+          )}&text=${encodeURIComponent(flick.title)}&hashtags=myflicklist`}
           target="_blank"
         >
           Share on Twitter
@@ -96,7 +96,7 @@ function SocialShareLinks({ flick }: { flick: FlickResponse }) {
       <div className="my-1">
         <Icon path={mdiShareVariantOutline} />{' '}
         <Link
-          href={`https://reddit.com/submit?url=${encodeURIComponent(selfUrl)}&title=${encodeURIComponent(flick.title!)}`}
+          href={`https://reddit.com/submit?url=${encodeURIComponent(selfUrl)}&title=${encodeURIComponent(flick.title)}`}
           target="_blank"
         >
           Share on Reddit

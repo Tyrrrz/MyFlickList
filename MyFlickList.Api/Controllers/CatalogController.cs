@@ -1,12 +1,11 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Internal;
+using MyFlickList.Api.Models;
 using MyFlickList.Api.Models.Catalog;
 using MyFlickList.Data;
 
@@ -39,48 +38,45 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpGet("flicks/top")]
-        [ProducesResponseType(typeof(FlickListingResponse[]), 200)]
-        public async Task<IActionResult> GetTopFlicks(int offset = 0, [Range(1, 20)] int count = 20)
+        [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
+        public async Task<IActionResult> GetTopFlicks(int page = 1)
         {
             // TODO: order by rating
-            var flicks = await _dbContext.Flicks
+            var query = _dbContext.Flicks
                 .OrderBy(f => f.Id)
-                .Skip(offset)
-                .Take(count)
-                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            return Ok(flicks);
+            var response = await PaginatedResponse.CreateAsync(query, page, 10);
+
+            return Ok(response);
         }
 
         [HttpGet("flicks/trending")]
-        [ProducesResponseType(typeof(FlickListingResponse[]), 200)]
-        public async Task<IActionResult> GetTrendingFlicks(int offset = 0, [Range(1, 20)] int count = 20)
+        [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
+        public async Task<IActionResult> GetTrendingFlicks(int page = 1)
         {
             // TODO: order by trendiness
-            var flicks = await _dbContext.Flicks
+            var query = _dbContext.Flicks
                 .OrderByDescending(f => f.Id)
-                .Skip(offset)
-                .Take(count)
-                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            return Ok(flicks);
+            var response = await PaginatedResponse.CreateAsync(query, page, 10);
+
+            return Ok(response);
         }
 
         [HttpGet("flicks/new")]
-        [ProducesResponseType(typeof(FlickListingResponse[]), 200)]
-        public async Task<IActionResult> GetNewFlicks(int offset = 0, [Range(1, 20)] int count = 20)
+        [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
+        public async Task<IActionResult> GetNewFlicks(int page = 1)
         {
-            var flicks = await _dbContext.Flicks
+            var query = _dbContext.Flicks
                 .Where(f => f.PremiereDate != null)
                 .OrderByDescending(f => f.PremiereDate)
-                .Skip(offset)
-                .Take(count)
-                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
-                .ToArrayAsync();
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            return Ok(flicks);
+            var response = await PaginatedResponse.CreateAsync(query, page, 10);
+
+            return Ok(response);
         }
 
         [HttpGet("flicks/{flickId}")]
@@ -92,7 +88,9 @@ namespace MyFlickList.Api.Controllers
             if (flick == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<FlickResponse>(flick));
+            var response = _mapper.Map<FlickResponse>(flick);
+
+            return Ok(response);
         }
     }
 }
