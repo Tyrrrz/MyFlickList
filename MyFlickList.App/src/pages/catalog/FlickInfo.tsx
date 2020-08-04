@@ -16,9 +16,7 @@ import { FlickResponse, FlickKind } from '../../infra/api.generated';
 import api from '../../infra/api';
 
 function formatKind(flick: FlickResponse) {
-  return flick.episodeCount && flick.episodeCount > 0
-    ? `${flick.kind?.toString()} (${flick.episodeCount} episodes)`
-    : flick.kind?.toString();
+  return flick.episodeCount && flick.episodeCount > 0 ? `${flick.kind.toString()} (${flick.episodeCount} episodes)` : flick.kind.toString();
 }
 
 function formatPremiereDate(flick: FlickResponse) {
@@ -141,7 +139,7 @@ function FlickData({ flick }: { flick: FlickResponse }) {
           </Col>
           <Col>
             <Jumbotron>
-              <h3>Create account to add this {flick.kind?.toString().toLowerCase()} to your list</h3>
+              <h3>Create account to add this {flick.kind.toString().toLowerCase()} to your list</h3>
               <p>
                 <Button>Sign up</Button>
               </p>

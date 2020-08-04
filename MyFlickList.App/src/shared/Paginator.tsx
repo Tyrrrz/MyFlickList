@@ -1,6 +1,10 @@
 import React from 'react';
 import Link from './Link';
 
+function scrollToTop() {
+  window.scrollTo(0, 0);
+}
+
 function getAvailablePageNumbers(currentPage: number, lastPage: number) {
   // The intent is to show first page, last page, current page, and a few pages around current.
   // If some of these overlap, then duplicates are avoided (e.g. for page 2/10, only [1, 2, 3, 4, 10] is shown).
@@ -22,7 +26,7 @@ function PageButton({ href, active, children }: PageButtonProps) {
   return (
     <li className={`page-item ${active && 'active'}`}>
       {!active ? (
-        <Link className="page-link" href={href}>
+        <Link className="page-link" href={href} onClick={() => scrollToTop()}>
           {children}
         </Link>
       ) : (

@@ -17,13 +17,18 @@ function formatEpisodeCount(flick: FlickListingResponse) {
   return flick.episodeCount && `(${flick.episodeCount} eps)`;
 }
 
-function FlickRow({ flick, number }: { flick: FlickListingResponse; number: number }) {
+interface FlickRowProps {
+  flick: FlickListingResponse;
+  position: number;
+}
+
+function FlickRow({ flick, position }: FlickRowProps) {
   const flickUrl = `/catalog/flicks/${flick.id}`;
   const flickImageUrl = api.utils.getImageUrl(flick.imageId!);
 
   return (
     <tr>
-      <td className="h1 font-weight-bold text-center text-muted align-middle">{number}</td>
+      <td className="h1 font-weight-bold text-center text-muted align-middle">{position}</td>
       <td>
         <Container className="m-0 p-0">
           <Row>
@@ -37,7 +42,7 @@ function FlickRow({ flick, number }: { flick: FlickListingResponse; number: numb
                 </Link>
               </div>
               <div>
-                {flick.kind?.toString() ?? '--'} {formatEpisodeCount(flick)}
+                {flick.kind.toString()} {formatEpisodeCount(flick)}
               </div>
               <div>{flick.premiereDate?.getUTCFullYear() ?? '--'}</div>
             </Col>
@@ -51,7 +56,12 @@ function FlickRow({ flick, number }: { flick: FlickListingResponse; number: numb
   );
 }
 
-function FlickTable({ flicks }: { flicks: FlickListingResponse[] }) {
+interface FlickTableProps {
+  flicks: FlickListingResponse[];
+  startingPosition: number;
+}
+
+function FlickTable({ flicks, startingPosition }: FlickTableProps) {
   return (
     <Table striped borderless>
       <colgroup>
@@ -74,7 +84,7 @@ function FlickTable({ flicks }: { flicks: FlickListingResponse[] }) {
 
       <tbody>
         {flicks.map((flick, i) => (
-          <FlickRow key={flick.id} flick={flick} number={i + 1} />
+          <FlickRow key={flick.id} flick={flick} position={startingPosition + i} />
         ))}
       </tbody>
     </Table>
@@ -99,7 +109,7 @@ export default function FlicksIndex({ indexTitle, resolve }: FlicksIndexProps) {
 
       <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: indexTitle }]} />
 
-      {flicks ? <FlickTable flicks={flicks.items} /> : <LoadingSpinner />}
+      {flicks ? <FlickTable flicks={flicks.items} startingPosition={1 + (page - 1) * 10} /> : <LoadingSpinner />}
 
       {flicks && <Paginator currentPage={page} lastPage={flicks.totalPageCount} getPageHref={(p) => `?page=${p}`} />}
     </div>
