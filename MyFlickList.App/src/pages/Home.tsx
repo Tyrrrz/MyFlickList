@@ -5,7 +5,7 @@ import LoadingSpinner from '../shared/LoadingSpinner';
 import { FlickListingResponse } from '../infra/api.generated';
 import api from '../infra/api';
 
-function FlickSpotlightItem({ flick }: { flick: FlickListingResponse }) {
+function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   const flickUrl = `/catalog/flicks/${flick.id}`;
   const flickImageUrl = api.utils.getImageUrl(flick.imageId!);
 
@@ -40,7 +40,7 @@ export default function Home() {
           <h3>Top Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {topFlicks?.map((flick) => <FlickSpotlightItem key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          {topFlicks?.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
         </div>
       </div>
 
@@ -50,7 +50,7 @@ export default function Home() {
           <h3>Trending Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {trendingFlicks?.map((flick) => <FlickSpotlightItem key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          {trendingFlicks?.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
         </div>
       </div>
 
@@ -60,7 +60,7 @@ export default function Home() {
           <h3>New Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {newFlicks?.map((flick) => <FlickSpotlightItem key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          {newFlicks?.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
         </div>
       </div>
     </div>

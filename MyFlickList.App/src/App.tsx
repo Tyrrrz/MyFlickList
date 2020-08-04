@@ -1,13 +1,12 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import useTracking from './shared/useTracking';
 import Meta from './shared/Meta';
 import Link from './shared/Link';
 import FlickInfo from './pages/catalog/FlickInfo';
-import TopFlicks from './pages/catalog/TopFlicks';
-import TrendingFlicks from './pages/catalog/TrendingFlicks';
+import { TopFlicksIndex, TrendingFlicksIndex, NewFlicksIndex } from './pages/catalog/FlicksIndex';
 import Home from './pages/Home';
 
 function Header() {
@@ -57,16 +56,19 @@ export default function App() {
       <main className="flex-grow-1">
         <Switch>
           <Route path="/catalog/flicks/top">
-            <TopFlicks />
+            <TopFlicksIndex />
           </Route>
           <Route path="/catalog/flicks/trending">
-            <TrendingFlicks />
+            <TrendingFlicksIndex />
+          </Route>
+          <Route path="/catalog/flicks/new">
+            <NewFlicksIndex />
           </Route>
           <Route path="/catalog/flicks/:flickId">
             <FlickInfo />
           </Route>
           <Route path="/catalog">
-            <TopFlicks />
+            <Redirect to="/catalog/flicks/top" />
           </Route>
           <Route path="/">
             <Home />

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 
-interface Props {
+interface MetaProps {
   title?: string | undefined;
   description?: string | undefined;
   imageUrl?: string | undefined;
   contentType?: string | undefined;
 }
 
-export default function Meta({ title, description, imageUrl, contentType }: Props) {
+export default function Meta({ title, description, imageUrl, contentType }: MetaProps) {
   const actualTitle = title ? `${title} - MyFlickList` : `MyFlickList`;
   const actualDescription = description || 'Social cataloging app';
 
