@@ -3,7 +3,6 @@ import { useParams } from 'react-router';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
 import { mdiCalendarBlank, mdiMovieOpenOutline, mdiClockOutline, mdiOpenInNew, mdiShareVariantOutline } from '@mdi/js';
@@ -12,6 +11,7 @@ import LoadingSpinner from '../../shared/LoadingSpinner';
 import Meta from '../../shared/Meta';
 import Icon from '../../shared/Icon';
 import Link from '../../shared/Link';
+import Breadcrumb from '../../shared/Breadcrumb';
 import { FlickResponse, FlickKind } from '../../infra/api.generated';
 import api from '../../infra/api';
 
@@ -166,17 +166,9 @@ export default function FlickInfo() {
     <div>
       <Meta title={flick?.title} description={flick?.synopsis} />
 
-      <Breadcrumb>
-        <Breadcrumb.Item href="/" linkAs={Link}>
-          Home
-        </Breadcrumb.Item>
-        <Breadcrumb.Item href="/catalog" linkAs={Link}>
-          Catalog
-        </Breadcrumb.Item>
-        <Breadcrumb.Item linkAs={Link} active>
-          {flick?.title ?? 'Loading...'}
-        </Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb
+        segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: flick?.title ?? 'Loading...' }]}
+      />
 
       {flick ? <FlickData flick={flick} /> : <LoadingSpinner />}
     </div>

@@ -1,5 +1,4 @@
 import React from 'react';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -9,6 +8,7 @@ import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import Meta from '../../shared/Meta';
 import Link from '../../shared/Link';
 import LoadingSpinner from '../../shared/LoadingSpinner';
+import Breadcrumb from '../../shared/Breadcrumb';
 import Paginator from '../../shared/Paginator';
 import { FlickListingResponse } from '../../infra/api.generated';
 import api from '../../infra/api';
@@ -82,11 +82,11 @@ function FlickTable({ flicks }: { flicks: FlickListingResponse[] }) {
 }
 
 interface FlicksIndexProps {
-  indexName: string;
+  indexTitle: string;
   resolve: (offset: number, count: number) => Promise<FlickListingResponse[]>;
 }
 
-export default function FlicksIndex({ indexName, resolve }: FlicksIndexProps) {
+export default function FlicksIndex({ indexTitle, resolve }: FlicksIndexProps) {
   // Page needs to be reflected in the URL
   const pageParam = parseInt(useQueryParam('page') ?? '');
   const page = pageParam >= 1 ? pageParam : 1;
@@ -97,17 +97,7 @@ export default function FlicksIndex({ indexName, resolve }: FlicksIndexProps) {
     <div>
       <Meta title="Top" />
 
-      <Breadcrumb>
-        <Breadcrumb.Item href="/" linkAs={Link}>
-          Home
-        </Breadcrumb.Item>
-        <Breadcrumb.Item href="/catalog" linkAs={Link}>
-          Catalog
-        </Breadcrumb.Item>
-        <Breadcrumb.Item linkAs={Link} active>
-          {indexName}
-        </Breadcrumb.Item>
-      </Breadcrumb>
+      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: indexTitle }]} />
 
       {flicks ? <FlickTable flicks={flicks} /> : <LoadingSpinner />}
 
@@ -117,13 +107,13 @@ export default function FlicksIndex({ indexName, resolve }: FlicksIndexProps) {
 }
 
 export function TopFlicksIndex() {
-  return <FlicksIndex indexName="Top" resolve={(offset, count) => api.catalog.getTopFlicks(offset, count)} />;
+  return <FlicksIndex indexTitle="Top" resolve={(offset, count) => api.catalog.getTopFlicks(offset, count)} />;
 }
 
 export function TrendingFlicksIndex() {
-  return <FlicksIndex indexName="Trending" resolve={(offset, count) => api.catalog.getTrendingFlicks(offset, count)} />;
+  return <FlicksIndex indexTitle="Trending" resolve={(offset, count) => api.catalog.getTrendingFlicks(offset, count)} />;
 }
 
 export function NewFlicksIndex() {
-  return <FlicksIndex indexName="New" resolve={(offset, count) => api.catalog.getNewFlicks(offset, count)} />;
+  return <FlicksIndex indexTitle="New" resolve={(offset, count) => api.catalog.getNewFlicks(offset, count)} />;
 }

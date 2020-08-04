@@ -63,7 +63,7 @@ export default function Paginator({ currentPage, lastPage, getPageHref }: Pagina
   }
 
   return (
-    <nav aria-label="Page navigation" className="">
+    <nav aria-label="Page navigation">
       <ul className="pagination justify-content-center">{pageButtons}</ul>
     </nav>
   );

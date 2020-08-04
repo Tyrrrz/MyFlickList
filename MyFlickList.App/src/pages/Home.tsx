@@ -1,7 +1,9 @@
 import React from 'react';
 import useAsyncStateEffect from '../shared/useAsyncStateEffect';
+import Meta from '../shared/Meta';
 import Link from '../shared/Link';
 import LoadingSpinner from '../shared/LoadingSpinner';
+import Breadcrumb from '../shared/Breadcrumb';
 import { FlickListingResponse } from '../infra/api.generated';
 import api from '../infra/api';
 
@@ -34,6 +36,10 @@ export default function Home() {
 
   return (
     <div>
+      <Meta />
+
+      <Breadcrumb segments={[{ title: 'Home', href: '/' }]} />
+
       {/* Top */}
       <div className="mt-4 mb-2">
         <Link className="text-body" href="/catalog/flicks/top">
