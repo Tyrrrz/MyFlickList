@@ -7,7 +7,7 @@ import useQueryParam from '../../shared/useQueryParam';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import Meta from '../../shared/Meta';
 import Link from '../../shared/Link';
-import LoadingSpinner from '../../shared/LoadingSpinner';
+import StateLoader from '../../shared/StateLoader';
 import Breadcrumb from '../../shared/Breadcrumb';
 import Paginator from '../../shared/Paginator';
 import { FlickListingResponse, PaginatedResponseOfFlickListingResponse } from '../../infra/api.generated';
@@ -42,7 +42,7 @@ function FlickRow({ flick, position }: FlickRowProps) {
                 </Link>
               </div>
               <div>
-                {flick.kind.toString()} {formatEpisodeCount(flick)}
+                {flick.kind} {formatEpisodeCount(flick)}
               </div>
               <div>{flick.premiereDate?.getUTCFullYear() ?? '--'}</div>
             </Col>
@@ -97,11 +97,11 @@ interface FlicksIndexProps {
 }
 
 export default function FlicksIndex({ indexTitle, resolve }: FlicksIndexProps) {
-  // Page needs to be reflected in the URL
+  // Page number needs to be reflected in the URL
   const pageParam = parseInt(useQueryParam('page') ?? '');
   const page = pageParam >= 1 ? pageParam : 1;
 
-  const flicks = useAsyncStateEffect(() => resolve(page), [page]);
+  const [flicks, flicksError] = useAsyncStateEffect(() => resolve(page), [page]);
 
   return (
     <div>
@@ -109,9 +109,16 @@ export default function FlicksIndex({ indexTitle, resolve }: FlicksIndexProps) {
 
       <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: indexTitle }]} />
 
-      {flicks ? <FlickTable flicks={flicks.items} startingPosition={1 + (page - 1) * 10} /> : <LoadingSpinner />}
-
-      {flicks && <Paginator currentPage={page} lastPage={flicks.totalPageCount} getPageHref={(p) => `?page=${p}`} />}
+      <StateLoader
+        state={flicks}
+        error={flicksError}
+        render={(fs) => (
+          <>
+            <FlickTable flicks={fs.items} startingPosition={1 + (page - 1) * 10} />
+            <Paginator currentPage={page} lastPage={fs.totalPageCount} getPageHref={(p) => `?page=${p}`} />
+          </>
+        )}
+      />
     </div>
   );
 }

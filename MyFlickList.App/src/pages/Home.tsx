@@ -2,7 +2,7 @@ import React from 'react';
 import useAsyncStateEffect from '../shared/useAsyncStateEffect';
 import Meta from '../shared/Meta';
 import Link from '../shared/Link';
-import LoadingSpinner from '../shared/LoadingSpinner';
+import StateLoader from '../shared/StateLoader';
 import Breadcrumb from '../shared/Breadcrumb';
 import { FlickListingResponse } from '../infra/api.generated';
 import api from '../infra/api';
@@ -30,9 +30,9 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
 }
 
 export default function Home() {
-  const topFlicks = useAsyncStateEffect(() => api.catalog.getTopFlicks(), []);
-  const trendingFlicks = useAsyncStateEffect(() => api.catalog.getTrendingFlicks(), []);
-  const newFlicks = useAsyncStateEffect(() => api.catalog.getNewFlicks(), []);
+  const [topFlicks, topFlicksError] = useAsyncStateEffect(() => api.catalog.getTopFlicks(), []);
+  const [trendingFlicks, trendingFlicksError] = useAsyncStateEffect(() => api.catalog.getTrendingFlicks(), []);
+  const [newFlicks, newFlicksError] = useAsyncStateEffect(() => api.catalog.getNewFlicks(), []);
 
   return (
     <div>
@@ -46,7 +46,11 @@ export default function Home() {
           <h3>Top Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {topFlicks?.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          <StateLoader
+            state={topFlicks}
+            error={topFlicksError}
+            render={(fs) => fs.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+          />
         </div>
       </div>
 
@@ -56,7 +60,11 @@ export default function Home() {
           <h3>Trending Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {trendingFlicks?.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          <StateLoader
+            state={trendingFlicks}
+            error={trendingFlicksError}
+            render={(fs) => fs.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+          />
         </div>
       </div>
 
@@ -66,7 +74,11 @@ export default function Home() {
           <h3>New Flicks</h3>
         </Link>
         <div className="d-flex flex-row">
-          {newFlicks?.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />) ?? <LoadingSpinner />}
+          <StateLoader
+            state={newFlicks}
+            error={newFlicksError}
+            render={(fs) => fs.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+          />
         </div>
       </div>
     </div>

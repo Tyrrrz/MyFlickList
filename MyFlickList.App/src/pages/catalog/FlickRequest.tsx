@@ -1,17 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useHistory } from 'react-router';
 import Meta from '../../shared/Meta';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 import Breadcrumb from '../../shared/Breadcrumb';
 import api from '../../infra/api';
+import ErrorHandler from '../../shared/ErrorHandler';
+
+function parseUrl(url: string) {
+  try {
+    return new URL(url);
+  } catch {
+    return null;
+  }
+}
 
 function parseImdbId(url: string) {
+  if (!url) return null;
+
   // Check if already is a parsed ID
-  if (/$\w\w\d+^/i.test(url)) {
+  if (/^\w\w\d+$/i.test(url)) {
     return url;
   }
 
-  const match = /(?:$|\/)title\/(\w\w\d+)(?:^|\/)/i.exec(url);
+  // Ensure that the link comes from IMDB
+  const urlParsed = parseUrl(url);
+  if (!urlParsed || !/(?:^|\.)imdb\.com$/i.test(urlParsed.hostname)) {
+    return null;
+  }
+
+  // Get the ID
+  const match = /(?:^|\/)title\/(\w\w\d+)(?:$|\/)/i.exec(urlParsed.pathname);
   if (!match) return null;
 
   return match[1];
@@ -22,12 +40,26 @@ export default function FlickRequest() {
 
   const [busy, setBusy] = useState(false);
   const [imdbUrl, setImdbUrl] = useState('');
+  const [error, setError] = useState<unknown>();
 
-  const imdbId = parseImdbId(imdbUrl);
+  const sendRequest = useCallback(() => {
+    const imdbId = parseImdbId(imdbUrl);
+    if (!imdbId) {
+      setError('Provided link appears invalid');
+    } else {
+      setBusy(true);
+
+      api.catalog
+        .requestFlick(imdbId)
+        .then(() => history.push(`/catalog/flicks/${imdbId}`))
+        .catch(setError)
+        .finally(() => setBusy(false));
+    }
+  }, [imdbUrl, history]);
 
   return (
     <div>
-      <Meta title="Request" />
+      <Meta title="Request Flick" />
 
       <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: 'Request' }]} />
 
@@ -39,27 +71,26 @@ export default function FlickRequest() {
       <form className="mt-4">
         <div className="form-group">
           <label htmlFor="imdbId">IMDB link</label>
-          <input className="form-control" type="email" id="imdbId" disabled={busy} onChange={(e) => setImdbUrl(e.target.value)} />
-          {imdbUrl && !imdbId && <small className="text-danger">Provided link appears invalid</small>}
+          <input className="form-control" type="url" id="imdbId" disabled={busy} onChange={(e) => setImdbUrl(e.target.value)} />
         </div>
-        {!busy ? (
+
+        <ErrorHandler error={error} />
+
+        {!busy && (
           <button
             className="btn btn-primary"
             type="submit"
-            disabled={!imdbId || busy}
-            onClick={() => {
-              setBusy(true);
-              api.catalog
-                .requestFlick(imdbId)
-                .then(() => history.push(`/catalog/flicks/${imdbId}`))
-                .finally(() => setBusy(false));
+            disabled={busy}
+            onClick={(e) => {
+              e.preventDefault();
+              sendRequest();
             }}
           >
             Submit
           </button>
-        ) : (
-          <LoadingSpinner />
         )}
+
+        {busy && <LoadingSpinner />}
       </form>
     </div>
   );

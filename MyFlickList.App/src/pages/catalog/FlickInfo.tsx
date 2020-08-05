@@ -7,16 +7,16 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
 import { mdiCalendarBlank, mdiMovieOpenOutline, mdiClockOutline, mdiOpenInNew, mdiShareVariantOutline } from '@mdi/js';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
-import LoadingSpinner from '../../shared/LoadingSpinner';
 import Meta from '../../shared/Meta';
 import Icon from '../../shared/Icon';
 import Link from '../../shared/Link';
+import StateLoader from '../../shared/StateLoader';
 import Breadcrumb from '../../shared/Breadcrumb';
 import { FlickResponse, FlickKind } from '../../infra/api.generated';
 import api from '../../infra/api';
 
 function formatKind(flick: FlickResponse) {
-  return flick.episodeCount && flick.episodeCount > 0 ? `${flick.kind.toString()} (${flick.episodeCount} episodes)` : flick.kind.toString();
+  return flick.episodeCount && flick.episodeCount > 0 ? `${flick.kind} (${flick.episodeCount} episodes)` : flick.kind.toString();
 }
 
 function formatPremiereDate(flick: FlickResponse) {
@@ -158,17 +158,15 @@ function FlickData({ flick }: { flick: FlickResponse }) {
 
 export default function FlickInfo() {
   const { flickId } = useParams();
-  const flick = useAsyncStateEffect(() => api.catalog.getFlick(flickId), [flickId]);
+  const [flick, flickError] = useAsyncStateEffect(() => api.catalog.getFlick(flickId), [flickId]);
 
   return (
     <div>
       <Meta title={flick?.title} description={flick?.synopsis} />
 
-      <Breadcrumb
-        segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: flick?.title ?? 'Loading...' }]}
-      />
+      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: flick?.title ?? '...' }]} />
 
-      {flick ? <FlickData flick={flick} /> : <LoadingSpinner />}
+      <StateLoader state={flick} error={flickError} render={(f) => <FlickData flick={f} />} />
     </div>
   );
 }
