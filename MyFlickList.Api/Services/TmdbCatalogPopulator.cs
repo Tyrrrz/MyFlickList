@@ -15,28 +15,33 @@ namespace MyFlickList.Api.Services
 {
     public class TmdbCatalogPopulator : ICatalogPopulator
     {
-        private readonly IConfiguration _configuration;
         private readonly AppDbContext _dbContext;
         private readonly HttpClient _httpClient;
-        private readonly TMDbClient _tmdbClient;
+
+        private readonly Lazy<TMDbClient> _tmdbClientLazy;
+
+        private TMDbClient TmDbClient => _tmdbClientLazy.Value;
 
         public TmdbCatalogPopulator(IConfiguration configuration, AppDbContext dbContext, HttpClient httpClient)
         {
-            _configuration = configuration;
             _dbContext = dbContext;
             _httpClient = httpClient;
 
-            _tmdbClient = new TMDbClient(GetApiKey());
-        }
+            // We want this to be lazy so that constructor doesn't throw if API key is not set in configuration
+            _tmdbClientLazy = new Lazy<TMDbClient>(() =>
+            {
+                var apiKey =
+                    configuration.GetSection("ApiKeys")?.GetValue<string>("Tmdb") ??
+                    throw new InvalidOperationException("Missing TMDB API key.");
 
-        private string GetApiKey() =>
-            _configuration.GetSection("ApiKeys")?.GetValue<string>("Tmdb") ??
-            throw new InvalidOperationException("Missing TMDB API key.");
+                return new TMDbClient(apiKey);
+            });
+        }
 
         private async Task<Guid> StoreImageAsync(string imagePath)
         {
             var imageUri = new Uri(
-                new Uri(_tmdbClient.Config.Images.BaseUrl, UriKind.Absolute),
+                new Uri(TmDbClient.Config.Images.BaseUrl, UriKind.Absolute),
                 $"w500{imagePath}"
             );
 
@@ -86,7 +91,7 @@ namespace MyFlickList.Api.Services
 
         private async Task PopulateSeriesFlickAsync(TvShow series)
         {
-            var externalIds = await _tmdbClient.GetTvShowExternalIdsAsync(series.Id);
+            var externalIds = await TmDbClient.GetTvShowExternalIdsAsync(series.Id);
             var id = externalIds.ImdbId;
 
             // Poster image
@@ -115,20 +120,20 @@ namespace MyFlickList.Api.Services
 
         public async Task PopulateFlickAsync(string flickId)
         {
-            await _tmdbClient.GetConfigAsync();
+            await TmDbClient.GetConfigAsync();
 
-            var item = await _tmdbClient.FindAsync(FindExternalSource.Imdb, flickId);
+            var item = await TmDbClient.FindAsync(FindExternalSource.Imdb, flickId);
             var movieMatch = item.MovieResults.FirstOrDefault();
             var seriesMatch = item.TvResults.FirstOrDefault();
 
             if (movieMatch != null)
             {
-                var movie = await _tmdbClient.GetMovieAsync(movieMatch.Id);
+                var movie = await TmDbClient.GetMovieAsync(movieMatch.Id);
                 await PopulateMovieFlickAsync(movie);
             }
             else if (seriesMatch != null)
             {
-                var series = await _tmdbClient.GetTvShowAsync(seriesMatch.Id);
+                var series = await TmDbClient.GetTvShowAsync(seriesMatch.Id);
                 await PopulateSeriesFlickAsync(series);
             }
             else
