@@ -77,7 +77,13 @@ export default function FlickRequest() {
         copy-paste the corresponding IMDB link. All of the data will be pulled automatically.
       </p>
 
-      <form className="mt-4">
+      <form
+        className="mt-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          sendRequest();
+        }}
+      >
         <div className="form-group">
           <label htmlFor="imdbId">IMDB link</label>
           <input className="form-control" type="url" id="imdbId" disabled={busy} onChange={(e) => setImdbUrl(e.target.value)} />
@@ -86,15 +92,7 @@ export default function FlickRequest() {
         <ErrorHandler error={error} />
 
         {!busy && (
-          <button
-            className="btn btn-primary"
-            type="submit"
-            disabled={busy}
-            onClick={(e) => {
-              e.preventDefault();
-              sendRequest();
-            }}
-          >
+          <button className="btn btn-primary" type="submit" disabled={busy}>
             Submit
           </button>
         )}

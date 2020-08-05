@@ -6,6 +6,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import FlickInfo from './pages/catalog/FlickInfo';
 import FlickRequest from './pages/catalog/FlickRequest';
 import { NewFlicksIndex, TopFlicksIndex, TrendingFlicksIndex } from './pages/catalog/FlicksIndex';
+import FlicksSearch from './pages/catalog/FlicksSearch';
 import Home from './pages/Home';
 import Link from './shared/Link';
 import Meta from './shared/Meta';
@@ -25,16 +26,19 @@ function Header() {
           </Nav.Link>
           <NavDropdown title="Catalog" id="catalog-dropdown">
             <NavDropdown.Item href="/catalog/flicks/top" as={Link}>
-              Top Flicks
+              Top
             </NavDropdown.Item>
             <NavDropdown.Item href="/catalog/flicks/trending" as={Link}>
-              Trending Flicks
+              Trending
             </NavDropdown.Item>
             <NavDropdown.Item href="/catalog/flicks/new" as={Link}>
-              New Flicks
+              New
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/catalog/flicks/search" as={Link}>
+              Search
             </NavDropdown.Item>
             <NavDropdown.Item href="/catalog/flicks/request" as={Link}>
-              Request Flick
+              Add
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>
@@ -73,6 +77,9 @@ export default function App() {
           </Route>
           <Route path="/catalog/flicks/new">
             <NewFlicksIndex />
+          </Route>
+          <Route path="/catalog/flicks/search">
+            <FlicksSearch />
           </Route>
           <Route path="/catalog/flicks/request">
             <FlickRequest />

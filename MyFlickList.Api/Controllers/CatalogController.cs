@@ -45,11 +45,11 @@ namespace MyFlickList.Api.Controllers
         public async Task<IActionResult> GetTopFlicks(int page = 1)
         {
             // TODO: order by rating
-            var query = _dbContext.Flicks
+            var flicks = _dbContext.Flicks
                 .OrderBy(f => f.Id)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            var response = await PaginatedResponse.CreateAsync(query, page, 10);
+            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
 
             return Ok(response);
         }
@@ -59,11 +59,11 @@ namespace MyFlickList.Api.Controllers
         public async Task<IActionResult> GetTrendingFlicks(int page = 1)
         {
             // TODO: order by trendiness
-            var query = _dbContext.Flicks
+            var flicks = _dbContext.Flicks
                 .OrderByDescending(f => f.Id)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            var response = await PaginatedResponse.CreateAsync(query, page, 10);
+            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
 
             return Ok(response);
         }
@@ -72,12 +72,28 @@ namespace MyFlickList.Api.Controllers
         [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
         public async Task<IActionResult> GetNewFlicks(int page = 1)
         {
-            var query = _dbContext.Flicks
+            var flicks = _dbContext.Flicks
                 .Where(f => f.PremiereDate != null)
                 .OrderByDescending(f => f.PremiereDate)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            var response = await PaginatedResponse.CreateAsync(query, page, 10);
+            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
+
+            return Ok(response);
+        }
+
+        [HttpGet("flicks/search")]
+        [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
+        public async Task<IActionResult> SearchFlicks(string query, int page = 1)
+        {
+            var actualQuery = query.Trim();
+
+            var flicks = _dbContext.Flicks
+                .Where(f => f.Title.ToLower().Contains(actualQuery.ToLower()))
+                .OrderBy(f => f.Title.Length - actualQuery.Length)
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
+
+            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
 
             return Ok(response);
         }
