@@ -49,10 +49,19 @@ export default function FlickRequest() {
     } else {
       setBusy(true);
 
+      const redirect = () => history.push(`/catalog/flicks/${imdbId}`);
+
       api.catalog
         .requestFlick(imdbId)
-        .then(() => history.push(`/catalog/flicks/${imdbId}`))
-        .catch(setError)
+        .then(() => redirect())
+        .catch((e) => {
+          // 409 means it already exists, which is ok
+          if (e.status === 409) {
+            redirect();
+          } else {
+            setError(e);
+          }
+        })
         .finally(() => setBusy(false));
     }
   }, [imdbUrl, history]);
