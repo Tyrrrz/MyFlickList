@@ -1,6 +1,6 @@
 import React from 'react';
-import LoadingSpinner from './LoadingSpinner';
 import ErrorHandler from './ErrorHandler';
+import LoadingSpinner from './LoadingSpinner';
 
 interface StateLoaderProps<T> {
   state: T | undefined;

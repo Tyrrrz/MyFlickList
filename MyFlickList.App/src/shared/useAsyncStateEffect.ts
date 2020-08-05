@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function useAsyncStateEffect<T>(resolve: () => Promise<T>, deps: React.DependencyList) {
   const [state, setState] = useState<T | undefined>(undefined);

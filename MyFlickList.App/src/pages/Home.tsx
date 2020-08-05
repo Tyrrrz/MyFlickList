@@ -1,11 +1,11 @@
 import React from 'react';
-import useAsyncStateEffect from '../shared/useAsyncStateEffect';
-import Meta from '../shared/Meta';
-import Link from '../shared/Link';
-import StateLoader from '../shared/StateLoader';
-import Breadcrumb from '../shared/Breadcrumb';
-import { FlickListingResponse } from '../infra/api.generated';
 import api from '../infra/api';
+import { FlickListingResponse } from '../infra/api.generated';
+import Breadcrumb from '../shared/Breadcrumb';
+import Link from '../shared/Link';
+import Meta from '../shared/Meta';
+import StateLoader from '../shared/StateLoader';
+import useAsyncStateEffect from '../shared/useAsyncStateEffect';
 
 function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   const flickUrl = `/catalog/flicks/${flick.id}`;

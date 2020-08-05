@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router';
-import Meta from '../../shared/Meta';
-import LoadingSpinner from '../../shared/LoadingSpinner';
-import Breadcrumb from '../../shared/Breadcrumb';
 import api from '../../infra/api';
+import Breadcrumb from '../../shared/Breadcrumb';
 import ErrorHandler from '../../shared/ErrorHandler';
+import LoadingSpinner from '../../shared/LoadingSpinner';
+import Meta from '../../shared/Meta';
 
 function parseUrl(url: string) {
   try {

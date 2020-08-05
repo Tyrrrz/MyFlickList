@@ -1,19 +1,19 @@
+import { mdiCalendarBlank, mdiClockOutline, mdiMovieOpenOutline, mdiOpenInNew, mdiShareVariantOutline } from '@mdi/js';
 import React from 'react';
-import { useParams } from 'react-router';
-import Container from 'react-bootstrap/Container';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import Jumbotron from 'react-bootstrap/Jumbotron';
 import Button from 'react-bootstrap/Button';
-import { mdiCalendarBlank, mdiMovieOpenOutline, mdiClockOutline, mdiOpenInNew, mdiShareVariantOutline } from '@mdi/js';
-import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
-import Meta from '../../shared/Meta';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Row from 'react-bootstrap/Row';
+import { useParams } from 'react-router';
+import api from '../../infra/api';
+import { FlickKind, FlickResponse } from '../../infra/api.generated';
+import Breadcrumb from '../../shared/Breadcrumb';
 import Icon from '../../shared/Icon';
 import Link from '../../shared/Link';
+import Meta from '../../shared/Meta';
 import StateLoader from '../../shared/StateLoader';
-import Breadcrumb from '../../shared/Breadcrumb';
-import { FlickResponse, FlickKind } from '../../infra/api.generated';
-import api from '../../infra/api';
+import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 
 function formatKind(flick: FlickResponse) {
   return flick.episodeCount && flick.episodeCount > 0 ? `${flick.kind} (${flick.episodeCount} episodes)` : flick.kind.toString();

@@ -1,6 +1,6 @@
-import React from 'react';
 import MdiIcon from '@mdi/react';
 import { IconProps } from '@mdi/react/dist/IconProps';
+import React from 'react';
 
 export default function Icon(props: IconProps) {
   return (

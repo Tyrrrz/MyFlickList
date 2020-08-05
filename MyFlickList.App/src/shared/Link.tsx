@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link as InternalLink } from 'react-router-dom';
 import { OutboundLink as ExternalLink } from 'react-ga';
+import { Link as InternalLink } from 'react-router-dom';
 
 interface LinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
   href: string;

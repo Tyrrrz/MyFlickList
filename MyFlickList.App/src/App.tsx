@@ -1,15 +1,15 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import useTracking from './shared/useTracking';
-import Meta from './shared/Meta';
-import Link from './shared/Link';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import FlickInfo from './pages/catalog/FlickInfo';
 import FlickRequest from './pages/catalog/FlickRequest';
-import { TopFlicksIndex, TrendingFlicksIndex, NewFlicksIndex } from './pages/catalog/FlicksIndex';
+import { NewFlicksIndex, TopFlicksIndex, TrendingFlicksIndex } from './pages/catalog/FlicksIndex';
 import Home from './pages/Home';
+import Link from './shared/Link';
+import Meta from './shared/Meta';
+import useTracking from './shared/useTracking';
 
 function Header() {
   return (

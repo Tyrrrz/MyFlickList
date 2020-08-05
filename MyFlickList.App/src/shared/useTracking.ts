@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useLocation } from 'react-router';
 import GoogleAnalytics from 'react-ga';
+import { useLocation } from 'react-router';
 import config from '../infra/config';
 
 export default function useTracking() {

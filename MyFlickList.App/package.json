@@ -28,7 +28,8 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react-hooks": "^4.0.8",
     "nswag": "^13.6.2",
-    "prettier": "^2.0.5"
+    "prettier": "^2.0.5",
+    "prettier-plugin-organize-imports": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
