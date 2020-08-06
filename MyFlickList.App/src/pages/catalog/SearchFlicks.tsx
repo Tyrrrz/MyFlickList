@@ -30,6 +30,7 @@ export default function SearchFlicks() {
         className="w-75 mx-auto my-5"
         onSubmit={(e) => {
           e.preventDefault();
+          // Reset page
           history.push(`?query=${stagingQuery}`);
         }}
       >
@@ -58,7 +59,9 @@ export default function SearchFlicks() {
           render={(fs) => (
             <>
               {fs.items.length > 0 && <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />}
-              {fs.items.length > 0 && <Paginator currentPage={pageNumber} lastPage={fs.totalPageCount} getPageHref={(p) => `?page=${p}`} />}
+              {fs.items.length > 0 && (
+                <Paginator currentPage={pageNumber} lastPage={fs.totalPageCount} getPageHref={(p) => `?query=${query}&page=${p}`} />
+              )}
 
               {fs.items.length <= 0 && <p className="display-4 text-center">Nothing found :(</p>}
 
