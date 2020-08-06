@@ -1,4 +1,4 @@
-import { mdiCalendarBlank, mdiClockOutline, mdiMovieOpenOutline, mdiOpenInNew, mdiShareVariantOutline } from '@mdi/js';
+import { mdiCalendarBlank, mdiClockOutline, mdiMovieOpenOutline, mdiOpenInNew, mdiShareVariantOutline, mdiStarOutline } from '@mdi/js';
 import React from 'react';
 import { useParams } from 'react-router';
 import api from '../../infra/api';
@@ -10,13 +10,23 @@ import Meta from '../../shared/Meta';
 import StateLoader from '../../shared/StateLoader';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 
+function formatRating(flick: FlickResponse) {
+  if (!flick.externalRating) return '--';
+  return flick.externalRating.toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+}
+
 function formatKind(flick: FlickResponse) {
   return flick.episodeCount && flick.episodeCount > 0 ? `${flick.kind} (${flick.episodeCount} episodes)` : flick.kind.toString();
 }
 
-function formatPremiereDate(flick: FlickResponse) {
+function formatDate(flick: FlickResponse) {
   if (!flick.premiereDate) return '--';
-  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).format(flick.premiereDate);
+  const formatter = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+
+  if (flick.kind === FlickKind.Movie) return formatter.format(flick.premiereDate);
+
+  if (flick.finaleDate) return `${formatter.format(flick.premiereDate)} - ${formatter.format(flick.finaleDate)}`;
+  return `${formatter.format(flick.premiereDate)} - ...`;
 }
 
 function formatRuntime(flick: FlickResponse) {
@@ -25,6 +35,8 @@ function formatRuntime(flick: FlickResponse) {
   const components = flick.runtime.split(':');
   const hours = parseInt(components[0]);
   const minutes = parseInt(components[1]);
+
+  if (hours + minutes <= 0) return '--';
 
   const hoursSuffix = hours === 1 ? 'hour' : 'hours';
   const minutesSuffix = minutes === 1 ? 'minute' : 'minutes';
@@ -118,7 +130,10 @@ function FlickData({ flick }: { flick: FlickResponse }) {
             <img className="mw-100" alt={flick.title} src={flickImageUrl} />
 
             <div className="my-1 mt-3">
-              <Icon path={mdiCalendarBlank} /> <span>{formatPremiereDate(flick)}</span>
+              <Icon path={mdiStarOutline} /> <span>{formatRating(flick)}</span>
+            </div>
+            <div className="my-1">
+              <Icon path={mdiCalendarBlank} /> <span>{formatDate(flick)}</span>
             </div>
             <div className="my-1">
               <Icon path={mdiMovieOpenOutline} /> <span>{formatKind(flick)}</span>

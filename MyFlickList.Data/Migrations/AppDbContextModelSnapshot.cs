@@ -92,6 +92,12 @@ namespace MyFlickList.Data.Migrations
                     b.Property<int?>("EpisodeCount")
                         .HasColumnType("integer");
 
+                    b.Property<double?>("ExternalRating")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTimeOffset?>("FinaleDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<Guid?>("ImageId")
                         .HasColumnType("uuid");
 

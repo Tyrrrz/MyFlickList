@@ -56,7 +56,7 @@ namespace MyFlickList.CatalogUpdater.Commands
                 foreach (var result in results.Results)
                 {
                     var externalIds = await tmdbClient.GetMovieExternalIdsAsync(result.Id, cancellationToken);
-                    await console.Output.WriteLineAsync($"Working on {externalIds.ImdbId}...");
+                    await console.Output.WriteLineAsync($"Working on {result.Title} [movie; {externalIds.ImdbId}]...");
                     await RequestFlickAsync(externalIds.ImdbId, cancellationToken);
                 }
             }
@@ -72,7 +72,7 @@ namespace MyFlickList.CatalogUpdater.Commands
                 foreach (var result in results.Results)
                 {
                     var externalIds = await tmdbClient.GetTvShowExternalIdsAsync(result.Id, cancellationToken);
-                    await console.Output.WriteLineAsync($"Working on {externalIds.ImdbId}...");
+                    await console.Output.WriteLineAsync($"Working on {result.Name} [series; {externalIds.ImdbId}]...");
                     await RequestFlickAsync(externalIds.ImdbId, cancellationToken);
                 }
             }

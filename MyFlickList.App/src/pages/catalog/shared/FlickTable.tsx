@@ -1,10 +1,24 @@
 import React from 'react';
 import api from '../../../infra/api';
-import { FlickListingResponse } from '../../../infra/api.generated';
+import { FlickKind, FlickListingResponse } from '../../../infra/api.generated';
 import Link from '../../../shared/Link';
 
-function formatEpisodeCount(flick: FlickListingResponse) {
-  return flick.episodeCount && `(${flick.episodeCount} eps)`;
+function formatKind(flick: FlickListingResponse) {
+  return flick.episodeCount && flick.episodeCount > 0 ? `${flick.kind} (${flick.episodeCount} eps)` : flick.kind.toString();
+}
+
+function formatDate(flick: FlickListingResponse) {
+  if (!flick.premiereDate) return '--';
+
+  if (flick.kind === FlickKind.Movie) return `${flick.premiereDate.getUTCFullYear()}`;
+
+  if (flick.finaleDate) return `${flick.premiereDate.getUTCFullYear()} - ${flick.finaleDate.getUTCFullYear()}`;
+  return `${flick.premiereDate.getUTCFullYear()} - ...`;
+}
+
+function formatRating(flick: FlickListingResponse) {
+  if (!flick.externalRating) return '--';
+  return flick.externalRating.toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
 }
 
 interface FlickRowProps {
@@ -28,14 +42,12 @@ function FlickRow({ flick, position }: FlickRowProps) {
                 {flick.title}
               </Link>
             </div>
-            <div>
-              {flick.kind} {formatEpisodeCount(flick)}
-            </div>
-            <div>{flick.premiereDate?.getUTCFullYear() ?? '--'}</div>
+            <div>{formatKind(flick)}</div>
+            <div>{formatDate(flick)}</div>
           </div>
         </div>
       </td>
-      <td className="h5 text-center text-muted align-middle">10</td>
+      <td className="h5 text-center text-muted align-middle">{formatRating(flick)}</td>
       <td className="h5 text-center text-muted align-middle">N/A</td>
       <td className="h5 text-center text-muted align-middle">N/A</td>
     </tr>

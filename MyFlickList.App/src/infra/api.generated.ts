@@ -395,8 +395,10 @@ export class FlickListingResponse {
     kind!: FlickKind;
     title!: string;
     premiereDate?: Date | undefined;
+    finaleDate?: Date | undefined;
     runtime?: string | undefined;
     episodeCount?: number | undefined;
+    externalRating?: number | undefined;
     imageId?: string | undefined;
 
     init(_data?: any) {
@@ -405,8 +407,10 @@ export class FlickListingResponse {
             this.kind = _data["kind"];
             this.title = _data["title"];
             this.premiereDate = _data["premiereDate"] ? new Date(_data["premiereDate"].toString()) : <any>undefined;
+            this.finaleDate = _data["finaleDate"] ? new Date(_data["finaleDate"].toString()) : <any>undefined;
             this.runtime = _data["runtime"];
             this.episodeCount = _data["episodeCount"];
+            this.externalRating = _data["externalRating"];
             this.imageId = _data["imageId"];
         }
     }
@@ -424,8 +428,10 @@ export class FlickListingResponse {
         data["kind"] = this.kind;
         data["title"] = this.title;
         data["premiereDate"] = this.premiereDate ? this.premiereDate.toISOString() : <any>undefined;
+        data["finaleDate"] = this.finaleDate ? this.finaleDate.toISOString() : <any>undefined;
         data["runtime"] = this.runtime;
         data["episodeCount"] = this.episodeCount;
+        data["externalRating"] = this.externalRating;
         data["imageId"] = this.imageId;
         return data; 
     }
@@ -441,8 +447,10 @@ export class FlickResponse {
     kind!: FlickKind;
     title!: string;
     premiereDate?: Date | undefined;
+    finaleDate?: Date | undefined;
     runtime?: string | undefined;
     episodeCount?: number | undefined;
+    externalRating?: number | undefined;
     synopsis?: string | undefined;
     imageId?: string | undefined;
 
@@ -452,8 +460,10 @@ export class FlickResponse {
             this.kind = _data["kind"];
             this.title = _data["title"];
             this.premiereDate = _data["premiereDate"] ? new Date(_data["premiereDate"].toString()) : <any>undefined;
+            this.finaleDate = _data["finaleDate"] ? new Date(_data["finaleDate"].toString()) : <any>undefined;
             this.runtime = _data["runtime"];
             this.episodeCount = _data["episodeCount"];
+            this.externalRating = _data["externalRating"];
             this.synopsis = _data["synopsis"];
             this.imageId = _data["imageId"];
         }
@@ -472,8 +482,10 @@ export class FlickResponse {
         data["kind"] = this.kind;
         data["title"] = this.title;
         data["premiereDate"] = this.premiereDate ? this.premiereDate.toISOString() : <any>undefined;
+        data["finaleDate"] = this.finaleDate ? this.finaleDate.toISOString() : <any>undefined;
         data["runtime"] = this.runtime;
         data["episodeCount"] = this.episodeCount;
+        data["externalRating"] = this.externalRating;
         data["synopsis"] = this.synopsis;
         data["imageId"] = this.imageId;
         return data; 

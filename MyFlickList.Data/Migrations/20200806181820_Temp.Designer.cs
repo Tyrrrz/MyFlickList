@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyFlickList.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200801131253_Temp")]
+    [Migration("20200806181820_Temp")]
     partial class Temp
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,6 +93,12 @@ namespace MyFlickList.Data.Migrations
 
                     b.Property<int?>("EpisodeCount")
                         .HasColumnType("integer");
+
+                    b.Property<double?>("ExternalRating")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTimeOffset?>("FinaleDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid?>("ImageId")
                         .HasColumnType("uuid");

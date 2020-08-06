@@ -60,6 +60,28 @@ namespace MyFlickList.Api.Services
             return entity.Id;
         }
 
+        private async Task AddOrUpdateFlickAsync(FlickEntity flickEntity)
+        {
+            var existing = await _dbContext.Flicks.FindAsync(flickEntity.Id);
+
+            if (existing != null)
+            {
+                // Delete image
+                if (existing.ImageId != null)
+                {
+                    var imageEntity = new ImageEntity {Id = existing.ImageId.Value};
+                    _dbContext.Images.Remove(imageEntity);
+                }
+
+                // Overwrite values
+                _dbContext.Entry(existing).CurrentValues.SetValues(flickEntity);
+            }
+            else
+            {
+                await _dbContext.Flicks.AddAsync(flickEntity);
+            }
+        }
+
         private async Task PopulateMovieFlickAsync(Movie movie)
         {
             var id = movie.ImdbId;
@@ -82,10 +104,11 @@ namespace MyFlickList.Api.Services
                 PremiereDate = movie.ReleaseDate,
                 Synopsis = movie.Overview,
                 Runtime = runtime,
+                ExternalRating = movie.VoteAverage,
                 ImageId = imageId
             };
 
-            await _dbContext.Flicks.AddAsync(flickEntity);
+            await AddOrUpdateFlickAsync(flickEntity);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -102,19 +125,24 @@ namespace MyFlickList.Api.Services
             // Runtime
             var runtime = TimeSpan.FromMinutes(series.EpisodeRunTime.Average());
 
+            // Finale date
+            var finaleDate = !series.InProduction ? series.LastAirDate : null;
+
             var flickEntity = new FlickEntity
             {
                 Id = id,
                 Kind = FlickKind.Series,
                 Title = series.Name,
                 PremiereDate = series.FirstAirDate,
+                FinaleDate = finaleDate,
                 Synopsis = series.Overview,
                 Runtime = runtime,
                 EpisodeCount = series.NumberOfEpisodes,
+                ExternalRating = series.VoteAverage,
                 ImageId = imageId
             };
 
-            await _dbContext.Flicks.AddAsync(flickEntity);
+            await AddOrUpdateFlickAsync(flickEntity);
             await _dbContext.SaveChangesAsync();
         }
 

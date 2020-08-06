@@ -27,8 +27,10 @@ namespace MyFlickList.Data.Migrations
                     Kind = table.Column<int>(nullable: false),
                     Title = table.Column<string>(nullable: false),
                     PremiereDate = table.Column<DateTimeOffset>(nullable: true),
+                    FinaleDate = table.Column<DateTimeOffset>(nullable: true),
                     Runtime = table.Column<TimeSpan>(nullable: true),
                     EpisodeCount = table.Column<int>(nullable: true),
+                    ExternalRating = table.Column<double>(nullable: true),
                     Synopsis = table.Column<string>(nullable: true),
                     ImageId = table.Column<Guid>(nullable: true)
                 },

@@ -17,9 +17,13 @@ namespace MyFlickList.Api.Models.Catalog
 
         public DateTimeOffset? PremiereDate { get; set; }
 
+        public DateTimeOffset? FinaleDate { get; set; }
+
         public TimeSpan? Runtime { get; set; }
 
         public int? EpisodeCount { get; set; }
+
+        public double? ExternalRating { get; set; }
 
         public string? Synopsis { get; set; }
 

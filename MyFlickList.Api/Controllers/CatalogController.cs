@@ -44,9 +44,9 @@ namespace MyFlickList.Api.Controllers
         [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
         public async Task<IActionResult> GetTopFlicks(int page = 1)
         {
-            // TODO: order by rating
             var flicks = _dbContext.Flicks
-                .OrderBy(f => f.Id)
+                .Where(f => f.ExternalRating != null)
+                .OrderByDescending(f => f.ExternalRating)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -118,12 +118,7 @@ namespace MyFlickList.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> RequestFlick(string flickId)
         {
-            var existingFlick = await _dbContext.Flicks.FindAsync(flickId);
-            if (existingFlick != null)
-                return Conflict();
-
             await _catalogPopulator.PopulateFlickAsync(flickId);
-
             return CreatedAtAction(nameof(GetFlick), new {flickId}, null);
         }
     }
