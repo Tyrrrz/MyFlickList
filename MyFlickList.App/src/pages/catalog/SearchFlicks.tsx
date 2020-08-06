@@ -7,16 +7,16 @@ import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
 import StateLoader from '../../shared/StateLoader';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
-import useQueryParam from '../../shared/useQueryParam';
-import FlicksTable from './shared/FlicksTable';
+import useQueryParams from '../../shared/useQueryParams';
+import FlickTable from './shared/FlickTable';
 
-export default function FlicksSearch() {
+export default function SearchFlicks() {
   const history = useHistory();
 
-  const query = useQueryParam('query');
-  const page = parseInt(useQueryParam('page') ?? '') || 1;
+  const { query, page } = useQueryParams();
+  const pageNumber = parseInt(page) || 1;
 
-  const [flicks, flicksError] = useAsyncStateEffect(() => api.catalog.searchFlicks(query, page), [query, page], !!query);
+  const [flicks, flicksError] = useAsyncStateEffect(() => api.catalog.searchFlicks(query, pageNumber), [query, pageNumber], !!query);
 
   const [stagingQuery, setStagingQuery] = useState(query ?? '');
 
@@ -57,8 +57,8 @@ export default function FlicksSearch() {
           error={flicksError}
           render={(fs) => (
             <>
-              {fs.items.length > 0 && <FlicksTable flicks={fs.items} startingPosition={1 + (page - 1) * 10} />}
-              {fs.items.length > 0 && <Paginator currentPage={page} lastPage={fs.totalPageCount} getPageHref={(p) => `?page=${p}`} />}
+              {fs.items.length > 0 && <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />}
+              {fs.items.length > 0 && <Paginator currentPage={pageNumber} lastPage={fs.totalPageCount} getPageHref={(p) => `?page=${p}`} />}
 
               {fs.items.length <= 0 && <p className="display-4 text-center">Nothing found :(</p>}
 

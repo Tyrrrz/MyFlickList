@@ -1,8 +1,4 @@
 import React from 'react';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Table from 'react-bootstrap/Table';
 import api from '../../../infra/api';
 import { FlickListingResponse } from '../../../infra/api.generated';
 import Link from '../../../shared/Link';
@@ -24,24 +20,20 @@ function FlickRow({ flick, position }: FlickRowProps) {
     <tr>
       <td className="h1 font-weight-bold text-center text-muted align-middle">{position}</td>
       <td>
-        <Container className="m-0 p-0">
-          <Row>
-            <Col md="auto">
-              <img style={{ width: '4rem' }} alt={flick.title} src={flickImageUrl} />
-            </Col>
-            <Col>
-              <div>
-                <Link className="font-weight-bold text-truncate" href={flickUrl}>
-                  {flick.title}
-                </Link>
-              </div>
-              <div>
-                {flick.kind} {formatEpisodeCount(flick)}
-              </div>
-              <div>{flick.premiereDate?.getUTCFullYear() ?? '--'}</div>
-            </Col>
-          </Row>
-        </Container>
+        <div className="d-flex m-0 p-0 flex-row">
+          <img className="mr-3" style={{ width: '4rem' }} alt={flick.title} src={flickImageUrl} />
+          <div>
+            <div>
+              <Link className="font-weight-bold text-truncate" href={flickUrl}>
+                {flick.title}
+              </Link>
+            </div>
+            <div>
+              {flick.kind} {formatEpisodeCount(flick)}
+            </div>
+            <div>{flick.premiereDate?.getUTCFullYear() ?? '--'}</div>
+          </div>
+        </div>
       </td>
       <td className="h5 text-center text-muted align-middle">10</td>
       <td className="h5 text-center text-muted align-middle">N/A</td>
@@ -50,14 +42,14 @@ function FlickRow({ flick, position }: FlickRowProps) {
   );
 }
 
-interface FlicksTableProps {
+interface FlickTableProps {
   flicks: FlickListingResponse[];
   startingPosition: number;
 }
 
-export default function FlicksTable({ flicks, startingPosition }: FlicksTableProps) {
+export default function FlickTable({ flicks, startingPosition }: FlickTableProps) {
   return (
-    <Table striped borderless>
+    <table className="table table-striped table-borderless">
       <colgroup>
         <col className="w-auto" />
         <col />
@@ -81,6 +73,6 @@ export default function FlicksTable({ flicks, startingPosition }: FlicksTablePro
           <FlickRow key={flick.id} flick={flick} position={startingPosition + i} />
         ))}
       </tbody>
-    </Table>
+    </table>
   );
 }

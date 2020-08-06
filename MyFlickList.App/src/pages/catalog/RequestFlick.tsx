@@ -3,6 +3,7 @@ import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import Breadcrumb from '../../shared/Breadcrumb';
 import ErrorHandler from '../../shared/ErrorHandler';
+import Link from '../../shared/Link';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 import Meta from '../../shared/Meta';
 
@@ -35,7 +36,7 @@ function parseImdbId(url: string) {
   return match[1];
 }
 
-export default function FlickRequest() {
+export default function RequestFlick() {
   const history = useHistory();
 
   const [busy, setBusy] = useState(false);
@@ -74,7 +75,11 @@ export default function FlickRequest() {
 
       <p>
         If a movie or a series you&apos;re looking for is not available, you can request it to be added using this form. To do that, simply
-        copy-paste the corresponding IMDB link. All of the data will be pulled automatically.
+        copy-paste the corresponding{' '}
+        <Link href="https://imdb.com" target="_blank">
+          IMDB
+        </Link>{' '}
+        link. All of the data will be pulled automatically.
       </p>
 
       <form

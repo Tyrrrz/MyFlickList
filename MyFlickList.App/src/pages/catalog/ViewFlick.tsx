@@ -1,10 +1,5 @@
 import { mdiCalendarBlank, mdiClockOutline, mdiMovieOpenOutline, mdiOpenInNew, mdiShareVariantOutline } from '@mdi/js';
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Jumbotron from 'react-bootstrap/Jumbotron';
-import Row from 'react-bootstrap/Row';
 import { useParams } from 'react-router';
 import api from '../../infra/api';
 import { FlickKind, FlickResponse } from '../../infra/api.generated';
@@ -117,9 +112,9 @@ function FlickData({ flick }: { flick: FlickResponse }) {
     <div>
       <h3>{flick.title}</h3>
 
-      <Container fluid className="m-0 mt-3 p-0">
-        <Row>
-          <Col className="col-3">
+      <div className="m-0 mt-3 p-0 container container-fluid">
+        <div className="row">
+          <div className="col col-3">
             <img className="mw-100" alt={flick.title} src={flickImageUrl} />
 
             <div className="my-1 mt-3">
@@ -136,27 +131,27 @@ function FlickData({ flick }: { flick: FlickResponse }) {
 
             <NetworkLinks flick={flick} />
             <SocialShareLinks flick={flick} />
-          </Col>
-          <Col>
-            <Jumbotron>
+          </div>
+          <div className="col">
+            <div className="jumbotron">
               <h3>Create account to add this {flick.kind.toString().toLowerCase()} to your list</h3>
               <p>
-                <Button>Sign up</Button>
+                <button className="btn btn-outline-primary">Sign up</button>
               </p>
-            </Jumbotron>
+            </div>
 
             <div>
               <h5>Synopsis</h5>
               <p>{flick.synopsis}</p>
             </div>
-          </Col>
-        </Row>
-      </Container>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default function FlickInfo() {
+export default function ViewFlick() {
   const { flickId } = useParams();
   const [flick, flickError] = useAsyncStateEffect(() => api.catalog.getFlick(flickId), [flickId]);
 

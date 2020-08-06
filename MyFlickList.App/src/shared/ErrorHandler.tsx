@@ -47,7 +47,7 @@ export default function ErrorHandler({ error }: ErrorHandlerProps) {
     <div className="alert alert-danger" role="alert">
       <div className="font-weight-bold">{resolvedError.title}</div>
 
-      {resolvedError.details && <p>{resolvedError.details}</p>}
+      {resolvedError.details && <div>{resolvedError.details}</div>}
 
       {resolvedError.code && (
         <div>
