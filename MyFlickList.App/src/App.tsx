@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { matchPath, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import FlickInfo from './pages/catalog/FlickInfo';
 import FlickRequest from './pages/catalog/FlickRequest';
 import { NewFlicksIndex, TopFlicksIndex, TrendingFlicksIndex } from './pages/catalog/FlicksIndex';
@@ -13,6 +13,12 @@ import Meta from './shared/Meta';
 import useTracking from './shared/useTracking';
 
 function Header() {
+  const history = useHistory();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Don't render search box on the search page, it looks weird with two search box
+  const searchVisible = !matchPath(history.location.pathname, '/catalog/flicks/search');
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Navbar.Brand href="/" as={Link}>
@@ -43,6 +49,27 @@ function Header() {
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>
+
+      {searchVisible && (
+        <form
+          className="form-inline my-2 my-lg-0"
+          onSubmit={(e) => {
+            e.preventDefault();
+            history.push(`/catalog/flicks/search?query=${searchQuery}`);
+          }}
+        >
+          <input
+            className="form-control mr-sm-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button className="btn btn-outline-success my-2 my-sm-0" type="submit">
+            Search
+          </button>
+        </form>
+      )}
     </Navbar>
   );
 }
@@ -69,30 +96,14 @@ export default function App() {
 
       <main className="flex-grow-1">
         <Switch>
-          <Route path="/catalog/flicks/top">
-            <TopFlicksIndex />
-          </Route>
-          <Route path="/catalog/flicks/trending">
-            <TrendingFlicksIndex />
-          </Route>
-          <Route path="/catalog/flicks/new">
-            <NewFlicksIndex />
-          </Route>
-          <Route path="/catalog/flicks/search">
-            <FlicksSearch />
-          </Route>
-          <Route path="/catalog/flicks/request">
-            <FlickRequest />
-          </Route>
-          <Route path="/catalog/flicks/:flickId">
-            <FlickInfo />
-          </Route>
-          <Route path="/catalog">
-            <Redirect to="/catalog/flicks/top" />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
+          <Route path="/catalog/flicks/top" component={TopFlicksIndex} />
+          <Route path="/catalog/flicks/trending" component={TrendingFlicksIndex} />
+          <Route path="/catalog/flicks/new" component={NewFlicksIndex} />
+          <Route path="/catalog/flicks/search" component={FlicksSearch} />
+          <Route path="/catalog/flicks/request" component={FlickRequest} />
+          <Route path="/catalog/flicks/:flickId" component={FlickInfo} />
+          <Route path="/catalog" render={() => <Redirect to="/catalog/flicks/top" />} />
+          <Route path="/" component={Home} />
         </Switch>
       </main>
 

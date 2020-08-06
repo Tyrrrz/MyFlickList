@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import Breadcrumb from '../../shared/Breadcrumb';
+import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
 import StateLoader from '../../shared/StateLoader';
@@ -56,8 +57,15 @@ export default function FlicksSearch() {
           error={flicksError}
           render={(fs) => (
             <>
-              <FlicksTable flicks={fs.items} startingPosition={1 + (page - 1) * 10} />
-              <Paginator currentPage={page} lastPage={fs.totalPageCount} getPageHref={(p) => `?page=${p}`} />
+              {fs.items.length > 0 && <FlicksTable flicks={fs.items} startingPosition={1 + (page - 1) * 10} />}
+              {fs.items.length > 0 && <Paginator currentPage={page} lastPage={fs.totalPageCount} getPageHref={(p) => `?page=${p}`} />}
+
+              {fs.items.length <= 0 && <p className="display-4 text-center">Nothing found :(</p>}
+
+              <p className="mt-5 lead text-center">
+                Didn&apos;t find what you were looking for? You can <Link href="/catalog/flicks/request">request</Link> a new flick to be
+                added.
+              </p>
             </>
           )}
         />
