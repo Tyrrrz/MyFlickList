@@ -14,7 +14,7 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   return (
     <div className="position-relative mr-2" style={{ width: '15rem' }} title={flick.title}>
       <Link href={flickUrl}>
-        <img className="rounded w-100" alt={flick.title} src={flickImageUrl} />
+        <img className="w-100 rounded hover-highlight" alt={flick.title} src={flickImageUrl} />
         <div
           className="position-absolute w-100 p-2 rounded text-white text-truncate font-weight-bold"
           style={{

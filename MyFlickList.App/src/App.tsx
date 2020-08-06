@@ -80,7 +80,7 @@ function Header() {
 
       {searchVisible && (
         <form
-          className="form-inline my-2 my-lg-0"
+          className="my-2 my-lg-0 form-inline fade-unfocused"
           onSubmit={(e) => {
             e.preventDefault();
             history.push(`/catalog/flicks/search?query=${searchQuery}`);
