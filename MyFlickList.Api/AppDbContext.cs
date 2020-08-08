@@ -34,7 +34,7 @@ namespace MyFlickList.Api
             // Catalog
 
             modelBuilder.Entity<FlickEntity>(
-                e => e.HasOne<ImageEntity>().WithOne().HasForeignKey<FlickEntity>(o => o.ImageId)
+                e => e.HasOne<ImageEntity>().WithOne().HasForeignKey<FlickEntity>(o => o.ImageId).OnDelete(DeleteBehavior.Cascade)
             );
 
             modelBuilder.Entity<TagLinkEntity>(

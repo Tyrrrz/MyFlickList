@@ -62,24 +62,9 @@ namespace MyFlickList.Api.Services
 
         private async Task AddOrUpdateFlickAsync(FlickEntity flickEntity)
         {
-            var existing = await _dbContext.Flicks.FindAsync(flickEntity.Id);
-
-            if (existing != null)
-            {
-                // Delete image
-                if (existing.ImageId != null)
-                {
-                    var imageEntity = new ImageEntity {Id = existing.ImageId.Value};
-                    _dbContext.Images.Remove(imageEntity);
-                }
-
-                // Overwrite values
-                _dbContext.Entry(existing).CurrentValues.SetValues(flickEntity);
-            }
-            else
-            {
-                await _dbContext.Flicks.AddAsync(flickEntity);
-            }
+            var existing = new FlickEntity {Id = flickEntity.Id};
+            _dbContext.Remove(existing);
+            await _dbContext.AddAsync(flickEntity);
         }
 
         private async Task PopulateMovieFlickAsync(Movie movie)
