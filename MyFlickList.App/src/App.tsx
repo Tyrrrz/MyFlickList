@@ -107,6 +107,8 @@ function Footer() {
     <footer className="mt-3 mb-1 p-2 text-center">
       <Link href="https://twitter.com/Tyrrrz">Twitter</Link>
       {' • '}
+      <Link href="https://discord.gg/hgVa7qS">Discord</Link>
+      {' • '}
       <Link href="https://tyrrrz.me/donate">Donate</Link>
       {' • '}
       <Link href="https://github.com/Tyrrrz/MyFlickList">Source</Link>
