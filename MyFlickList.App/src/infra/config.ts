@@ -11,5 +11,6 @@ export default {
 
   secrets,
 
-  getRelativeApiUrl: (relativeUrl: string) => new URL(relativeUrl, apiUrl).toString()
+  getRelativeApiUrl: (relativeUrl: string) => new URL(relativeUrl, apiUrl).toString(),
+  getRelativeAppUrl: (relativeUrl: string) => new URL(relativeUrl, appUrl).toString()
 };

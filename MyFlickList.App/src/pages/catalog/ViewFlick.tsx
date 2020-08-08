@@ -122,6 +122,8 @@ function FlickData({ flick }: { flick: FlickResponse }) {
 
   return (
     <div>
+      <Meta imageUrl={flickImageUrl} />
+
       <h3>{flick.title}</h3>
 
       <div className="m-0 mt-3 p-0 container container-fluid">

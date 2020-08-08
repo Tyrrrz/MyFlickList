@@ -1,6 +1,7 @@
 import React from 'react';
 import { OutboundLink as ExternalLink } from 'react-ga';
 import { Link as InternalLink } from 'react-router-dom';
+import { isAbsoluteUrl } from '../infra/utils';
 
 interface LinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
   href: string;
@@ -8,9 +9,7 @@ interface LinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
 }
 
 export default function Link({ href, target, ...props }: LinkProps) {
-  const isAbsolute = /^[a-z][a-z\d+\-.]*:/iu.test(href);
-
-  return isAbsolute ? (
+  return isAbsoluteUrl(href) ? (
     <ExternalLink to={href} eventLabel={href} target={target} {...props} />
   ) : (
     <InternalLink to={href} target={target} {...props} />

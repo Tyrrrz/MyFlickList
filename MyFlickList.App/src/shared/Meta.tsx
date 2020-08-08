@@ -1,5 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
+import config from '../infra/config';
+import { isAbsoluteUrl } from '../infra/utils';
 
 interface MetaProps {
   title?: string | undefined;
@@ -11,6 +13,7 @@ interface MetaProps {
 export default function Meta({ title, description, imageUrl, contentType }: MetaProps) {
   const actualTitle = title ? `${title} - MyFlickList` : `MyFlickList`;
   const actualDescription = description || 'Social cataloging app';
+  const actualImageUrl = imageUrl && !isAbsoluteUrl(imageUrl) ? config.getRelativeAppUrl(imageUrl) : imageUrl;
 
   return (
     <Helmet>
@@ -23,7 +26,7 @@ export default function Meta({ title, description, imageUrl, contentType }: Meta
       <meta name="twitter:description" content={actualDescription} />
 
       <meta name="og:type" content={contentType || 'website'} />
-      <meta property="og:image" content={imageUrl} />
+      <meta property="og:image" content={actualImageUrl} />
     </Helmet>
   );
 }
