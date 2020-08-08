@@ -9,7 +9,7 @@ import useAsyncStateEffect from '../shared/useAsyncStateEffect';
 
 function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   const flickUrl = `/catalog/flicks/${flick.id}`;
-  const flickImageUrl = api.utils.getImageUrl(flick.imageId!);
+  const flickImageUrl = (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
 
   return (
     <div className="position-relative mr-2" style={{ width: '15rem' }} title={flick.title}>

@@ -28,7 +28,7 @@ interface FlickRowProps {
 
 function FlickRow({ flick, position }: FlickRowProps) {
   const flickUrl = `/catalog/flicks/${flick.id}`;
-  const flickImageUrl = api.utils.getImageUrl(flick.imageId!);
+  const flickImageUrl = (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
 
   return (
     <tr>

@@ -118,7 +118,7 @@ function SocialShareLinks({ flick }: { flick: FlickResponse }) {
 }
 
 function FlickData({ flick }: { flick: FlickResponse }) {
-  const flickImageUrl = api.utils.getImageUrl(flick.imageId!);
+  const flickImageUrl = (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
 
   return (
     <div>

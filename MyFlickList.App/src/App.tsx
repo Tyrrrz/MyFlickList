@@ -6,6 +6,7 @@ import SearchFlicks from './pages/catalog/SearchFlicks';
 import TopFlicks from './pages/catalog/TopFlicks';
 import TrendingFlicks from './pages/catalog/TrendingFlicks';
 import ViewFlick from './pages/catalog/ViewFlick';
+import Credits from './pages/Credits';
 import Home from './pages/Home';
 import Link from './shared/Link';
 import Meta from './shared/Meta';
@@ -109,6 +110,8 @@ function Footer() {
       <Link href="https://tyrrrz.me/donate">Donate</Link>
       {' • '}
       <Link href="https://github.com/Tyrrrz/MyFlickList">Source</Link>
+      {' • '}
+      <Link href="/credits">Credits</Link>
     </footer>
   );
 }
@@ -130,6 +133,7 @@ export default function App() {
           <Route path="/catalog/flicks/request" component={RequestFlick} />
           <Route path="/catalog/flicks/:flickId" component={ViewFlick} />
           <Route path="/catalog" render={() => <Redirect to="/catalog/flicks/top" />} />
+          <Route path="/credits" component={Credits} />
           <Route path="/" component={Home} />
         </Switch>
       </main>
