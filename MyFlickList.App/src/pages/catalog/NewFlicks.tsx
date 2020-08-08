@@ -25,7 +25,7 @@ export default function NewFlicks() {
         render={(fs) => (
           <>
             <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />
-            <Paginator currentPage={pageNumber} lastPage={fs.totalPageCount} getPageHref={(p) => `?page=${p}`} />
+            <Paginator currentPage={pageNumber} lastPage={fs.totalPages} getPageHref={(p) => `?page=${p}`} />
           </>
         )}
       />

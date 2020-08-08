@@ -356,7 +356,7 @@ export class ProblemDetails {
 export class PaginatedResponseOfFlickListingResponse {
     items!: FlickListingResponse[];
     page!: number;
-    totalPageCount!: number;
+    totalPages!: number;
 
     init(_data?: any) {
         if (_data) {
@@ -366,7 +366,7 @@ export class PaginatedResponseOfFlickListingResponse {
                     this.items!.push(FlickListingResponse.fromJS(item));
             }
             this.page = _data["page"];
-            this.totalPageCount = _data["totalPageCount"];
+            this.totalPages = _data["totalPages"];
         }
     }
 
@@ -385,7 +385,7 @@ export class PaginatedResponseOfFlickListingResponse {
                 data["items"].push(item.toJSON());
         }
         data["page"] = this.page;
-        data["totalPageCount"] = this.totalPageCount;
+        data["totalPages"] = this.totalPages;
         return data; 
     }
 }

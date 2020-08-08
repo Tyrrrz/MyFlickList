@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using MyFlickList.Api.Entities.Catalog;
+using MyFlickList.Api.Exceptions;
 using MyFlickList.Api.Internal.Extensions;
 using TMDbLib.Client;
 using TMDbLib.Objects.Find;
@@ -32,7 +33,7 @@ namespace MyFlickList.Api.Services
             {
                 var apiKey =
                     configuration.GetSection("ApiKeys")?.GetValue<string>("Tmdb") ??
-                    throw new InvalidOperationException("Missing TMDB API key.");
+                    throw new ConfigurationException("Missing TMDB API key.");
 
                 return new TMDbClient(apiKey);
             });
@@ -140,7 +141,7 @@ namespace MyFlickList.Api.Services
             }
             else
             {
-                throw new InvalidOperationException("Can't find.");
+                throw new DomainException($"Cannot find IMDB title with ID '{flickId}'.", StatusCodeHint.NotFound);
             }
         }
     }

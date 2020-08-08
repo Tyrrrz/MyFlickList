@@ -16,13 +16,13 @@ namespace MyFlickList.Api.Models
         public int Page { get; }
 
         [Required]
-        public int TotalPageCount { get; }
+        public int TotalPages { get; }
 
-        public PaginatedResponse(IReadOnlyList<T> items, int page, int totalPageCount)
+        public PaginatedResponse(IReadOnlyList<T> items, int page, int totalPages)
         {
             Items = items;
             Page = page;
-            TotalPageCount = totalPageCount;
+            TotalPages = totalPages;
         }
     }
 
