@@ -3,9 +3,9 @@ using Npgsql;
 
 namespace MyFlickList.Data
 {
-    public static class PostgresUrl
+    public static class Postgres
     {
-        public static string ToConnectionString(string url)
+        public static string UrlToConnectionString(string url)
         {
             // postgres://user:password@host:port/database
 

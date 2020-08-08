@@ -24,7 +24,7 @@ namespace MyFlickList.Api
         private string GetDatabaseConnectionString() =>
             Configuration.GetConnectionString("Database") ??
             // The following is set by Heroku directly
-            Environment.GetEnvironmentVariable("DATABASE_URL")?.Pipe(PostgresUrl.ToConnectionString!) ??
+            Environment.GetEnvironmentVariable("DATABASE_URL")?.Pipe(Postgres.UrlToConnectionString!) ??
             throw new InvalidOperationException("Database connection string not set.");
 
         private string[] GetAllowedOrigins() =>

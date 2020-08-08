@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Data;
 using MyFlickList.Data.Entities.Catalog;
 using TMDbLib.Client;
@@ -91,20 +92,15 @@ namespace MyFlickList.Api.Services
                 ? await StoreImageAsync(movie.PosterPath)
                 : (Guid?) null;
 
-            // Runtime
-            var runtime = movie.Runtime != null
-                ? TimeSpan.FromMinutes(movie.Runtime.Value)
-                : (TimeSpan?) null;
-
             var flickEntity = new FlickEntity
             {
                 Id = id,
                 Kind = FlickKind.Movie,
                 Title = movie.Title,
                 PremiereDate = movie.ReleaseDate,
-                Synopsis = movie.Overview,
-                Runtime = runtime,
+                Runtime = movie.Runtime?.Pipe(m => TimeSpan.FromMinutes(m)).NullIf(t => t.TotalSeconds <= 0),
                 ExternalRating = movie.VoteAverage,
+                Synopsis = movie.Overview,
                 ImageId = imageId
             };
 
@@ -122,23 +118,17 @@ namespace MyFlickList.Api.Services
                 ? await StoreImageAsync(series.PosterPath)
                 : (Guid?) null;
 
-            // Runtime
-            var runtime = TimeSpan.FromMinutes(series.EpisodeRunTime.Average());
-
-            // Finale date
-            var finaleDate = !series.InProduction ? series.LastAirDate : null;
-
             var flickEntity = new FlickEntity
             {
                 Id = id,
                 Kind = FlickKind.Series,
                 Title = series.Name,
                 PremiereDate = series.FirstAirDate,
-                FinaleDate = finaleDate,
-                Synopsis = series.Overview,
-                Runtime = runtime,
+                FinaleDate = series.LastAirDate?.NullIf(series.InProduction),
+                Runtime = series.EpisodeRunTime.Average().Pipe(TimeSpan.FromMinutes),
                 EpisodeCount = series.NumberOfEpisodes,
                 ExternalRating = series.VoteAverage,
+                Synopsis = series.Overview,
                 ImageId = imageId
             };
 
