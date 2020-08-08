@@ -91,7 +91,14 @@ export default function RequestFlick() {
       >
         <div className="form-group">
           <label htmlFor="imdbId">IMDB link</label>
-          <input className="form-control" type="url" id="imdbId" disabled={busy} onChange={(e) => setImdbUrl(e.target.value)} />
+          <input
+            className="form-control"
+            type="url"
+            id="imdbId"
+            disabled={busy}
+            value={imdbUrl}
+            onChange={(e) => setImdbUrl(e.target.value)}
+          />
         </div>
 
         <ErrorHandler error={error} />

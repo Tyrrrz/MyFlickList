@@ -80,22 +80,21 @@ function Header() {
 
       {searchVisible && (
         <form
-          className="my-2 my-lg-0 form-inline fade-unfocused"
+          className="my-2 form-inline fade-unfocused"
           onSubmit={(e) => {
             e.preventDefault();
             history.push(`/catalog/flicks/search?query=${searchQuery}`);
           }}
         >
-          <div className="form-row">
-            <div className="col">
-              <input className="form-control" type="search" aria-label="Search" onChange={(e) => setSearchQuery(e.target.value)} />
-            </div>
-            <div className="col-auto">
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </div>
-          </div>
+          <input
+            className="form-control"
+            type="search"
+            aria-label="Search"
+            placeholder="Search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit" hidden />
         </form>
       )}
     </nav>
