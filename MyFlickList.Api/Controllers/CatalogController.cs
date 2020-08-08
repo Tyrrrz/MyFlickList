@@ -46,6 +46,7 @@ namespace MyFlickList.Api.Controllers
             var flicks = _dbContext.Flicks
                 .Where(f => f.ExternalRating != null)
                 .OrderByDescending(f => f.ExternalRating)
+                .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -60,6 +61,7 @@ namespace MyFlickList.Api.Controllers
             // TODO: order by trendiness
             var flicks = _dbContext.Flicks
                 .OrderByDescending(f => f.Id)
+                .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -74,6 +76,7 @@ namespace MyFlickList.Api.Controllers
             var flicks = _dbContext.Flicks
                 .Where(f => f.PremiereDate != null)
                 .OrderByDescending(f => f.PremiereDate)
+                .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -85,11 +88,14 @@ namespace MyFlickList.Api.Controllers
         [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
         public async Task<IActionResult> SearchFlicks(string query, int page = 1)
         {
-            var actualQuery = query.Trim();
+            var querySanitized = query.ToLower().Trim();
 
             var flicks = _dbContext.Flicks
-                .Where(f => f.Title.ToLower().Contains(actualQuery.ToLower()))
-                .OrderBy(f => f.Title.Length - actualQuery.Length)
+                // Match flick titles that contain the query (strip accents for "Pokemon" -> "Pokémon")
+                .Where(f => Postgres.Unaccent(f.Title.ToLower()).Contains(Postgres.Unaccent(querySanitized)))
+                // Order by how similar the strings are, in terms of length
+                .OrderBy(f => f.Title.Length - querySanitized.Length)
+                .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);

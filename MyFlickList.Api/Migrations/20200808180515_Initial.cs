@@ -7,6 +7,9 @@ namespace MyFlickList.Api.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:unaccent", ",,");
+
             migrationBuilder.CreateTable(
                 name: "Actors",
                 columns: table => new
@@ -17,26 +20,6 @@ namespace MyFlickList.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Actors", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Flicks",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Kind = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: false),
-                    PremiereDate = table.Column<DateTimeOffset>(nullable: true),
-                    FinaleDate = table.Column<DateTimeOffset>(nullable: true),
-                    Runtime = table.Column<TimeSpan>(nullable: true),
-                    EpisodeCount = table.Column<int>(nullable: true),
-                    ExternalRating = table.Column<double>(nullable: true),
-                    Synopsis = table.Column<string>(nullable: true),
-                    ImageId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Flicks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,6 +44,32 @@ namespace MyFlickList.Api.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Name);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Flicks",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Kind = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    PremiereDate = table.Column<DateTimeOffset>(nullable: true),
+                    FinaleDate = table.Column<DateTimeOffset>(nullable: true),
+                    Runtime = table.Column<TimeSpan>(nullable: true),
+                    EpisodeCount = table.Column<int>(nullable: true),
+                    ExternalRating = table.Column<double>(nullable: true),
+                    Synopsis = table.Column<string>(nullable: true),
+                    ImageId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Flicks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Flicks_Images_ImageId",
+                        column: x => x.ImageId,
+                        principalTable: "Images",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -167,6 +176,12 @@ namespace MyFlickList.Api.Migrations
                 column: "FlickId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Flicks_ImageId",
+                table: "Flicks",
+                column: "ImageId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ListedFlickEntity_FlickId",
                 table: "ListedFlickEntity",
                 column: "FlickId");
@@ -186,9 +201,6 @@ namespace MyFlickList.Api.Migrations
                 name: "ExternalResources");
 
             migrationBuilder.DropTable(
-                name: "Images");
-
-            migrationBuilder.DropTable(
                 name: "ListedFlickEntity");
 
             migrationBuilder.DropTable(
@@ -202,6 +214,9 @@ namespace MyFlickList.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "Images");
         }
     }
 }

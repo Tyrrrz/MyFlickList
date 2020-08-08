@@ -10,13 +10,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MyFlickList.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200808134154_Initial")]
+    [Migration("20200808180515_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasAnnotation("Npgsql:PostgresExtension:unaccent", ",,")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
@@ -121,6 +122,9 @@ namespace MyFlickList.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ImageId")
+                        .IsUnique();
+
                     b.ToTable("Flicks");
                 });
 
@@ -207,6 +211,13 @@ namespace MyFlickList.Api.Migrations
                         .HasForeignKey("FlickId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.FlickEntity", b =>
+                {
+                    b.HasOne("MyFlickList.Api.Entities.Catalog.ImageEntity", null)
+                        .WithOne()
+                        .HasForeignKey("MyFlickList.Api.Entities.Catalog.FlickEntity", "ImageId");
                 });
 
             modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.TagLinkEntity", b =>

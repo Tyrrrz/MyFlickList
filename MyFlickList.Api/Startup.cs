@@ -16,6 +16,8 @@ namespace MyFlickList.Api
 {
     public class Startup
     {
+        private const string ApplicationTitle = "MyFlickList API";
+
         public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration) =>
@@ -33,15 +35,25 @@ namespace MyFlickList.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<AppDbContext>(o => o.UseNpgsql(GetDatabaseConnectionString()), 20);
+            // Database
+            services.AddDbContextPool<AppDbContext>(o =>
+            {
+                o.UseNpgsql(GetDatabaseConnectionString());
+                o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }, 20);
+
+            // Request handling
             services.AddCors();
             services.AddResponseCaching();
             services.AddResponseCompression();
-            services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
             services.AddControllers().AddNewtonsoftJson(s => s.SerializerSettings.Converters.Add(new StringEnumConverter()));
-            services.AddOpenApiDocument(d => d.Title = "MyFlickList API");
+
+            // Infrastructure
+            services.AddOpenApiDocument(d => d.Title = ApplicationTitle);
+            services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
             services.AddAutoMapper(typeof(Mapping));
 
+            // Domain services
             services.AddHttpClient<ICatalogPopulator, TmdbCatalogPopulator>();
         }
 
@@ -69,7 +81,7 @@ namespace MyFlickList.Api
             });
 
             app.UseOpenApi();
-            app.UseSwaggerUi3(s => s.DocumentTitle = "MyFlickList API");
+            app.UseSwaggerUi3(s => s.DocumentTitle = ApplicationTitle);
         }
     }
 }

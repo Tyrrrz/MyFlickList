@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Entities.Catalog;
+using MyFlickList.Api.Internal;
 
 namespace MyFlickList.Api
 {
@@ -26,7 +27,15 @@ namespace MyFlickList.Api
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Unaccent extension
+            modelBuilder.HasPostgresExtension("unaccent");
+            modelBuilder.HasDbFunction(typeof(Postgres).GetMethod(nameof(Postgres.Unaccent))).HasName("unaccent");
+
             // Catalog
+
+            modelBuilder.Entity<FlickEntity>(
+                e => e.HasOne<ImageEntity>().WithOne().HasForeignKey<FlickEntity>(o => o.ImageId)
+            );
 
             modelBuilder.Entity<TagLinkEntity>(
                 e => e.HasKey(o => new {o.FlickId, o.TagName})

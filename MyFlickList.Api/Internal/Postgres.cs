@@ -3,7 +3,7 @@ using Npgsql;
 
 namespace MyFlickList.Api.Internal
 {
-    internal static class Postgres
+    internal static partial class Postgres
     {
         public static string UrlToConnectionString(string url)
         {
@@ -24,5 +24,11 @@ namespace MyFlickList.Api.Internal
 
             return builder.ConnectionString;
         }
+    }
+
+    // DB Functions
+    internal partial class Postgres
+    {
+        public static string Unaccent(string value) => throw new NotSupportedException();
     }
 }
