@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyFlickList.Data.Entities.Catalog;
+using MyFlickList.Api.Entities.Catalog;
 
-namespace MyFlickList.Data
+namespace MyFlickList.Api
 {
     public class AppDbContext : DbContext
     {

@@ -8,7 +8,6 @@ using MyFlickList.Api.Internal;
 using MyFlickList.Api.Models;
 using MyFlickList.Api.Models.Catalog;
 using MyFlickList.Api.Services;
-using MyFlickList.Data;
 
 namespace MyFlickList.Api.Controllers
 {

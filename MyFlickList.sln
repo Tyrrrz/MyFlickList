@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFlickList.Api", "MyFlickL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFlickList.CatalogPopulator", "MyFlickList.CatalogPopulator\MyFlickList.CatalogPopulator.csproj", "{43D57355-04D1-49A9-8C5D-B5F33921ABB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFlickList.Data", "MyFlickList.Data\MyFlickList.Data.csproj", "{47612B13-E4FD-4770-B58F-3A1124C3E31C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyFlickList.Api.Tests", "MyFlickList.Api.Tests\MyFlickList.Api.Tests.csproj", "{5886C953-7768-4D94-B4AA-3F054662F676}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{3058F6B6-956C-40E1-8729-A234FBF4F81C}"
@@ -33,10 +31,6 @@ Global
 		{43D57355-04D1-49A9-8C5D-B5F33921ABB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43D57355-04D1-49A9-8C5D-B5F33921ABB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43D57355-04D1-49A9-8C5D-B5F33921ABB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47612B13-E4FD-4770-B58F-3A1124C3E31C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47612B13-E4FD-4770-B58F-3A1124C3E31C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47612B13-E4FD-4770-B58F-3A1124C3E31C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47612B13-E4FD-4770-B58F-3A1124C3E31C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5886C953-7768-4D94-B4AA-3F054662F676}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5886C953-7768-4D94-B4AA-3F054662F676}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5886C953-7768-4D94-B4AA-3F054662F676}.Release|Any CPU.ActiveCfg = Release|Any CPU

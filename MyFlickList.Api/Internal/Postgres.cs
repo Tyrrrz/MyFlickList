@@ -1,9 +1,9 @@
 ﻿using System;
 using Npgsql;
 
-namespace MyFlickList.Data
+namespace MyFlickList.Api.Internal
 {
-    public static class Postgres
+    internal static class Postgres
     {
         public static string UrlToConnectionString(string url)
         {

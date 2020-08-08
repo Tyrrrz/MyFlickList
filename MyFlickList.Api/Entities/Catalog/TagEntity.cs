@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyFlickList.Data.Entities.Catalog
+namespace MyFlickList.Api.Entities.Catalog
 {
     public class TagEntity
     {

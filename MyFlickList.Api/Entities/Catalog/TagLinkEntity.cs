@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MyFlickList.Data.Entities.Catalog
+namespace MyFlickList.Api.Entities.Catalog
 {
     public class TagLinkEntity
     {

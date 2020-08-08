@@ -2,16 +2,18 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyFlickList.Data;
+using MyFlickList.Api;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace MyFlickList.Data.Migrations
+namespace MyFlickList.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200808134154_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,7 +21,7 @@ namespace MyFlickList.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.ActorEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.ActorEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,7 +36,7 @@ namespace MyFlickList.Data.Migrations
                     b.ToTable("Actors");
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.CharacterEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.CharacterEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +62,7 @@ namespace MyFlickList.Data.Migrations
                     b.ToTable("Characters");
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.ExternalResourceEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.ExternalResourceEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,7 +86,7 @@ namespace MyFlickList.Data.Migrations
                     b.ToTable("ExternalResources");
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.FlickEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.FlickEntity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -122,7 +124,7 @@ namespace MyFlickList.Data.Migrations
                     b.ToTable("Flicks");
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.ImageEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.ImageEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -141,7 +143,7 @@ namespace MyFlickList.Data.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.TagEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.TagEntity", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -151,7 +153,7 @@ namespace MyFlickList.Data.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.TagLinkEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.TagLinkEntity", b =>
                 {
                     b.Property<string>("FlickId")
                         .HasColumnType("text");
@@ -166,7 +168,7 @@ namespace MyFlickList.Data.Migrations
                     b.ToTable("TagLinks");
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Lists.ListedFlickEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Lists.ListedFlickEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -183,48 +185,48 @@ namespace MyFlickList.Data.Migrations
                     b.ToTable("ListedFlickEntity");
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.CharacterEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.CharacterEntity", b =>
                 {
-                    b.HasOne("MyFlickList.Data.Entities.Catalog.ActorEntity", "Actor")
+                    b.HasOne("MyFlickList.Api.Entities.Catalog.ActorEntity", "Actor")
                         .WithMany("Characters")
                         .HasForeignKey("ActorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyFlickList.Data.Entities.Catalog.FlickEntity", "Flick")
+                    b.HasOne("MyFlickList.Api.Entities.Catalog.FlickEntity", "Flick")
                         .WithMany("Characters")
                         .HasForeignKey("FlickId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.ExternalResourceEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.ExternalResourceEntity", b =>
                 {
-                    b.HasOne("MyFlickList.Data.Entities.Catalog.FlickEntity", "Flick")
+                    b.HasOne("MyFlickList.Api.Entities.Catalog.FlickEntity", "Flick")
                         .WithMany("Resources")
                         .HasForeignKey("FlickId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Catalog.TagLinkEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Catalog.TagLinkEntity", b =>
                 {
-                    b.HasOne("MyFlickList.Data.Entities.Catalog.FlickEntity", "Flick")
+                    b.HasOne("MyFlickList.Api.Entities.Catalog.FlickEntity", "Flick")
                         .WithMany("TagLinks")
                         .HasForeignKey("FlickId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyFlickList.Data.Entities.Catalog.TagEntity", "Tag")
+                    b.HasOne("MyFlickList.Api.Entities.Catalog.TagEntity", "Tag")
                         .WithMany("TagLinks")
                         .HasForeignKey("TagName")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyFlickList.Data.Entities.Lists.ListedFlickEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Entities.Lists.ListedFlickEntity", b =>
                 {
-                    b.HasOne("MyFlickList.Data.Entities.Catalog.FlickEntity", "Flick")
+                    b.HasOne("MyFlickList.Api.Entities.Catalog.FlickEntity", "Flick")
                         .WithMany("Listed")
                         .HasForeignKey("FlickId")
                         .OnDelete(DeleteBehavior.Cascade)

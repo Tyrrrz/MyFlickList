@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using MyFlickList.Api.Entities.Catalog;
 using MyFlickList.Api.Models.Catalog;
-using MyFlickList.Data.Entities.Catalog;
 
 namespace MyFlickList.Api.Models
 {

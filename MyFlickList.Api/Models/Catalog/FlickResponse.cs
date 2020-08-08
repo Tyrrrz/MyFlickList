@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using MyFlickList.Data.Entities.Catalog;
+using MyFlickList.Api.Entities.Catalog;
 
 namespace MyFlickList.Api.Models.Catalog
 {

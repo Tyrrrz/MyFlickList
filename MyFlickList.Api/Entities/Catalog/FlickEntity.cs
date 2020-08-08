@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using MyFlickList.Data.Entities.Lists;
+using MyFlickList.Api.Entities.Lists;
 
-namespace MyFlickList.Data.Entities.Catalog
+namespace MyFlickList.Api.Entities.Catalog
 {
     public enum FlickKind { Movie, Series }
 

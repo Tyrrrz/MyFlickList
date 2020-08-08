@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyFlickList.Api.Internal;
 using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Api.Models;
 using MyFlickList.Api.Services;
-using MyFlickList.Data;
 using Newtonsoft.Json.Converters;
 
 namespace MyFlickList.Api
