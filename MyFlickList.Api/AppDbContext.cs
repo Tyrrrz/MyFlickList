@@ -22,7 +22,7 @@ namespace MyFlickList.Api
 
         public DbSet<TagEntity> Tags { get; set; } = default!;
 
-        public DbSet<TagLinkEntity> TagLinks { get; set; } = default!;
+        public DbSet<FlickTagEntity> FlickTags { get; set; } = default!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -50,7 +50,7 @@ namespace MyFlickList.Api
                 .HasForeignKey<FlickEntity>(o => o.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<TagLinkEntity>().HasKey(o => new {o.FlickId, o.TagName});
+            modelBuilder.Entity<FlickTagEntity>().HasKey(o => new {o.FlickId, o.TagName});
         }
     }
 }

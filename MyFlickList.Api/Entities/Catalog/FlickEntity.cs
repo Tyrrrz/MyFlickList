@@ -35,7 +35,7 @@ namespace MyFlickList.Api.Entities.Catalog
 
         public ICollection<CharacterEntity> Characters { get; set; } = new List<CharacterEntity>();
 
-        public ICollection<TagLinkEntity> TagLinks { get; set; } = new List<TagLinkEntity>();
+        public ICollection<FlickTagEntity> FlickTags { get; set; } = new List<FlickTagEntity>();
 
         public ICollection<ListedFlickEntity> Listed { get; set; } = new List<ListedFlickEntity>();
     }

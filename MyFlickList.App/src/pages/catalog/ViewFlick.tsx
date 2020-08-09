@@ -1,4 +1,12 @@
-import { mdiCalendarBlank, mdiClockOutline, mdiMovieOpenOutline, mdiOpenInNew, mdiShareVariantOutline, mdiStarOutline } from '@mdi/js';
+import {
+  mdiCalendarBlank,
+  mdiClockOutline,
+  mdiMovieOpenOutline,
+  mdiOpenInNew,
+  mdiShareVariantOutline,
+  mdiStarOutline,
+  mdiTagOutline
+} from '@mdi/js';
 import React from 'react';
 import { useParams } from 'react-router';
 import api from '../../infra/api';
@@ -49,6 +57,12 @@ function formatRuntime(flick: FlickResponse) {
       : `${minutes} ${minutesSuffix}`;
 
   return flick.kind === FlickKind.Series ? `${formatted} / episode` : formatted;
+}
+
+function formatTags(flick: FlickResponse) {
+  if (!flick.tags || flick.tags.length <= 0) return '--';
+
+  return flick.tags.join(', ');
 }
 
 function NetworkLinks({ flick }: { flick: FlickResponse }) {
@@ -142,6 +156,9 @@ function FlickData({ flick }: { flick: FlickResponse }) {
             </div>
             <div className="my-1">
               <Icon path={mdiClockOutline} /> <span>{formatRuntime(flick)}</span>
+            </div>
+            <div className="my-1">
+              <Icon path={mdiTagOutline} /> <span>{formatTags(flick)}</span>
             </div>
 
             <hr className="w-75" />

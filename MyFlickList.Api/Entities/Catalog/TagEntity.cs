@@ -9,6 +9,6 @@ namespace MyFlickList.Api.Entities.Catalog
         [Required(AllowEmptyStrings = false)]
         public string Name { get; set; } = default!;
 
-        public ICollection<TagLinkEntity> TagLinks { get; set; } = new List<TagLinkEntity>();
+        public ICollection<FlickTagEntity> FlickTags { get; set; } = new List<FlickTagEntity>();
     }
 }

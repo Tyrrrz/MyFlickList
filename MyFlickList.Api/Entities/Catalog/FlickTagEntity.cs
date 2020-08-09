@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyFlickList.Api.Entities.Catalog
 {
-    public class TagLinkEntity
+    public class FlickTagEntity
     {
         [Required(AllowEmptyStrings = false)]
         public string FlickId { get; set; } = default!;

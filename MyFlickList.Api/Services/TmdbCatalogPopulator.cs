@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MyFlickList.Api.Entities.Catalog;
 using MyFlickList.Api.Exceptions;
@@ -54,11 +55,31 @@ namespace MyFlickList.Api.Services
             return entity.Id;
         }
 
+        private async Task AddOrUpdateTagAsync(TagEntity tagEntity)
+        {
+            var existing = await _dbContext.Tags.FindAsync(tagEntity.Name);
+
+            if (existing != null)
+            {
+                return;
+            }
+
+            await _dbContext.Tags.AddAsync(tagEntity);
+        }
+
         private async Task AddOrUpdateFlickAsync(FlickEntity flickEntity)
         {
-            var existing = new FlickEntity {Id = flickEntity.Id};
-            _dbContext.Remove(existing);
-            await _dbContext.AddAsync(flickEntity);
+            var existing = await _dbContext.Flicks
+                .Include(f => f.FlickTags)
+                .SingleOrDefaultAsync(f => f.Id == flickEntity.Id);
+
+            if (existing != null)
+            {
+                _dbContext.Flicks.Remove(existing);
+                _dbContext.FlickTags.RemoveRange(existing.FlickTags);
+            }
+
+            await _dbContext.Flicks.AddAsync(flickEntity);
         }
 
         private async Task PopulateMovieFlickAsync(Movie movie)
@@ -82,6 +103,18 @@ namespace MyFlickList.Api.Services
                 Synopsis = movie.Overview,
                 ImageId = imageId
             };
+
+            // Tags
+            foreach (var genre in movie.Genres)
+            {
+                await AddOrUpdateTagAsync(new TagEntity {Name = genre.Name});
+
+                flickEntity.FlickTags.Add(new FlickTagEntity
+                {
+                    FlickId = id,
+                    TagName = genre.Name
+                });
+            }
 
             await AddOrUpdateFlickAsync(flickEntity);
             await _dbContext.SaveChangesAsync();
@@ -111,6 +144,18 @@ namespace MyFlickList.Api.Services
                 Synopsis = series.Overview,
                 ImageId = imageId
             };
+
+            // Tags
+            foreach (var genre in series.Genres)
+            {
+                await AddOrUpdateTagAsync(new TagEntity {Name = genre.Name});
+
+                flickEntity.FlickTags.Add(new FlickTagEntity
+                {
+                    FlickId = id,
+                    TagName = genre.Name
+                });
+            }
 
             await AddOrUpdateFlickAsync(flickEntity);
             await _dbContext.SaveChangesAsync();

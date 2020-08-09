@@ -7,6 +7,103 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
+export class AuthClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
+    }
+
+    register(request: RegisterRequest): Promise<void> {
+        let url_ = this.baseUrl + "/auth/register";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRegister(_response);
+        });
+    }
+
+    protected processRegister(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    login(request: LoginRequest): Promise<LoginResponse> {
+        let url_ = this.baseUrl + "/auth/login";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processLogin(_response);
+        });
+    }
+
+    protected processLogin(response: Response): Promise<LoginResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = LoginResponse.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<LoginResponse>(<any>null);
+    }
+}
+
 export class CatalogClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -353,6 +450,84 @@ export class ProblemDetails {
     }
 }
 
+export class RegisterRequest {
+    userName!: string;
+    email!: string;
+    password!: string;
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.email = _data["email"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): RegisterRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new RegisterRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
+        data["email"] = this.email;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
+export class LoginResponse {
+    token!: string;
+
+    init(_data?: any) {
+        if (_data) {
+            this.token = _data["token"];
+        }
+    }
+
+    static fromJS(data: any): LoginResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["token"] = this.token;
+        return data; 
+    }
+}
+
+export class LoginRequest {
+    userName!: string;
+    password!: string;
+
+    init(_data?: any) {
+        if (_data) {
+            this.userName = _data["userName"];
+            this.password = _data["password"];
+        }
+    }
+
+    static fromJS(data: any): LoginRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new LoginRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userName"] = this.userName;
+        data["password"] = this.password;
+        return data; 
+    }
+}
+
 export class PaginatedResponseOfFlickListingResponse {
     items!: FlickListingResponse[];
     page!: number;
@@ -400,6 +575,7 @@ export class FlickListingResponse {
     episodeCount?: number | undefined;
     externalRating?: number | undefined;
     imageId?: string | undefined;
+    tags?: string[];
 
     init(_data?: any) {
         if (_data) {
@@ -412,6 +588,11 @@ export class FlickListingResponse {
             this.episodeCount = _data["episodeCount"];
             this.externalRating = _data["externalRating"];
             this.imageId = _data["imageId"];
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
         }
     }
 
@@ -433,6 +614,11 @@ export class FlickListingResponse {
         data["episodeCount"] = this.episodeCount;
         data["externalRating"] = this.externalRating;
         data["imageId"] = this.imageId;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
         return data; 
     }
 }
@@ -442,30 +628,13 @@ export enum FlickKind {
     Series = "Series",
 }
 
-export class FlickResponse {
-    id!: string;
-    kind!: FlickKind;
-    title!: string;
-    premiereDate?: Date | undefined;
-    finaleDate?: Date | undefined;
-    runtime?: string | undefined;
-    episodeCount?: number | undefined;
-    externalRating?: number | undefined;
+export class FlickResponse extends FlickListingResponse {
     synopsis?: string | undefined;
-    imageId?: string | undefined;
 
     init(_data?: any) {
+        super.init(_data);
         if (_data) {
-            this.id = _data["id"];
-            this.kind = _data["kind"];
-            this.title = _data["title"];
-            this.premiereDate = _data["premiereDate"] ? new Date(_data["premiereDate"].toString()) : <any>undefined;
-            this.finaleDate = _data["finaleDate"] ? new Date(_data["finaleDate"].toString()) : <any>undefined;
-            this.runtime = _data["runtime"];
-            this.episodeCount = _data["episodeCount"];
-            this.externalRating = _data["externalRating"];
             this.synopsis = _data["synopsis"];
-            this.imageId = _data["imageId"];
         }
     }
 
@@ -478,16 +647,8 @@ export class FlickResponse {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["kind"] = this.kind;
-        data["title"] = this.title;
-        data["premiereDate"] = this.premiereDate ? this.premiereDate.toISOString() : <any>undefined;
-        data["finaleDate"] = this.finaleDate ? this.finaleDate.toISOString() : <any>undefined;
-        data["runtime"] = this.runtime;
-        data["episodeCount"] = this.episodeCount;
-        data["externalRating"] = this.externalRating;
         data["synopsis"] = this.synopsis;
-        data["imageId"] = this.imageId;
+        super.toJSON(data);
         return data; 
     }
 }

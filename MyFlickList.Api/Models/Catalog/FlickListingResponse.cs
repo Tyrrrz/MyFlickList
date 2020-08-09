@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using MyFlickList.Api.Entities.Catalog;
 
@@ -26,5 +27,7 @@ namespace MyFlickList.Api.Models.Catalog
         public double? ExternalRating { get; set; }
 
         public Guid? ImageId { get; set; }
+
+        public IReadOnlyList<string> Tags { get; set; } = Array.Empty<string>();
     }
 }

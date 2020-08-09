@@ -8,8 +8,17 @@ namespace MyFlickList.Api.Models
     {
         public Mapping()
         {
-            CreateMap<FlickEntity, FlickListingResponse>();
-            CreateMap<FlickEntity, FlickResponse>();
+            CreateMap<TagEntity, string>()
+                .ConvertUsing(o => o.Name);
+
+            CreateMap<FlickTagEntity, string>()
+                .ConvertUsing(o => o.TagName);
+
+            CreateMap<FlickEntity, FlickListingResponse>()
+                .ForMember(o => o.Tags, x => x.MapFrom(o => o.FlickTags));
+
+            CreateMap<FlickEntity, FlickResponse>()
+                .ForMember(o => o.Tags, x => x.MapFrom(o => o.FlickTags));
         }
     }
 }

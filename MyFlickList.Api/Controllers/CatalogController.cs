@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Internal;
 using MyFlickList.Api.Models;
 using MyFlickList.Api.Models.Catalog;
@@ -47,6 +48,7 @@ namespace MyFlickList.Api.Controllers
                 .Where(f => f.ExternalRating != null)
                 .OrderByDescending(f => f.ExternalRating)
                 .Take(100)
+                .Include(f => f.FlickTags)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -62,6 +64,7 @@ namespace MyFlickList.Api.Controllers
             var flicks = _dbContext.Flicks
                 .OrderByDescending(f => f.Id)
                 .Take(100)
+                .Include(f => f.FlickTags)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -77,6 +80,7 @@ namespace MyFlickList.Api.Controllers
                 .Where(f => f.PremiereDate != null)
                 .OrderByDescending(f => f.PremiereDate)
                 .Take(100)
+                .Include(f => f.FlickTags)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -96,6 +100,7 @@ namespace MyFlickList.Api.Controllers
                 // Order by how similar the strings are, in terms of length
                 .OrderBy(f => f.Title.Length - querySanitized.Length)
                 .Take(100)
+                .Include(f => f.FlickTags)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -108,7 +113,10 @@ namespace MyFlickList.Api.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetFlick(string flickId)
         {
-            var flick = await _dbContext.Flicks.FindAsync(flickId);
+            var flick = await _dbContext.Flicks
+                .Include(f => f.FlickTags)
+                .SingleOrDefaultAsync(f => f.Id == flickId);
+
             if (flick == null)
                 return NotFound();
 
