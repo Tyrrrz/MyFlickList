@@ -121,7 +121,7 @@ namespace MyFlickList.Api.Controllers
         [ProducesResponseType(201)]
         [ProducesResponseType(409)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> RequestFlick(string flickId) => await WrapAsync(async () =>
+        public async Task<IActionResult> RequestFlick(string flickId) => await HandleExceptionsAsync(async () =>
         {
             await _catalogPopulator.PopulateFlickAsync(flickId);
             return CreatedAtAction(nameof(GetFlick), new {flickId}, null);

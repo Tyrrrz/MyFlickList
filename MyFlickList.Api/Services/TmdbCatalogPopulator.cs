@@ -28,15 +28,8 @@ namespace MyFlickList.Api.Services
             _dbContext = dbContext;
             _httpClient = httpClient;
 
-            // We want this to be lazy so that constructor doesn't throw if API key is not set in configuration
-            _tmdbClientLazy = new Lazy<TMDbClient>(() =>
-            {
-                var apiKey =
-                    configuration.GetSection("ApiKeys")?.GetValue<string>("Tmdb") ??
-                    throw new ConfigurationException("Missing TMDB API key.");
-
-                return new TMDbClient(apiKey);
-            });
+            // We want this to be lazy so that constructor doesn't throw if the API key is not set in configuration
+            _tmdbClientLazy = new Lazy<TMDbClient>(() => new TMDbClient(configuration.GetTmdbApiKey()));
         }
 
         private async Task<Guid> StoreImageAsync(string imagePath)
@@ -77,6 +70,7 @@ namespace MyFlickList.Api.Services
                 ? await StoreImageAsync(movie.PosterPath)
                 : (Guid?) null;
 
+            // TODO: get external rating from IMDB, not TMDB
             var flickEntity = new FlickEntity
             {
                 Id = id,
@@ -103,6 +97,7 @@ namespace MyFlickList.Api.Services
                 ? await StoreImageAsync(series.PosterPath)
                 : (Guid?) null;
 
+            // TODO: get external rating from IMDB, not TMDB
             var flickEntity = new FlickEntity
             {
                 Id = id,

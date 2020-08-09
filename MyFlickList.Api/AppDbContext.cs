@@ -1,10 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Entities.Catalog;
+using MyFlickList.Api.Entities.Auth;
 using MyFlickList.Api.Internal;
 
 namespace MyFlickList.Api
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityUserContext<UserEntity, Guid>
     {
         public DbSet<ActorEntity> Actors { get; set; } = default!;
 
@@ -27,19 +31,26 @@ namespace MyFlickList.Api
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // Unaccent extension
             modelBuilder.HasPostgresExtension("unaccent");
             modelBuilder.HasDbFunction(typeof(Postgres).GetMethod(nameof(Postgres.Unaccent))).HasName("unaccent");
 
+            // Auth
+            modelBuilder.Entity<UserEntity>().ToTable("Users");
+            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
+            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
+            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
+
             // Catalog
+            modelBuilder.Entity<FlickEntity>()
+                .HasOne<ImageEntity>()
+                .WithOne()
+                .HasForeignKey<FlickEntity>(o => o.ImageId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<FlickEntity>(
-                e => e.HasOne<ImageEntity>().WithOne().HasForeignKey<FlickEntity>(o => o.ImageId).OnDelete(DeleteBehavior.Cascade)
-            );
-
-            modelBuilder.Entity<TagLinkEntity>(
-                e => e.HasKey(o => new {o.FlickId, o.TagName})
-            );
+            modelBuilder.Entity<TagLinkEntity>().HasKey(o => new {o.FlickId, o.TagName});
         }
     }
 }

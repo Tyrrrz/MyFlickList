@@ -7,7 +7,7 @@ namespace MyFlickList.Api.Controllers
 {
     public abstract class ControllerBase : Microsoft.AspNetCore.Mvc.ControllerBase
     {
-        protected async Task<IActionResult> WrapAsync(Func<Task<IActionResult>> executeAsync)
+        protected async Task<IActionResult> HandleExceptionsAsync(Func<Task<IActionResult>> executeAsync)
         {
             try
             {
@@ -23,7 +23,7 @@ namespace MyFlickList.Api.Controllers
                     _ => 500
                 };
 
-                return Problem(ex.Message, statusCode: statusCode, title: "Error");
+                return Problem(ex.Message, null, statusCode, "Error");
             }
         }
     }

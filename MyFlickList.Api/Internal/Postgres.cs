@@ -29,6 +29,7 @@ namespace MyFlickList.Api.Internal
     // DB Functions
     internal partial class Postgres
     {
-        public static string Unaccent(string value) => throw new NotSupportedException();
+        public static string Unaccent(string value) =>
+            throw new InvalidOperationException("This method is not meant to be called directly.");
     }
 }

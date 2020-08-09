@@ -28,20 +28,20 @@ namespace MyFlickList.Api.Models
 
     public static class PaginatedResponse
     {
-        public static PaginatedResponse<T> Create<T>(IReadOnlyList<T> items, int page, int totalPageCount) =>
-            new PaginatedResponse<T>(items, page, totalPageCount);
+        public static PaginatedResponse<T> Create<T>(IReadOnlyList<T> items, int page, int totalPages) =>
+            new PaginatedResponse<T>(items, page, totalPages);
 
         public static async Task<PaginatedResponse<T>> CreateAsync<T>(IQueryable<T> itemsQuery, int page, int itemsPerPage)
         {
-            var totalCount = await itemsQuery.CountAsync();
-            var totalPageCount = (int) Math.Ceiling(1.0 * totalCount / itemsPerPage);
+            var count = await itemsQuery.CountAsync();
+            var totalPages = (int) Math.Ceiling(1.0 * count / itemsPerPage);
 
             var skip = (page - 1) * itemsPerPage;
             var take = itemsPerPage;
 
             var items = await itemsQuery.Skip(skip).Take(take).ToArrayAsync();
 
-            return Create(items, page, totalPageCount);
+            return Create(items, page, totalPages);
         }
     }
 }
