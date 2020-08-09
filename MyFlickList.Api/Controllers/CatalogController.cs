@@ -47,8 +47,8 @@ namespace MyFlickList.Api.Controllers
             var flicks = _dbContext.Flicks
                 .Where(f => f.ExternalRating != null)
                 .OrderByDescending(f => f.ExternalRating)
-                .Take(100)
                 .Include(f => f.FlickTags)
+                .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -63,8 +63,8 @@ namespace MyFlickList.Api.Controllers
             // TODO: order by trendiness
             var flicks = _dbContext.Flicks
                 .OrderByDescending(f => f.Id)
-                .Take(100)
                 .Include(f => f.FlickTags)
+                .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -79,8 +79,8 @@ namespace MyFlickList.Api.Controllers
             var flicks = _dbContext.Flicks
                 .Where(f => f.PremiereDate != null)
                 .OrderByDescending(f => f.PremiereDate)
-                .Take(100)
                 .Include(f => f.FlickTags)
+                .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
@@ -99,8 +99,37 @@ namespace MyFlickList.Api.Controllers
                 .Where(f => Postgres.Unaccent(f.Title.ToLower()).Contains(Postgres.Unaccent(querySanitized)))
                 // Order by how similar the strings are, in terms of length
                 .OrderBy(f => f.Title.Length - querySanitized.Length)
-                .Take(100)
                 .Include(f => f.FlickTags)
+                .Take(100)
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
+
+            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
+
+            return Ok(response);
+        }
+
+        [HttpGet("tags")]
+        [ProducesResponseType(typeof(string[]), 200)]
+        public async Task<IActionResult> GetTags()
+        {
+            var response = await _dbContext.Tags
+                .OrderByDescending(t => t.FlickTags.Count)
+                .Select(t => t.Name)
+                .Take(50)
+                .ToArrayAsync();
+
+            return Ok(response);
+        }
+
+        [HttpGet("tags/{tagName}")]
+        [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
+        public async Task<IActionResult> GetTaggedFlicks(string tagName, int page = 1)
+        {
+            var flicks = _dbContext.Flicks
+                .Where(f => f.FlickTags.Any(t => t.TagName == tagName))
+                .OrderByDescending(f => f.ExternalRating)
+                .Include(f => f.FlickTags)
+                .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.CreateAsync(flicks, page, 10);

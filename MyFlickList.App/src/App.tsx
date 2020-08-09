@@ -3,6 +3,8 @@ import { matchPath, Redirect, Route, Switch, useHistory } from 'react-router-dom
 import NewFlicks from './pages/catalog/NewFlicks';
 import RequestFlick from './pages/catalog/RequestFlick';
 import SearchFlicks from './pages/catalog/SearchFlicks';
+import TaggedFlicks from './pages/catalog/TaggedFlicks';
+import Tags from './pages/catalog/Tags';
 import TopFlicks from './pages/catalog/TopFlicks';
 import TrendingFlicks from './pages/catalog/TrendingFlicks';
 import ViewFlick from './pages/catalog/ViewFlick';
@@ -74,6 +76,9 @@ function Header() {
               <Link className="dropdown-item" href="/catalog/flicks/request">
                 Add
               </Link>
+              <Link className="dropdown-item" href="/catalog/tags">
+                Tags
+              </Link>
             </div>
           </li>
         </ul>
@@ -134,6 +139,8 @@ export default function App() {
           <Route path="/catalog/flicks/search" component={SearchFlicks} />
           <Route path="/catalog/flicks/request" component={RequestFlick} />
           <Route path="/catalog/flicks/:flickId" component={ViewFlick} />
+          <Route path="/catalog/tags/:tagName" component={TaggedFlicks} />
+          <Route path="/catalog/tags" component={Tags} />
           <Route path="/catalog" render={() => <Redirect to="/catalog/flicks/top" />} />
           <Route path="/credits" component={Credits} />
           <Route path="/" component={Home} />

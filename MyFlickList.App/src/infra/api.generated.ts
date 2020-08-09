@@ -308,6 +308,85 @@ export class CatalogClient {
         return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
     }
 
+    getTags(): Promise<string[]> {
+        let url_ = this.baseUrl + "/catalog/tags";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetTags(_response);
+        });
+    }
+
+    protected processGetTags(response: Response): Promise<string[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(item);
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string[]>(<any>null);
+    }
+
+    getTaggedFlicks(tagName: string | null, page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
+        let url_ = this.baseUrl + "/catalog/tags/{tagName}?";
+        if (tagName === undefined || tagName === null)
+            throw new Error("The parameter 'tagName' must be defined.");
+        url_ = url_.replace("{tagName}", encodeURIComponent("" + tagName));
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetTaggedFlicks(_response);
+        });
+    }
+
+    protected processGetTaggedFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
+    }
+
     getFlick(flickId: string | null): Promise<FlickResponse> {
         let url_ = this.baseUrl + "/catalog/flicks/{flickId}";
         if (flickId === undefined || flickId === null)
