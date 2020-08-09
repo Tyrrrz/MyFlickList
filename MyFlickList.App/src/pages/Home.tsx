@@ -43,13 +43,13 @@ export default function Home() {
       {/* Top */}
       <div className="mt-4 mb-2">
         <Link className="text-body" href="/catalog/flicks/top">
-          <h3>Top Flicks</h3>
+          <h3>Top</h3>
         </Link>
         <div className="d-flex flex-row">
           <StateLoader
             state={topFlicks}
             error={topFlicksError}
-            render={(fs) => fs.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+            render={(fs) => fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
           />
         </div>
       </div>
@@ -57,13 +57,13 @@ export default function Home() {
       {/* Trending */}
       <div className="mt-4 mb-2">
         <Link className="text-body" href="/catalog/flicks/trending">
-          <h3>Trending Flicks</h3>
+          <h3>Trending</h3>
         </Link>
         <div className="d-flex flex-row">
           <StateLoader
             state={trendingFlicks}
             error={trendingFlicksError}
-            render={(fs) => fs.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+            render={(fs) => fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
           />
         </div>
       </div>
@@ -71,13 +71,13 @@ export default function Home() {
       {/* New */}
       <div className="mt-4 mb-2">
         <Link className="text-body" href="/catalog/flicks/new">
-          <h3>New Flicks</h3>
+          <h3>New</h3>
         </Link>
         <div className="d-flex flex-row">
           <StateLoader
             state={newFlicks}
             error={newFlicksError}
-            render={(fs) => fs.items.map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+            render={(fs) => fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
           />
         </div>
       </div>
