@@ -24,7 +24,7 @@ function Header() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <Link className="navbar-brand" href="/">
-        MyFlickList
+        <img className="align-top" src="/logo.png" alt="Logo" width={32} height={32} /> <span>MyFlickList</span>
       </Link>
 
       <button
