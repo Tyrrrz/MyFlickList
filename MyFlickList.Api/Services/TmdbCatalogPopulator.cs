@@ -45,12 +45,12 @@ namespace MyFlickList.Api.Services
 
             var entity = new ImageEntity
             {
+                Id = Guid.NewGuid(),
                 Data = data,
                 ContentType = $"image/{extension}"
             };
 
             await _dbContext.Images.AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
 
             return entity.Id;
         }
@@ -117,7 +117,6 @@ namespace MyFlickList.Api.Services
             }
 
             await AddOrUpdateFlickAsync(flickEntity);
-            await _dbContext.SaveChangesAsync();
         }
 
         private async Task PopulateSeriesFlickAsync(TvShow series)
@@ -158,7 +157,6 @@ namespace MyFlickList.Api.Services
             }
 
             await AddOrUpdateFlickAsync(flickEntity);
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task PopulateFlickAsync(string flickId)
@@ -172,12 +170,16 @@ namespace MyFlickList.Api.Services
             if (movieMatch != null)
             {
                 var movie = await TmDbClient.GetMovieAsync(movieMatch.Id);
+
                 await PopulateMovieFlickAsync(movie);
+                await _dbContext.SaveChangesAsync();
             }
             else if (seriesMatch != null)
             {
                 var series = await TmDbClient.GetTvShowAsync(seriesMatch.Id);
+
                 await PopulateSeriesFlickAsync(series);
+                await _dbContext.SaveChangesAsync();
             }
             else
             {
