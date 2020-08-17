@@ -44,12 +44,6 @@ namespace MyFlickList.Api
             modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
 
             // Catalog
-            modelBuilder.Entity<FlickEntity>()
-                .HasOne<ImageEntity>()
-                .WithOne()
-                .HasForeignKey<FlickEntity>(o => o.ImageId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             modelBuilder.Entity<FlickTagEntity>().HasKey(o => new {o.FlickId, o.TagName});
         }
     }

@@ -31,6 +31,8 @@ namespace MyFlickList.Api.Entities.Catalog
 
         public Guid? ImageId { get; set; }
 
+        public ImageEntity? Image { get; set; }
+
         public ICollection<ExternalResourceEntity> Resources { get; set; } = new List<ExternalResourceEntity>();
 
         public ICollection<CharacterEntity> Characters { get; set; } = new List<CharacterEntity>();
