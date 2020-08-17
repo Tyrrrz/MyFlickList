@@ -138,7 +138,7 @@ namespace MyFlickList.Api.Services
                 Title = series.Name,
                 PremiereDate = series.FirstAirDate,
                 FinaleDate = series.LastAirDate?.NullIf(series.InProduction),
-                Runtime = series.EpisodeRunTime.Average().Pipe(TimeSpan.FromMinutes),
+                Runtime = series.EpisodeRunTime.NullIfEmpty()?.Average().Pipe(TimeSpan.FromMinutes),
                 EpisodeCount = series.NumberOfEpisodes,
                 ExternalRating = series.VoteAverage,
                 Synopsis = series.Overview,
