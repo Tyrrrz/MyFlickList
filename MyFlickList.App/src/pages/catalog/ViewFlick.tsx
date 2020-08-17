@@ -8,7 +8,6 @@ import {
   mdiTagOutline
 } from '@mdi/js';
 import React from 'react';
-import { useParams } from 'react-router';
 import api from '../../infra/api';
 import { FlickKind, FlickResponse } from '../../infra/api.generated';
 import Breadcrumb from '../../shared/Breadcrumb';
@@ -17,6 +16,7 @@ import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import StateLoader from '../../shared/StateLoader';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
+import useRouteParams from '../../shared/useRouteParams';
 
 function formatRating(flick: FlickResponse) {
   if (!flick.externalRating) return '--';
@@ -70,7 +70,7 @@ function NetworkLinks({ flick }: { flick: FlickResponse }) {
     <div>
       <div className="my-1">
         <Icon path={mdiOpenInNew} />{' '}
-        <Link href={`https://imdb.com/title/${flick.id}`} target="_blank">
+        <Link href={`https://imdb.com/title/${encodeURIComponent(flick.id)}`} target="_blank">
           Find on IMDB
         </Link>
       </div>
@@ -186,7 +186,7 @@ function FlickData({ flick }: { flick: FlickResponse }) {
 }
 
 export default function ViewFlick() {
-  const { flickId } = useParams();
+  const { flickId } = useRouteParams();
   const [flick, flickError] = useAsyncStateEffect(() => api.catalog.getFlick(flickId), [flickId]);
 
   return (

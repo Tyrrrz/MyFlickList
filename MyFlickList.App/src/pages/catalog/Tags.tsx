@@ -20,7 +20,7 @@ export default function Tags() {
         render={(ts) => (
           <>
             {ts.map((t) => (
-              <Link key={t} className="badge badge-pill badge-secondary m-1" href={`/catalog/tags/${t}`}>
+              <Link key={t} className="badge badge-pill badge-secondary m-1" href={`/catalog/tags/${encodeURIComponent(t)}`}>
                 {t}
               </Link>
             ))}

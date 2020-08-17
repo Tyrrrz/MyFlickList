@@ -1,5 +1,4 @@
 import React from 'react';
-import { useParams } from 'react-router';
 import api from '../../infra/api';
 import Breadcrumb from '../../shared/Breadcrumb';
 import Meta from '../../shared/Meta';
@@ -7,10 +6,11 @@ import Paginator from '../../shared/Paginator';
 import StateLoader from '../../shared/StateLoader';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import useQueryParams from '../../shared/useQueryParams';
+import useRouteParams from '../../shared/useRouteParams';
 import FlickTable from './shared/FlickTable';
 
 export default function TaggedFlicks() {
-  const { tagName } = useParams();
+  const { tagName } = useRouteParams();
 
   const { page } = useQueryParams();
   const pageNumber = parseInt(page) || 1;

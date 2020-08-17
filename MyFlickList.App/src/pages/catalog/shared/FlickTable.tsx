@@ -46,7 +46,7 @@ function FlickRow({ flick, position }: FlickRowProps) {
             <div>{formatDate(flick)}</div>
             <div>
               {flick.tags?.slice(0, 5).map((t) => (
-                <Link key={t} className="badge badge-pill badge-secondary mr-1" href={`/catalog/tags/${t}`}>
+                <Link key={t} className="badge badge-pill badge-secondary mr-1" href={`/catalog/tags/${encodeURIComponent(t)}`}>
                   {t}
                 </Link>
               ))}
