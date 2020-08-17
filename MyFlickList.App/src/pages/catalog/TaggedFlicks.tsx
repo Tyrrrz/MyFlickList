@@ -23,8 +23,8 @@ export default function TaggedFlicks() {
 
   return (
     <div>
-      <Meta title="Top" />
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: 'Top' }]} />
+      <Meta title={tagName} />
+      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: tagName }]} />
 
       <StateLoader
         state={flicks}
