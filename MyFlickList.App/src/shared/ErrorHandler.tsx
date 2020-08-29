@@ -1,11 +1,5 @@
 import React from 'react';
 
-interface ResolvedError {
-  title: string;
-  details?: string | undefined;
-  code?: number | undefined;
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function castToString(x: any) {
   if (typeof x === 'string' || typeof x === 'undefined') {
@@ -22,6 +16,12 @@ function castToNumber(x: any) {
   }
 
   return undefined;
+}
+
+interface ResolvedError {
+  title: string;
+  details?: string | undefined;
+  code?: number | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

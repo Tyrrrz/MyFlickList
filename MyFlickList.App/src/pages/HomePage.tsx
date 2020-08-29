@@ -3,22 +3,20 @@ import api from '../infra/api';
 import { FlickListingResponse } from '../infra/api.generated';
 import { FlickHelper } from '../infra/helpers';
 import Breadcrumb from '../shared/Breadcrumb';
+import DataLoader from '../shared/DataLoader';
 import Link from '../shared/Link';
-import Meta from '../shared/Meta';
-import StateLoader from '../shared/StateLoader';
-import useAsyncStateEffect from '../shared/useAsyncStateEffect';
 
 function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   const flickHelper = new FlickHelper(flick);
 
   return (
-    <div className="position-relative mr-2" style={{ width: '15rem' }} title={flick.title}>
+    <div
+      className="position-relative mr-2 hover-highlight"
+      style={{ width: '15rem' }}
+      title={flick.title}
+    >
       <Link href={flickHelper.getUrl()}>
-        <img
-          className="w-100 rounded hover-highlight"
-          alt={flick.title}
-          src={flickHelper.getImageUrl()}
-        />
+        <img className="w-100 rounded" alt={flick.title} src={flickHelper.getImageUrl()} />
         <div
           className="position-absolute w-100 p-2 rounded text-white text-truncate font-weight-bold"
           style={{
@@ -34,67 +32,65 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   );
 }
 
+async function getData() {
+  const [topFlicks, trendingFlicks, newFlicks] = await Promise.all([
+    api.catalog.getTopFlicks(),
+    api.catalog.getTrendingFlicks(),
+    api.catalog.getNewFlicks()
+  ]);
+
+  return {
+    topFlicks,
+    trendingFlicks,
+    newFlicks
+  };
+}
+
 export default function HomePage() {
-  const [topFlicks, topFlicksError] = useAsyncStateEffect(() => api.catalog.getTopFlicks(), []);
-  const [trendingFlicks, trendingFlicksError] = useAsyncStateEffect(
-    () => api.catalog.getTrendingFlicks(),
-    []
-  );
-  const [newFlicks, newFlicksError] = useAsyncStateEffect(() => api.catalog.getNewFlicks(), []);
-
   return (
-    <div>
-      <Meta />
+    <DataLoader
+      getData={getData}
+      render={({ topFlicks, trendingFlicks, newFlicks }) => (
+        <div>
+          <Breadcrumb segments={[{ title: 'Home', href: '/' }]} />
 
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }]} />
+          {/* Top */}
+          <div className="mt-4 mb-2">
+            <Link className="text-body" href="/catalog/flicks/top">
+              <h3>Top</h3>
+            </Link>
+            <div className="d-flex flex-row">
+              {topFlicks.items.slice(0, 5).map((flick) => (
+                <FlickSpotlight key={flick.id} flick={flick} />
+              ))}
+            </div>
+          </div>
 
-      {/* Top */}
-      <div className="mt-4 mb-2">
-        <Link className="text-body" href="/catalog/flicks/top">
-          <h3>Top</h3>
-        </Link>
-        <div className="d-flex flex-row">
-          <StateLoader
-            state={topFlicks}
-            error={topFlicksError}
-            render={(fs) =>
-              fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)
-            }
-          />
+          {/* Trending */}
+          <div className="mt-4 mb-2">
+            <Link className="text-body" href="/catalog/flicks/trending">
+              <h3>Trending</h3>
+            </Link>
+            <div className="d-flex flex-row">
+              {trendingFlicks.items.slice(0, 5).map((flick) => (
+                <FlickSpotlight key={flick.id} flick={flick} />
+              ))}
+            </div>
+          </div>
+
+          {/* New */}
+          <div className="mt-4 mb-2">
+            <Link className="text-body" href="/catalog/flicks/new">
+              <h3>New</h3>
+            </Link>
+            <div className="d-flex flex-row">
+              {newFlicks.items.slice(0, 5).map((flick) => (
+                <FlickSpotlight key={flick.id} flick={flick} />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Trending */}
-      <div className="mt-4 mb-2">
-        <Link className="text-body" href="/catalog/flicks/trending">
-          <h3>Trending</h3>
-        </Link>
-        <div className="d-flex flex-row">
-          <StateLoader
-            state={trendingFlicks}
-            error={trendingFlicksError}
-            render={(fs) =>
-              fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)
-            }
-          />
-        </div>
-      </div>
-
-      {/* New */}
-      <div className="mt-4 mb-2">
-        <Link className="text-body" href="/catalog/flicks/new">
-          <h3>New</h3>
-        </Link>
-        <div className="d-flex flex-row">
-          <StateLoader
-            state={newFlicks}
-            error={newFlicksError}
-            render={(fs) =>
-              fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)
-            }
-          />
-        </div>
-      </div>
-    </div>
+      )}
+    />
   );
 }

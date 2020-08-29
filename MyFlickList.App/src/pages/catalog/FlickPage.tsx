@@ -6,10 +6,9 @@ import config from '../../infra/config';
 import { FlickHelper } from '../../infra/helpers';
 import { getAbsoluteUrl } from '../../infra/utils';
 import Breadcrumb from '../../shared/Breadcrumb';
+import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
-import StateLoader from '../../shared/StateLoader';
-import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import useRouteParams from '../../shared/useRouteParams';
 
 function getNetworkLinks(flick: FlickResponse) {
@@ -59,7 +58,7 @@ function getShareLinks(flick: FlickResponse) {
   ];
 }
 
-function FlickView({ flick }: { flick: FlickResponse }) {
+function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
   const flickHelper = new FlickHelper(flick);
 
   return (
@@ -71,64 +70,76 @@ function FlickView({ flick }: { flick: FlickResponse }) {
         contentType={flick.kind === FlickKind.Movie ? 'video.movie' : 'video.tv_show'}
       />
 
-      <h1>{flick.title}</h1>
+      <Breadcrumb
+        segments={[
+          { title: 'Home', href: '/' },
+          { title: 'Catalog', href: '/catalog' },
+          { title: flick.title || '...' }
+        ]}
+      />
 
-      <div className="m-0 mt-3 p-0 container container-fluid">
-        <div className="row">
-          <div className="col col-3">
-            <img className="mw-100 rounded" alt={flick.title} src={flickHelper.getImageUrl()} />
+      <div>
+        <h1>{flick.title}</h1>
 
-            <div className="my-1 mt-3">
-              <FiStar /> <span>{flickHelper.formatRating()}</span>
-            </div>
-            <div className="my-1">
-              <FiCalendar /> <span>{flickHelper.formatDate()}</span>
-            </div>
-            <div className="my-1">
-              <FiTv /> <span>{flickHelper.formatKind()}</span>
-            </div>
-            <div className="my-1">
-              <FiClock /> <span>{flickHelper.formatRuntime()}</span>
-            </div>
-            <div className="my-1">
-              <FiTag /> <span>{flickHelper.formatTags()}</span>
-            </div>
+        <div className="m-0 mt-3 p-0 container container-fluid">
+          <div className="row">
+            <div className="col col-3">
+              <img className="mw-100 rounded" alt={flick.title} src={flickHelper.getImageUrl()} />
 
-            <hr className="w-75" />
+              <div className="my-1 mt-3">
+                <FiStar /> <span>{flickHelper.formatRating()}</span>
+              </div>
+              <div className="my-1">
+                <FiCalendar /> <span>{flickHelper.formatDate()}</span>
+              </div>
+              <div className="my-1">
+                <FiTv /> <span>{flickHelper.formatKind()}</span>
+              </div>
+              <div className="my-1">
+                <FiClock /> <span>{flickHelper.formatRuntime()}</span>
+              </div>
+              <div className="my-1">
+                <FiTag /> <span>{flickHelper.formatTags()}</span>
+              </div>
 
-            <div>
-              {getNetworkLinks(flick).map((networkLink) => (
-                <div key={networkLink.name} className="my-1">
-                  <FiExternalLink />{' '}
-                  <Link href={networkLink.url} target="_blank">
-                    Find on {networkLink.name}
-                  </Link>
-                </div>
-              ))}
-            </div>
+              <hr className="w-75" />
 
-            <div className="mt-4">
-              {getShareLinks(flick).map((shareLink) => (
-                <div key={shareLink.name} className="my-1">
-                  <FiShare2 />{' '}
-                  <Link href={shareLink.url} target="_blank">
-                    Share on {shareLink.name}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="col">
-            <div className="jumbotron">
-              <h3>Create account to add this {flick.kind.toString().toLowerCase()} to your list</h3>
-              <p>
-                <button className="btn btn-outline-primary">Sign up</button>
-              </p>
-            </div>
+              <div>
+                {getNetworkLinks(flick).map((networkLink) => (
+                  <div key={networkLink.name} className="my-1">
+                    <FiExternalLink />{' '}
+                    <Link href={networkLink.url} target="_blank">
+                      Find on {networkLink.name}
+                    </Link>
+                  </div>
+                ))}
+              </div>
 
-            <div>
-              <h5>Synopsis</h5>
-              <article>{flick.synopsis}</article>
+              <div className="mt-4">
+                {getShareLinks(flick).map((shareLink) => (
+                  <div key={shareLink.name} className="my-1">
+                    <FiShare2 />{' '}
+                    <Link href={shareLink.url} target="_blank">
+                      Share on {shareLink.name}
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="col">
+              <div className="jumbotron">
+                <h3>
+                  Create account to add this {flick.kind.toString().toLowerCase()} to your list
+                </h3>
+                <p>
+                  <button className="btn btn-outline-primary">Sign up</button>
+                </p>
+              </div>
+
+              <div>
+                <h5>Synopsis</h5>
+                <article>{flick.synopsis}</article>
+              </div>
             </div>
           </div>
         </div>
@@ -139,19 +150,12 @@ function FlickView({ flick }: { flick: FlickResponse }) {
 
 export default function FlickPage() {
   const { flickId } = useRouteParams();
-  const [flick, flickError] = useAsyncStateEffect(() => api.catalog.getFlick(flickId), [flickId]);
 
   return (
-    <div>
-      <Breadcrumb
-        segments={[
-          { title: 'Home', href: '/' },
-          { title: 'Catalog', href: '/catalog' },
-          { title: flick?.title || '...' }
-        ]}
-      />
-
-      <StateLoader state={flick} error={flickError} render={(f) => <FlickView flick={f} />} />
-    </div>
+    <DataLoader
+      getData={() => api.catalog.getFlick(flickId)}
+      deps={[flickId]}
+      render={(flick) => <FlickPageLoaded flick={flick} />}
+    />
   );
 }

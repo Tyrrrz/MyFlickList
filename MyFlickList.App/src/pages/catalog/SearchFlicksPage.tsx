@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import Breadcrumb from '../../shared/Breadcrumb';
+import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
-import StateLoader from '../../shared/StateLoader';
-import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import useQueryParams from '../../shared/useQueryParams';
 import FlickTable from './shared/FlickTable';
 
@@ -15,12 +14,6 @@ export default function SearchFlicksPage() {
 
   const { query, page } = useQueryParams();
   const pageNumber = Number(page) || 1;
-
-  const [flicks, flicksError] = useAsyncStateEffect(
-    () => api.catalog.searchFlicks(query, pageNumber),
-    [query, pageNumber],
-    !!query
-  );
 
   const [stagingQuery, setStagingQuery] = useState(query ?? '');
 
@@ -40,7 +33,8 @@ export default function SearchFlicksPage() {
         className="w-75 mx-auto my-5"
         onSubmit={(e) => {
           e.preventDefault();
-          // Reset page
+
+          // Update query and reset page
           history.push(`?query=${stagingQuery}`);
         }}
       >
@@ -63,23 +57,25 @@ export default function SearchFlicksPage() {
       </form>
 
       {query && (
-        <StateLoader
-          state={flicks}
-          error={flicksError}
-          render={(fs) => (
+        <DataLoader
+          getData={() => api.catalog.searchFlicks(query, pageNumber)}
+          deps={[query, pageNumber]}
+          render={(flicks) => (
             <>
-              {fs.items.length > 0 && (
-                <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />
+              {flicks.items.length > 0 && (
+                <FlickTable flicks={flicks.items} startingPosition={1 + (pageNumber - 1) * 10} />
               )}
-              {fs.items.length > 0 && (
+              {flicks.items.length > 0 && (
                 <Paginator
                   currentPage={pageNumber}
-                  lastPage={fs.totalPages}
+                  lastPage={flicks.totalPages}
                   getPageHref={(p) => `?query=${query}&page=${p}`}
                 />
               )}
 
-              {fs.items.length <= 0 && <p className="display-4 text-center">Nothing found :(</p>}
+              {flicks.items.length <= 0 && (
+                <p className="display-4 text-center">Nothing found :(</p>
+              )}
 
               <p className="mt-5 lead text-center">
                 Didn&apos;t find what you were looking for? You can{' '}

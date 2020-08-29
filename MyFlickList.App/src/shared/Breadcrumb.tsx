@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React from 'react';
 import Link from './Link';
 
@@ -13,7 +14,16 @@ interface BreadcrumbItemProps {
 
 function BreadcrumbItem({ segment, active }: BreadcrumbItemProps) {
   if (!segment.href || active) {
-    return <li className={`breadcrumb-item ${active && 'active'}`}>{segment.title}</li>;
+    return (
+      <li
+        className={classNames({
+          'breadcrumb-item': true,
+          active: active
+        })}
+      >
+        {segment.title}
+      </li>
+    );
   }
 
   return (
