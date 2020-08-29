@@ -10,7 +10,7 @@ import FlickTable from './shared/FlickTable';
 
 export default function TopFlicksPage() {
   const { page } = useQueryParams();
-  const pageNumber = parseInt(page) || 1;
+  const pageNumber = Number(page) || 1;
 
   const [flicks, flicksError] = useAsyncStateEffect(() => api.catalog.getTopFlicks(pageNumber), [
     pageNumber

@@ -431,7 +431,7 @@ export class CatalogClient {
         return Promise.resolve<FlickResponse>(<any>null);
     }
 
-    requestFlick(flickId: string | null): Promise<void> {
+    requestFlick(flickId: string | null): Promise<RequestFlickResponse> {
         let url_ = this.baseUrl + "/catalog/flicks/{flickId}";
         if (flickId === undefined || flickId === null)
             throw new Error("The parameter 'flickId' must be defined.");
@@ -441,6 +441,7 @@ export class CatalogClient {
         let options_ = <RequestInit>{
             method: "POST",
             headers: {
+                "Accept": "application/json"
             }
         };
 
@@ -449,19 +450,15 @@ export class CatalogClient {
         });
     }
 
-    protected processRequestFlick(response: Response): Promise<void> {
+    protected processRequestFlick(response: Response): Promise<RequestFlickResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 201) {
+        if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status === 409) {
-            return response.text().then((_responseText) => {
-            let result409: any = null;
-            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = ProblemDetails.fromJS(resultData409);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result409);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RequestFlickResponse.fromJS(resultData200);
+            return result200;
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
@@ -475,7 +472,7 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
+        return Promise.resolve<RequestFlickResponse>(<any>null);
     }
 }
 
@@ -838,6 +835,42 @@ export class FlickResponse extends FlickListingResponse implements IFlickRespons
 
 export interface IFlickResponse extends IFlickListingResponse {
     synopsis?: string | undefined;
+}
+
+export class RequestFlickResponse implements IRequestFlickResponse {
+    flickId!: string;
+
+    constructor(data?: IRequestFlickResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.flickId = _data["flickId"];
+        }
+    }
+
+    static fromJS(data: any): RequestFlickResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new RequestFlickResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["flickId"] = this.flickId;
+        return data; 
+    }
+}
+
+export interface IRequestFlickResponse {
+    flickId: string;
 }
 
 export class ApiException extends Error {

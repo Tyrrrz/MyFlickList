@@ -1,6 +1,7 @@
 import React from 'react';
 import api from '../infra/api';
 import { FlickListingResponse } from '../infra/api.generated';
+import { FlickHelper } from '../infra/helpers';
 import Breadcrumb from '../shared/Breadcrumb';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
@@ -8,14 +9,16 @@ import StateLoader from '../shared/StateLoader';
 import useAsyncStateEffect from '../shared/useAsyncStateEffect';
 
 function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
-  const flickUrl = `/catalog/flicks/${flick.id}`;
-  const flickImageUrl =
-    (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
+  const flickHelper = new FlickHelper(flick);
 
   return (
     <div className="position-relative mr-2" style={{ width: '15rem' }} title={flick.title}>
-      <Link href={flickUrl}>
-        <img className="w-100 rounded hover-highlight" alt={flick.title} src={flickImageUrl} />
+      <Link href={flickHelper.getUrl()}>
+        <img
+          className="w-100 rounded hover-highlight"
+          alt={flick.title}
+          src={flickHelper.getImageUrl()}
+        />
         <div
           className="position-absolute w-100 p-2 rounded text-white text-truncate font-weight-bold"
           style={{

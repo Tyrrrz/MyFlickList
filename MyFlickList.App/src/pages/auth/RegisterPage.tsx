@@ -7,10 +7,10 @@ import ErrorHandler from '../../shared/ErrorHandler';
 import Meta from '../../shared/Meta';
 
 interface FormData {
-  userName?: string | undefined;
-  email?: string | undefined;
-  password?: string | undefined;
-  passwordConfirm?: string | undefined;
+  userName: string;
+  email: string;
+  password: string;
+  passwordConfirm: string;
 }
 
 function submitForm(formData: FormData) {
@@ -33,7 +33,14 @@ function submitForm(formData: FormData) {
 
 export default function RegisterPage() {
   const history = useHistory();
-  const [formData, setFormData] = useState<FormData>({});
+
+  const [formData, setFormData] = useState<FormData>({
+    userName: '',
+    email: '',
+    password: '',
+    passwordConfirm: ''
+  });
+
   const [error, setError] = useState<unknown>();
 
   return (
@@ -54,7 +61,9 @@ export default function RegisterPage() {
         className="mt-3"
         onSubmit={(e) => {
           e.preventDefault();
-          submitForm(formData).then(() => history.push('/profile/login'), setError);
+          submitForm(formData)
+            .then(() => history.push('/profile/login'))
+            .catch(setError);
         }}
       >
         <div className="form-group">

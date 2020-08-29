@@ -155,13 +155,12 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpPost("flicks/{flickId}")]
-        [ProducesResponseType(201)]
-        [ProducesResponseType(409)]
+        [ProducesResponseType(typeof(RequestFlickResponse), 200)]
         [ProducesResponseType(404)]
         public async Task<IActionResult> RequestFlick(string flickId) => await HandleExceptionsAsync(async () =>
         {
             await _catalogPopulator.PopulateFlickAsync(flickId);
-            return CreatedAtAction(nameof(GetFlick), new {flickId}, null);
+            return Ok(flickId);
         });
     }
 }

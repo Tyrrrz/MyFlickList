@@ -8,7 +8,7 @@ interface MetaProps {
   description?: string | undefined;
   keywords?: string[] | undefined;
   imageUrl?: string | undefined;
-  contentType?: string | undefined;
+  contentType?: 'website' | 'profile' | 'video.movie' | 'video.tv_show' | undefined;
 }
 
 export default function Meta({ title, description, keywords, imageUrl, contentType }: MetaProps) {

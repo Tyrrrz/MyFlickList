@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import Breadcrumb from '../../shared/Breadcrumb';
@@ -40,36 +40,26 @@ function parseImdbId(url: string) {
   return match[1];
 }
 
+interface FormData {
+  imdbUrl: string;
+}
+
+function submitForm(formData: FormData) {
+  const parsedImdbId = parseImdbId(formData.imdbUrl);
+
+  if (!parseImdbId) {
+    return Promise.reject('Provided IMDB link appears invalid');
+  }
+
+  return api.catalog.requestFlick(parsedImdbId);
+}
+
 export default function RequestFlickPage() {
   const history = useHistory();
 
   const [busy, setBusy] = useState(false);
   const [imdbUrl, setImdbUrl] = useState('');
   const [error, setError] = useState<unknown>();
-
-  const sendRequest = useCallback(() => {
-    const imdbId = parseImdbId(imdbUrl);
-    if (!imdbId) {
-      setError('Provided link appears invalid');
-    } else {
-      setBusy(true);
-
-      const redirect = () => history.push(`/catalog/flicks/${imdbId}`);
-
-      api.catalog
-        .requestFlick(imdbId)
-        .then(() => redirect())
-        .catch((e) => {
-          // 409 means it already exists, which is ok
-          if (e.status === 409) {
-            redirect();
-          } else {
-            setError(e);
-          }
-        })
-        .finally(() => setBusy(false));
-    }
-  }, [imdbUrl, history]);
 
   return (
     <div>
@@ -96,15 +86,21 @@ export default function RequestFlickPage() {
         className="mt-4"
         onSubmit={(e) => {
           e.preventDefault();
-          sendRequest();
+
+          setBusy(true);
+
+          submitForm({ imdbUrl })
+            .then((res) => history.push('/catalog/flicks/' + res.flickId))
+            .catch(setError)
+            .finally(() => setBusy(false));
         }}
       >
         <div className="form-group">
-          <label htmlFor="imdbId">IMDB link</label>
+          <label htmlFor="imdbUrl">IMDB link</label>
           <input
             className="form-control"
             type="url"
-            id="imdbId"
+            id="imdbUrl"
             disabled={busy}
             value={imdbUrl}
             onChange={(e) => setImdbUrl(e.target.value)}

@@ -13,7 +13,7 @@ export default function TaggedFlicksPage() {
   const { tagName } = useRouteParams();
 
   const { page } = useQueryParams();
-  const pageNumber = parseInt(page) || 1;
+  const pageNumber = Number(page) || 1;
 
   const [flicks, flicksError] = useAsyncStateEffect(
     () => api.catalog.getTaggedFlicks(tagName, pageNumber),

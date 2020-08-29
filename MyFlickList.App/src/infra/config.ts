@@ -8,6 +8,5 @@ const secrets = {
 export default {
   apiUrl,
   appUrl,
-
   secrets
 };

@@ -1,6 +1,6 @@
 import * as generated from './api.generated';
 import config from './config';
-import { getAbsoluteUrl, trimEnd } from './utils';
+import { trimEnd } from './utils';
 
 // NSwag's client treats the URL as string and expects it to not end with a slash
 const apiUrl = trimEnd(config.apiUrl, '/');
@@ -14,8 +14,5 @@ const fetchProvider = {
 
 export default {
   auth: new generated.AuthClient(apiUrl, fetchProvider),
-  catalog: new generated.CatalogClient(apiUrl, fetchProvider),
-  utils: {
-    getImageUrl: (imageId: string) => getAbsoluteUrl(config.apiUrl, 'catalog/images/' + imageId)
-  }
+  catalog: new generated.CatalogClient(apiUrl, fetchProvider)
 };

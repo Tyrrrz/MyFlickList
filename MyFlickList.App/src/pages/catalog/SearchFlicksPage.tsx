@@ -14,7 +14,7 @@ export default function SearchFlicksPage() {
   const history = useHistory();
 
   const { query, page } = useQueryParams();
-  const pageNumber = parseInt(page) || 1;
+  const pageNumber = Number(page) || 1;
 
   const [flicks, flicksError] = useAsyncStateEffect(
     () => api.catalog.searchFlicks(query, pageNumber),
