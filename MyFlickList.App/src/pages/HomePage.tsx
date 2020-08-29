@@ -31,7 +31,7 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   );
 }
 
-export default function Home() {
+export default function HomePage() {
   const [topFlicks, topFlicksError] = useAsyncStateEffect(() => api.catalog.getTopFlicks(), []);
   const [trendingFlicks, trendingFlicksError] = useAsyncStateEffect(
     () => api.catalog.getTrendingFlicks(),

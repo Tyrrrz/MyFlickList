@@ -479,13 +479,22 @@ export class CatalogClient {
     }
 }
 
-export class ProblemDetails {
+export class ProblemDetails implements IProblemDetails {
     type?: string | undefined;
     title?: string | undefined;
     status?: number | undefined;
     detail?: string | undefined;
     instance?: string | undefined;
     extensions?: { [key: string]: any; } | undefined;
+
+    constructor(data?: IProblemDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
 
     init(_data?: any) {
         if (_data) {
@@ -529,10 +538,28 @@ export class ProblemDetails {
     }
 }
 
-export class RegisterRequest {
+export interface IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+    extensions?: { [key: string]: any; } | undefined;
+}
+
+export class RegisterRequest implements IRegisterRequest {
     userName!: string;
     email!: string;
     password!: string;
+
+    constructor(data?: IRegisterRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
 
     init(_data?: any) {
         if (_data) {
@@ -558,8 +585,23 @@ export class RegisterRequest {
     }
 }
 
-export class LoginResponse {
+export interface IRegisterRequest {
+    userName: string;
+    email: string;
+    password: string;
+}
+
+export class LoginResponse implements ILoginResponse {
     token!: string;
+
+    constructor(data?: ILoginResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
 
     init(_data?: any) {
         if (_data) {
@@ -581,9 +623,22 @@ export class LoginResponse {
     }
 }
 
-export class LoginRequest {
+export interface ILoginResponse {
+    token: string;
+}
+
+export class LoginRequest implements ILoginRequest {
     userName!: string;
     password!: string;
+
+    constructor(data?: ILoginRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
 
     init(_data?: any) {
         if (_data) {
@@ -607,10 +662,27 @@ export class LoginRequest {
     }
 }
 
-export class PaginatedResponseOfFlickListingResponse {
+export interface ILoginRequest {
+    userName: string;
+    password: string;
+}
+
+export class PaginatedResponseOfFlickListingResponse implements IPaginatedResponseOfFlickListingResponse {
     items!: FlickListingResponse[];
     page!: number;
     totalPages!: number;
+
+    constructor(data?: IPaginatedResponseOfFlickListingResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.items = [];
+        }
+    }
 
     init(_data?: any) {
         if (_data) {
@@ -644,7 +716,13 @@ export class PaginatedResponseOfFlickListingResponse {
     }
 }
 
-export class FlickListingResponse {
+export interface IPaginatedResponseOfFlickListingResponse {
+    items: FlickListingResponse[];
+    page: number;
+    totalPages: number;
+}
+
+export class FlickListingResponse implements IFlickListingResponse {
     id!: string;
     kind!: FlickKind;
     title!: string;
@@ -655,6 +733,15 @@ export class FlickListingResponse {
     externalRating?: number | undefined;
     imageId?: string | undefined;
     tags?: string[];
+
+    constructor(data?: IFlickListingResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
 
     init(_data?: any) {
         if (_data) {
@@ -702,13 +789,30 @@ export class FlickListingResponse {
     }
 }
 
+export interface IFlickListingResponse {
+    id: string;
+    kind: FlickKind;
+    title: string;
+    premiereDate?: Date | undefined;
+    finaleDate?: Date | undefined;
+    runtime?: string | undefined;
+    episodeCount?: number | undefined;
+    externalRating?: number | undefined;
+    imageId?: string | undefined;
+    tags?: string[];
+}
+
 export enum FlickKind {
     Movie = "Movie",
     Series = "Series",
 }
 
-export class FlickResponse extends FlickListingResponse {
+export class FlickResponse extends FlickListingResponse implements IFlickResponse {
     synopsis?: string | undefined;
+
+    constructor(data?: IFlickResponse) {
+        super(data);
+    }
 
     init(_data?: any) {
         super.init(_data);
@@ -730,6 +834,10 @@ export class FlickResponse extends FlickListingResponse {
         super.toJSON(data);
         return data; 
     }
+}
+
+export interface IFlickResponse extends IFlickListingResponse {
+    synopsis?: string | undefined;
 }
 
 export class ApiException extends Error {

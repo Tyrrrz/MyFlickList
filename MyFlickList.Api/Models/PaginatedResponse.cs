@@ -31,7 +31,7 @@ namespace MyFlickList.Api.Models
         public static PaginatedResponse<T> Create<T>(IReadOnlyList<T> items, int page, int totalPages) =>
             new PaginatedResponse<T>(items, page, totalPages);
 
-        public static async Task<PaginatedResponse<T>> CreateAsync<T>(IQueryable<T> itemsQuery, int page, int itemsPerPage)
+        public static async Task<PaginatedResponse<T>> FromQueryAsync<T>(IQueryable<T> itemsQuery, int page, int itemsPerPage)
         {
             var count = await itemsQuery.CountAsync();
             var totalPages = (int) Math.Ceiling(1.0 * count / itemsPerPage);

@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using MyFlickList.Api.Entities.Catalog;
 using MyFlickList.Api.Entities.Auth;
+using MyFlickList.Api.Entities.Catalog;
 using MyFlickList.Api.Internal;
 
 namespace MyFlickList.Api
@@ -35,7 +35,7 @@ namespace MyFlickList.Api
 
             // Unaccent extension
             modelBuilder.HasPostgresExtension("unaccent");
-            modelBuilder.HasDbFunction(typeof(Postgres).GetMethod(nameof(Postgres.Unaccent))).HasName("unaccent");
+            modelBuilder.HasDbFunction(typeof(Postgres.Functions).GetMethod(nameof(Postgres.Functions.Unaccent))).HasName("unaccent");
 
             // Auth
             modelBuilder.Entity<UserEntity>().ToTable("Users");

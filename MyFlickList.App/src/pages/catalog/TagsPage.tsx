@@ -6,7 +6,7 @@ import Meta from '../../shared/Meta';
 import StateLoader from '../../shared/StateLoader';
 import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 
-export default function Tags() {
+export default function TagsPage() {
   const [tags, tagsError] = useAsyncStateEffect(() => api.catalog.getTags(), []);
 
   return (

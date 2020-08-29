@@ -16,7 +16,9 @@ function parseUrl(url: string) {
 }
 
 function parseImdbId(url: string) {
-  if (!url) return null;
+  if (!url) {
+    return null;
+  }
 
   // Check if already is a parsed ID
   if (/^\w\w\d+$/i.test(url)) {
@@ -31,12 +33,14 @@ function parseImdbId(url: string) {
 
   // Get the ID
   const match = /(?:^|\/)title\/(\w\w\d+)(?:$|\/)/i.exec(urlParsed.pathname);
-  if (!match) return null;
+  if (!match) {
+    return null;
+  }
 
   return match[1];
 }
 
-export default function RequestFlick() {
+export default function RequestFlickPage() {
   const history = useHistory();
 
   const [busy, setBusy] = useState(false);

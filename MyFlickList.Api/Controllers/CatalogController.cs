@@ -51,7 +51,7 @@ namespace MyFlickList.Api.Controllers
                 .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
+            var response = await PaginatedResponse.FromQueryAsync(flicks, page, 10);
 
             return Ok(response);
         }
@@ -67,7 +67,7 @@ namespace MyFlickList.Api.Controllers
                 .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
+            var response = await PaginatedResponse.FromQueryAsync(flicks, page, 10);
 
             return Ok(response);
         }
@@ -83,7 +83,7 @@ namespace MyFlickList.Api.Controllers
                 .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
+            var response = await PaginatedResponse.FromQueryAsync(flicks, page, 10);
 
             return Ok(response);
         }
@@ -96,14 +96,14 @@ namespace MyFlickList.Api.Controllers
 
             var flicks = _dbContext.Flicks
                 // Match flick titles that contain the query (strip accents for "Pokemon" -> "Pokémon")
-                .Where(f => Postgres.Unaccent(f.Title.ToLower()).Contains(Postgres.Unaccent(querySanitized)))
+                .Where(f => Postgres.Functions.Unaccent(f.Title.ToLower()).Contains(Postgres.Functions.Unaccent(querySanitized)))
                 // Order by how similar the strings are, in terms of length
                 .OrderBy(f => f.Title.Length - querySanitized.Length)
                 .Include(f => f.FlickTags)
                 .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
+            var response = await PaginatedResponse.FromQueryAsync(flicks, page, 10);
 
             return Ok(response);
         }
@@ -132,7 +132,7 @@ namespace MyFlickList.Api.Controllers
                 .Take(100)
                 .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider);
 
-            var response = await PaginatedResponse.CreateAsync(flicks, page, 10);
+            var response = await PaginatedResponse.FromQueryAsync(flicks, page, 10);
 
             return Ok(response);
         }

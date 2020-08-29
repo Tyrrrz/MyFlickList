@@ -8,7 +8,7 @@ import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import useQueryParams from '../../shared/useQueryParams';
 import FlickTable from './shared/FlickTable';
 
-export default function TopFlicks() {
+export default function TopFlicksPage() {
   const { page } = useQueryParams();
   const pageNumber = parseInt(page) || 1;
 

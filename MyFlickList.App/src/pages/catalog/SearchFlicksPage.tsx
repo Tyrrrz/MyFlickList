@@ -10,7 +10,7 @@ import useAsyncStateEffect from '../../shared/useAsyncStateEffect';
 import useQueryParams from '../../shared/useQueryParams';
 import FlickTable from './shared/FlickTable';
 
-export default function SearchFlicks() {
+export default function SearchFlicksPage() {
   const history = useHistory();
 
   const { query, page } = useQueryParams();

@@ -201,7 +201,7 @@ function FlickData({ flick }: { flick: FlickResponse }) {
   );
 }
 
-export default function ViewFlick() {
+export default function FlickPage() {
   const { flickId } = useRouteParams();
   const [flick, flickError] = useAsyncStateEffect(() => api.catalog.getFlick(flickId), [flickId]);
 

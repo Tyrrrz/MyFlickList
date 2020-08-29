@@ -13,6 +13,7 @@ const fetchProvider = {
 };
 
 export default {
+  auth: new generated.AuthClient(apiUrl, fetchProvider),
   catalog: new generated.CatalogClient(apiUrl, fetchProvider),
   utils: {
     getImageUrl: (imageId: string) => getAbsoluteUrl(config.apiUrl, 'catalog/images/' + imageId)

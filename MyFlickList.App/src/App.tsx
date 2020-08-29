@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { matchPath, Redirect, Route, Switch, useHistory } from 'react-router-dom';
-import NewFlicks from './pages/catalog/NewFlicks';
-import RequestFlick from './pages/catalog/RequestFlick';
-import SearchFlicks from './pages/catalog/SearchFlicks';
-import TaggedFlicks from './pages/catalog/TaggedFlicks';
-import Tags from './pages/catalog/Tags';
-import TopFlicks from './pages/catalog/TopFlicks';
-import TrendingFlicks from './pages/catalog/TrendingFlicks';
-import ViewFlick from './pages/catalog/ViewFlick';
-import Credits from './pages/Credits';
-import Home from './pages/Home';
+import LoginPage from './pages/auth/LoginPage';
+import ProfilePage from './pages/auth/ProfilePage';
+import RegisterPage from './pages/auth/RegisterPage';
+import FlickPage from './pages/catalog/FlickPage';
+import NewFlicksPage from './pages/catalog/NewFlicksPage';
+import RequestFlickPage from './pages/catalog/RequestFlickPage';
+import SearchFlicksPage from './pages/catalog/SearchFlicksPage';
+import TaggedFlicksPage from './pages/catalog/TaggedFlicksPage';
+import TagsPage from './pages/catalog/TagsPage';
+import TopFlicksPage from './pages/catalog/TopFlicksPage';
+import TrendingFlicksPage from './pages/catalog/TrendingFlicksPage';
+import CreditsPage from './pages/CreditsPage';
+import HomePage from './pages/HomePage';
+import NotFoundPage from './pages/NotFoundPage';
 import Link from './shared/Link';
 import Meta from './shared/Meta';
 import useTracking from './shared/useTracking';
@@ -45,6 +49,12 @@ function Header() {
           <li className="nav-item">
             <Link className="nav-link" href="/">
               Home
+            </Link>
+          </li>
+
+          <li className="nav-item">
+            <Link className="nav-link" href="/profile">
+              Profile
             </Link>
           </li>
 
@@ -108,22 +118,6 @@ function Header() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="mt-3 mb-1 p-2 text-center">
-      <Link href="https://twitter.com/Tyrrrz">Twitter</Link>
-      {' • '}
-      <Link href="https://discord.gg/hgVa7qS">Discord</Link>
-      {' • '}
-      <Link href="https://tyrrrz.me/donate">Donate</Link>
-      {' • '}
-      <Link href="https://github.com/Tyrrrz/MyFlickList">Source</Link>
-      {' • '}
-      <Link href="/credits">Credits</Link>
-    </footer>
-  );
-}
-
 export default function App() {
   useTracking();
 
@@ -134,21 +128,39 @@ export default function App() {
 
       <main className="flex-grow-1">
         <Switch>
-          <Route path="/catalog/flicks/top" component={TopFlicks} />
-          <Route path="/catalog/flicks/trending" component={TrendingFlicks} />
-          <Route path="/catalog/flicks/new" component={NewFlicks} />
-          <Route path="/catalog/flicks/search" component={SearchFlicks} />
-          <Route path="/catalog/flicks/request" component={RequestFlick} />
-          <Route path="/catalog/flicks/:flickId" component={ViewFlick} />
-          <Route path="/catalog/tags/:tagName" component={TaggedFlicks} />
-          <Route path="/catalog/tags" component={Tags} />
-          <Route path="/catalog" render={() => <Redirect to="/catalog/flicks/top" />} />
-          <Route path="/credits" component={Credits} />
-          <Route path="/" component={Home} />
+          <Route path="/catalog/flicks/top" exact component={TopFlicksPage} />
+          <Route path="/catalog/flicks/trending" exact component={TrendingFlicksPage} />
+          <Route path="/catalog/flicks/new" exact component={NewFlicksPage} />
+          <Route path="/catalog/flicks/search" exact component={SearchFlicksPage} />
+          <Route path="/catalog/flicks/request" exact component={RequestFlickPage} />
+          <Route path="/catalog/flicks/:flickId" exact component={FlickPage} />
+          <Route path="/catalog/tags/:tagName" exact component={TaggedFlicksPage} />
+          <Route path="/catalog/tags" exact component={TagsPage} />
+          <Route path="/catalog" exact render={() => <Redirect to="/catalog/flicks/top" />} />
+
+          <Route path="/profile/login" exact component={LoginPage} />
+          <Route path="/profile/register" exact component={RegisterPage} />
+          <Route path="/profile" exact component={ProfilePage} />
+
+          <Route path="/credits" exact component={CreditsPage} />
+
+          <Route path="/" exact component={HomePage} />
+
+          <Route path="*" component={NotFoundPage} />
         </Switch>
       </main>
 
-      <Footer />
+      <footer className="mt-3 mb-1 p-2 text-center">
+        <Link href="https://twitter.com/Tyrrrz">Twitter</Link>
+        {' • '}
+        <Link href="https://discord.gg/hgVa7qS">Discord</Link>
+        {' • '}
+        <Link href="https://tyrrrz.me/donate">Donate</Link>
+        {' • '}
+        <Link href="https://github.com/Tyrrrz/MyFlickList">Source</Link>
+        {' • '}
+        <Link href="/credits">Credits</Link>
+      </footer>
     </div>
   );
 }

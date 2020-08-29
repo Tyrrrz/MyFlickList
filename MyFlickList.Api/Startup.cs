@@ -62,6 +62,9 @@ namespace MyFlickList.Api
             // Auth
             services.AddIdentityCore<UserEntity>(o =>
             {
+                // Lenient password requirements because we're not storing any sensitive data
+                o.Password.RequiredLength = 6;
+                o.Password.RequireDigit = false;
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequireLowercase = false;
                 o.Password.RequireUppercase = false;
@@ -106,7 +109,11 @@ namespace MyFlickList.Api
             }
 
             app.UseRouting();
-            app.UseCors(o => o.WithOrigins(Configuration.GetAllowedOrigins()));
+            app.UseCors(o =>
+            {
+                o.WithOrigins(Configuration.GetAllowedOrigins());
+                o.AllowAnyHeader();
+            });
 
             app.UseAuthentication();
             app.UseAuthorization();

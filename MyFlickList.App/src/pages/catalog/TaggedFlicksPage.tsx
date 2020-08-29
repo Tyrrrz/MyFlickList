@@ -9,7 +9,7 @@ import useQueryParams from '../../shared/useQueryParams';
 import useRouteParams from '../../shared/useRouteParams';
 import FlickTable from './shared/FlickTable';
 
-export default function TaggedFlicks() {
+export default function TaggedFlicksPage() {
   const { tagName } = useRouteParams();
 
   const { page } = useQueryParams();
