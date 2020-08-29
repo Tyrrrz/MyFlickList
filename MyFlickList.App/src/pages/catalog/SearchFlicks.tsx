@@ -16,7 +16,11 @@ export default function SearchFlicks() {
   const { query, page } = useQueryParams();
   const pageNumber = parseInt(page) || 1;
 
-  const [flicks, flicksError] = useAsyncStateEffect(() => api.catalog.searchFlicks(query, pageNumber), [query, pageNumber], !!query);
+  const [flicks, flicksError] = useAsyncStateEffect(
+    () => api.catalog.searchFlicks(query, pageNumber),
+    [query, pageNumber],
+    !!query
+  );
 
   const [stagingQuery, setStagingQuery] = useState(query ?? '');
 
@@ -24,7 +28,13 @@ export default function SearchFlicks() {
     <div>
       <Meta title="Search" />
 
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: 'Search' }]} />
+      <Breadcrumb
+        segments={[
+          { title: 'Home', href: '/' },
+          { title: 'Catalog', href: '/catalog' },
+          { title: 'Search' }
+        ]}
+      />
 
       <form
         className="w-75 mx-auto my-5"
@@ -58,16 +68,22 @@ export default function SearchFlicks() {
           error={flicksError}
           render={(fs) => (
             <>
-              {fs.items.length > 0 && <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />}
               {fs.items.length > 0 && (
-                <Paginator currentPage={pageNumber} lastPage={fs.totalPages} getPageHref={(p) => `?query=${query}&page=${p}`} />
+                <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />
+              )}
+              {fs.items.length > 0 && (
+                <Paginator
+                  currentPage={pageNumber}
+                  lastPage={fs.totalPages}
+                  getPageHref={(p) => `?query=${query}&page=${p}`}
+                />
               )}
 
               {fs.items.length <= 0 && <p className="display-4 text-center">Nothing found :(</p>}
 
               <p className="mt-5 lead text-center">
-                Didn&apos;t find what you were looking for? You can <Link href="/catalog/flicks/request">request</Link> a new flick to be
-                added.
+                Didn&apos;t find what you were looking for? You can{' '}
+                <Link href="/catalog/flicks/request">request</Link> a new flick to be added.
               </p>
             </>
           )}

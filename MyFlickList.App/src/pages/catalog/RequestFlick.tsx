@@ -71,11 +71,17 @@ export default function RequestFlick() {
     <div>
       <Meta title="Request Flick" />
 
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: 'Request' }]} />
+      <Breadcrumb
+        segments={[
+          { title: 'Home', href: '/' },
+          { title: 'Catalog', href: '/catalog' },
+          { title: 'Request' }
+        ]}
+      />
 
       <p>
-        If a movie or a series you&apos;re looking for is not available, you can request it to be added using this form. To do that, simply
-        copy-paste the corresponding{' '}
+        If a movie or a series you&apos;re looking for is not available, you can request it to be
+        added using this form. To do that, simply copy-paste the corresponding{' '}
         <Link href="https://imdb.com" target="_blank">
           IMDB
         </Link>{' '}

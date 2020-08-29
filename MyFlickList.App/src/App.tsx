@@ -18,13 +18,14 @@ function Header() {
   const history = useHistory();
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Don't render search box on the search page, it looks weird with two search box
+  // Don't render search box on the search page
   const searchVisible = !matchPath(history.location.pathname, '/catalog/flicks/search');
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <Link className="navbar-brand" href="/">
-        <img className="align-top" src="/logo.png" alt="Logo" width={32} height={32} /> <span>MyFlickList</span>
+        <img className="align-top" src="/logo.png" alt="Logo" width={32} height={32} />{' '}
+        <span>MyFlickList</span>
       </Link>
 
       <button

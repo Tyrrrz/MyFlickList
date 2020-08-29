@@ -11,3 +11,7 @@ export function trimEnd(str: string, end: string) {
 export function isAbsoluteUrl(url: string) {
   return /^[a-z][a-z\d+\-.]*:/iu.test(url);
 }
+
+export function getAbsoluteUrl(baseUrl: string, url: string) {
+  return new URL(url, baseUrl).toString();
+}

@@ -1,17 +1,8 @@
-import {
-  mdiCalendarBlank,
-  mdiClockOutline,
-  mdiMovieOpenOutline,
-  mdiOpenInNew,
-  mdiShareVariantOutline,
-  mdiStarOutline,
-  mdiTagOutline
-} from '@mdi/js';
 import React from 'react';
+import { FiCalendar, FiClock, FiExternalLink, FiShare2, FiStar, FiTag, FiTv } from 'react-icons/fi';
 import api from '../../infra/api';
 import { FlickKind, FlickResponse } from '../../infra/api.generated';
 import Breadcrumb from '../../shared/Breadcrumb';
-import Icon from '../../shared/Icon';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import StateLoader from '../../shared/StateLoader';
@@ -20,20 +11,30 @@ import useRouteParams from '../../shared/useRouteParams';
 
 function formatRating(flick: FlickResponse) {
   if (!flick.externalRating) return '--';
-  return flick.externalRating.toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+  return flick.externalRating.toLocaleString('en-US', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2
+  });
 }
 
 function formatKind(flick: FlickResponse) {
-  return flick.episodeCount && flick.episodeCount > 0 ? `${flick.kind} (${flick.episodeCount} episodes)` : flick.kind.toString();
+  return flick.episodeCount && flick.episodeCount > 0
+    ? `${flick.kind} (${flick.episodeCount} episodes)`
+    : flick.kind.toString();
 }
 
 function formatDate(flick: FlickResponse) {
   if (!flick.premiereDate) return '--';
-  const formatter = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
 
   if (flick.kind === FlickKind.Movie) return formatter.format(flick.premiereDate);
 
-  if (flick.finaleDate) return `${formatter.format(flick.premiereDate)} - ${formatter.format(flick.finaleDate)}`;
+  if (flick.finaleDate)
+    return `${formatter.format(flick.premiereDate)} - ${formatter.format(flick.finaleDate)}`;
   return `${formatter.format(flick.premiereDate)} - ...`;
 }
 
@@ -69,26 +70,35 @@ function NetworkLinks({ flick }: { flick: FlickResponse }) {
   return (
     <div>
       <div className="my-1">
-        <Icon path={mdiOpenInNew} />{' '}
+        <FiExternalLink />{' '}
         <Link href={`https://imdb.com/title/${encodeURIComponent(flick.id)}`} target="_blank">
           Find on IMDB
         </Link>
       </div>
       <div className="my-1">
-        <Icon path={mdiOpenInNew} />{' '}
-        <Link href={`https://themoviedb.org/search?query=${encodeURIComponent(flick.title)}`} target="_blank">
+        <FiExternalLink />{' '}
+        <Link
+          href={`https://themoviedb.org/search?query=${encodeURIComponent(flick.title)}`}
+          target="_blank"
+        >
           Find on TMDB
         </Link>
       </div>
       <div className="my-1">
-        <Icon path={mdiOpenInNew} />{' '}
-        <Link href={`https://netflix.com/search?q=${encodeURIComponent(flick.title)}`} target="_blank">
+        <FiExternalLink />{' '}
+        <Link
+          href={`https://netflix.com/search?q=${encodeURIComponent(flick.title)}`}
+          target="_blank"
+        >
           Find on Netflix
         </Link>
       </div>
       <div className="my-1">
-        <Icon path={mdiOpenInNew} />{' '}
-        <Link href={`https://hbo.com/searchresults?q=${encodeURIComponent(flick.title)}`} target="_blank">
+        <FiExternalLink />{' '}
+        <Link
+          href={`https://hbo.com/searchresults?q=${encodeURIComponent(flick.title)}`}
+          target="_blank"
+        >
           Find on HBO
         </Link>
       </div>
@@ -102,7 +112,7 @@ function SocialShareLinks({ flick }: { flick: FlickResponse }) {
   return (
     <div className="mt-4">
       <div className="my-1">
-        <Icon path={mdiShareVariantOutline} />{' '}
+        <FiShare2 />{' '}
         <Link
           href={`https://twitter.com/share?related=myflicklist.net&via=myflicklist&url=${encodeURIComponent(
             selfUrl
@@ -113,17 +123,22 @@ function SocialShareLinks({ flick }: { flick: FlickResponse }) {
         </Link>
       </div>
       <div className="my-1">
-        <Icon path={mdiShareVariantOutline} />{' '}
+        <FiShare2 />{' '}
         <Link
-          href={`https://reddit.com/submit?url=${encodeURIComponent(selfUrl)}&title=${encodeURIComponent(flick.title)}`}
+          href={`https://reddit.com/submit?url=${encodeURIComponent(
+            selfUrl
+          )}&title=${encodeURIComponent(flick.title)}`}
           target="_blank"
         >
           Share on Reddit
         </Link>
       </div>
       <div className="my-1">
-        <Icon path={mdiShareVariantOutline} />{' '}
-        <Link href={`https://facebook.com/share.php?u=${encodeURIComponent(selfUrl)}`} target="_blank">
+        <FiShare2 />{' '}
+        <Link
+          href={`https://facebook.com/share.php?u=${encodeURIComponent(selfUrl)}`}
+          target="_blank"
+        >
           Share on Facebook
         </Link>
       </div>
@@ -132,7 +147,8 @@ function SocialShareLinks({ flick }: { flick: FlickResponse }) {
 }
 
 function FlickData({ flick }: { flick: FlickResponse }) {
-  const flickImageUrl = (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
+  const flickImageUrl =
+    (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
 
   return (
     <div>
@@ -146,19 +162,19 @@ function FlickData({ flick }: { flick: FlickResponse }) {
             <img className="mw-100" alt={flick.title} src={flickImageUrl} />
 
             <div className="my-1 mt-3">
-              <Icon path={mdiStarOutline} /> <span>{formatRating(flick)}</span>
+              <FiStar /> <span>{formatRating(flick)}</span>
             </div>
             <div className="my-1">
-              <Icon path={mdiCalendarBlank} /> <span>{formatDate(flick)}</span>
+              <FiCalendar /> <span>{formatDate(flick)}</span>
             </div>
             <div className="my-1">
-              <Icon path={mdiMovieOpenOutline} /> <span>{formatKind(flick)}</span>
+              <FiTv /> <span>{formatKind(flick)}</span>
             </div>
             <div className="my-1">
-              <Icon path={mdiClockOutline} /> <span>{formatRuntime(flick)}</span>
+              <FiClock /> <span>{formatRuntime(flick)}</span>
             </div>
             <div className="my-1">
-              <Icon path={mdiTagOutline} /> <span>{formatTags(flick)}</span>
+              <FiTag /> <span>{formatTags(flick)}</span>
             </div>
 
             <hr className="w-75" />
@@ -193,7 +209,13 @@ export default function ViewFlick() {
     <div>
       <Meta title={flick?.title} description={flick?.synopsis} />
 
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: flick?.title ?? '...' }]} />
+      <Breadcrumb
+        segments={[
+          { title: 'Home', href: '/' },
+          { title: 'Catalog', href: '/catalog' },
+          { title: flick?.title ?? '...' }
+        ]}
+      />
 
       <StateLoader state={flick} error={flickError} render={(f) => <FlickData flick={f} />} />
     </div>

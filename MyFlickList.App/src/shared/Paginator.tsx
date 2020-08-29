@@ -7,11 +7,17 @@ function scrollToTop() {
 
 function getAvailablePageNumbers(currentPage: number, lastPage: number) {
   // The intent is to show first page, last page, current page, and a few pages around current.
-  // If some of these overlap, then duplicates are avoided (e.g. for page 2/10, only [1, 2, 3, 4, 10] is shown).
+  // If some of these overlap, then duplicates are avoided (e.g. for page 2/10, only [1, 2, 3, 4, 10] are shown).
 
-  const candidates = [1, currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2, lastPage].filter(
-    (p) => p >= 1 && p <= lastPage
-  );
+  const candidates = [
+    1,
+    currentPage - 2,
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+    currentPage + 2,
+    lastPage
+  ].filter((p) => p >= 1 && p <= lastPage);
 
   return [...new Set(candidates)];
 }
@@ -49,7 +55,8 @@ interface PaginatorProps {
 export default function Paginator({ currentPage, lastPage, getPageHref }: PaginatorProps) {
   const pages = getAvailablePageNumbers(currentPage, lastPage);
 
-  const pageButtons = [];
+  // Populate page buttons
+  const pageButtons = [] as JSX.Element[];
   for (let i = 0; i < pages.length; i++) {
     const prevPage = pages[i - 1];
     const page = pages[i];

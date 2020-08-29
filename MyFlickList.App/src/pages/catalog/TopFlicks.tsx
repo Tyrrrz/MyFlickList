@@ -12,12 +12,20 @@ export default function TopFlicks() {
   const { page } = useQueryParams();
   const pageNumber = parseInt(page) || 1;
 
-  const [flicks, flicksError] = useAsyncStateEffect(() => api.catalog.getTopFlicks(pageNumber), [pageNumber]);
+  const [flicks, flicksError] = useAsyncStateEffect(() => api.catalog.getTopFlicks(pageNumber), [
+    pageNumber
+  ]);
 
   return (
     <div>
       <Meta title="Top" />
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: 'Top' }]} />
+      <Breadcrumb
+        segments={[
+          { title: 'Home', href: '/' },
+          { title: 'Catalog', href: '/catalog' },
+          { title: 'Top' }
+        ]}
+      />
 
       <StateLoader
         state={flicks}
@@ -25,7 +33,11 @@ export default function TopFlicks() {
         render={(fs) => (
           <>
             <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />
-            <Paginator currentPage={pageNumber} lastPage={fs.totalPages} getPageHref={(p) => `?page=${p}`} />
+            <Paginator
+              currentPage={pageNumber}
+              lastPage={fs.totalPages}
+              getPageHref={(p) => `?page=${p}`}
+            />
           </>
         )}
       />

@@ -12,7 +12,13 @@ export default function Tags() {
   return (
     <div>
       <Meta title="Tags" />
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: 'Tags' }]} />
+      <Breadcrumb
+        segments={[
+          { title: 'Home', href: '/' },
+          { title: 'Catalog', href: '/catalog' },
+          { title: 'Tags' }
+        ]}
+      />
 
       <StateLoader
         state={tags}
@@ -20,7 +26,11 @@ export default function Tags() {
         render={(ts) => (
           <>
             {ts.map((t) => (
-              <Link key={t} className="badge badge-pill badge-secondary m-1" href={`/catalog/tags/${encodeURIComponent(t)}`}>
+              <Link
+                key={t}
+                className="badge badge-pill badge-secondary m-1"
+                href={`/catalog/tags/${encodeURIComponent(t)}`}
+              >
                 {t}
               </Link>
             ))}

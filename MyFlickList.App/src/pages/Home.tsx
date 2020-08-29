@@ -9,7 +9,8 @@ import useAsyncStateEffect from '../shared/useAsyncStateEffect';
 
 function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   const flickUrl = `/catalog/flicks/${flick.id}`;
-  const flickImageUrl = (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
+  const flickImageUrl =
+    (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
 
   return (
     <div className="position-relative mr-2" style={{ width: '15rem' }} title={flick.title}>
@@ -19,7 +20,8 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
           className="position-absolute w-100 p-2 rounded text-white text-truncate font-weight-bold"
           style={{
             bottom: 0,
-            background: 'linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)'
+            background:
+              'linear-gradient(0deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 80%, rgba(0,0,0,0) 100%)'
           }}
         >
           {flick.title}
@@ -31,7 +33,10 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
 
 export default function Home() {
   const [topFlicks, topFlicksError] = useAsyncStateEffect(() => api.catalog.getTopFlicks(), []);
-  const [trendingFlicks, trendingFlicksError] = useAsyncStateEffect(() => api.catalog.getTrendingFlicks(), []);
+  const [trendingFlicks, trendingFlicksError] = useAsyncStateEffect(
+    () => api.catalog.getTrendingFlicks(),
+    []
+  );
   const [newFlicks, newFlicksError] = useAsyncStateEffect(() => api.catalog.getNewFlicks(), []);
 
   return (
@@ -49,7 +54,9 @@ export default function Home() {
           <StateLoader
             state={topFlicks}
             error={topFlicksError}
-            render={(fs) => fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+            render={(fs) =>
+              fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)
+            }
           />
         </div>
       </div>
@@ -63,7 +70,9 @@ export default function Home() {
           <StateLoader
             state={trendingFlicks}
             error={trendingFlicksError}
-            render={(fs) => fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+            render={(fs) =>
+              fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)
+            }
           />
         </div>
       </div>
@@ -77,7 +86,9 @@ export default function Home() {
           <StateLoader
             state={newFlicks}
             error={newFlicksError}
-            render={(fs) => fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)}
+            render={(fs) =>
+              fs.items.slice(0, 5).map((flick) => <FlickSpotlight key={flick.id} flick={flick} />)
+            }
           />
         </div>
       </div>

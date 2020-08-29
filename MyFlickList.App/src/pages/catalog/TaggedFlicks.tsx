@@ -24,7 +24,13 @@ export default function TaggedFlicks() {
   return (
     <div>
       <Meta title={tagName} />
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: tagName }]} />
+      <Breadcrumb
+        segments={[
+          { title: 'Home', href: '/' },
+          { title: 'Catalog', href: '/catalog' },
+          { title: tagName }
+        ]}
+      />
 
       <StateLoader
         state={flicks}
@@ -32,7 +38,11 @@ export default function TaggedFlicks() {
         render={(fs) => (
           <>
             <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />
-            <Paginator currentPage={pageNumber} lastPage={fs.totalPages} getPageHref={(p) => `?page=${p}`} />
+            <Paginator
+              currentPage={pageNumber}
+              lastPage={fs.totalPages}
+              getPageHref={(p) => `?page=${p}`}
+            />
           </>
         )}
       />

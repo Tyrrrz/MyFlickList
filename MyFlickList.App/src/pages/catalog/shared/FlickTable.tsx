@@ -4,7 +4,9 @@ import { FlickKind, FlickListingResponse } from '../../../infra/api.generated';
 import Link from '../../../shared/Link';
 
 function formatKind(flick: FlickListingResponse) {
-  return flick.episodeCount && flick.episodeCount > 0 ? `${flick.kind} (${flick.episodeCount} eps)` : flick.kind.toString();
+  return flick.episodeCount && flick.episodeCount > 0
+    ? `${flick.kind} (${flick.episodeCount} eps)`
+    : flick.kind.toString();
 }
 
 function formatDate(flick: FlickListingResponse) {
@@ -12,13 +14,17 @@ function formatDate(flick: FlickListingResponse) {
 
   if (flick.kind === FlickKind.Movie) return `${flick.premiereDate.getUTCFullYear()}`;
 
-  if (flick.finaleDate) return `${flick.premiereDate.getUTCFullYear()} - ${flick.finaleDate.getUTCFullYear()}`;
+  if (flick.finaleDate)
+    return `${flick.premiereDate.getUTCFullYear()} - ${flick.finaleDate.getUTCFullYear()}`;
   return `${flick.premiereDate.getUTCFullYear()} - ...`;
 }
 
 function formatRating(flick: FlickListingResponse) {
   if (!flick.externalRating) return '--';
-  return flick.externalRating.toLocaleString('en-US', { maximumFractionDigits: 2, minimumFractionDigits: 2 });
+  return flick.externalRating.toLocaleString('en-US', {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2
+  });
 }
 
 interface FlickRowProps {
@@ -28,7 +34,8 @@ interface FlickRowProps {
 
 function FlickRow({ flick, position }: FlickRowProps) {
   const flickUrl = `/catalog/flicks/${flick.id}`;
-  const flickImageUrl = (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
+  const flickImageUrl =
+    (flick.imageId && api.utils.getImageUrl(flick.imageId)) || '/images/poster-placeholder.png';
 
   return (
     <tr>
@@ -46,7 +53,11 @@ function FlickRow({ flick, position }: FlickRowProps) {
             <div>{formatDate(flick)}</div>
             <div>
               {flick.tags?.slice(0, 5).map((t) => (
-                <Link key={t} className="badge badge-pill badge-secondary mr-1" href={`/catalog/tags/${encodeURIComponent(t)}`}>
+                <Link
+                  key={t}
+                  className="badge badge-pill badge-secondary mr-1"
+                  href={`/catalog/tags/${encodeURIComponent(t)}`}
+                >
                   {t}
                 </Link>
               ))}

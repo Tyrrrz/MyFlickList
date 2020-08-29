@@ -1,32 +1,48 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import config from '../infra/config';
-import { isAbsoluteUrl } from '../infra/utils';
+import { getAbsoluteUrl } from '../infra/utils';
 
 interface MetaProps {
   title?: string | undefined;
   description?: string | undefined;
+  keywords?: string[] | undefined;
   imageUrl?: string | undefined;
   contentType?: string | undefined;
 }
 
-export default function Meta({ title, description, imageUrl, contentType }: MetaProps) {
-  const actualTitle = title ? `${title} - MyFlickList` : `MyFlickList`;
-  const actualDescription = description || 'Social cataloging app';
-  const actualImageUrl = imageUrl && !isAbsoluteUrl(imageUrl) ? config.getRelativeAppUrl(imageUrl) : imageUrl;
+export default function Meta({ title, description, keywords, imageUrl, contentType }: MetaProps) {
+  const defaults = {
+    title: 'MyFlickList',
+    description: 'Social cataloging app',
+    contentType: 'website'
+  };
+
+  const actual = {
+    title: title ? `${title} - ${defaults.title}` : defaults.title,
+    description: description || defaults.description,
+    keywords: keywords?.join(', '),
+    imageUrl: imageUrl && getAbsoluteUrl(config.appUrl, imageUrl),
+    contentType: contentType || defaults.contentType
+  };
 
   return (
     <Helmet>
-      <title>{actualTitle}</title>
-      <meta property="og:title" content={actualTitle} />
-      <meta name="twitter:title" content={actualTitle} />
+      <title>{actual.title}</title>
 
-      <meta name="description" content={actualDescription} />
-      <meta property="og:description" content={actualDescription} />
-      <meta name="twitter:description" content={actualDescription} />
+      <meta name="description" content={actual.description} />
+      {actual.keywords && <meta name="keywords" content={actual.keywords} />}
 
-      <meta name="og:type" content={contentType || 'website'} />
-      <meta property="og:image" content={actualImageUrl} />
+      <meta property="og:title" content={actual.title} />
+      <meta property="og:description" content={actual.description} />
+      <meta name="og:type" content={actual.contentType} />
+      {actual.imageUrl && <meta property="og:image" content={actual.imageUrl} />}
+
+      <meta name="twitter:title" content={actual.title} />
+      <meta name="twitter:site" content="@Tyrrrz" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:description" content={actual.description} />
+      {actual.imageUrl && <meta name="twitter:image" content={actual.imageUrl} />}
     </Helmet>
   );
 }

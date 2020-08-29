@@ -12,12 +12,21 @@ export default function TrendingFlicks() {
   const { page } = useQueryParams();
   const pageNumber = parseInt(page) || 1;
 
-  const [flicks, flicksError] = useAsyncStateEffect(() => api.catalog.getTrendingFlicks(pageNumber), [pageNumber]);
+  const [flicks, flicksError] = useAsyncStateEffect(
+    () => api.catalog.getTrendingFlicks(pageNumber),
+    [pageNumber]
+  );
 
   return (
     <div>
       <Meta title="Trending" />
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Catalog', href: '/catalog' }, { title: 'Trending' }]} />
+      <Breadcrumb
+        segments={[
+          { title: 'Home', href: '/' },
+          { title: 'Catalog', href: '/catalog' },
+          { title: 'Trending' }
+        ]}
+      />
 
       <StateLoader
         state={flicks}
@@ -25,7 +34,11 @@ export default function TrendingFlicks() {
         render={(fs) => (
           <>
             <FlickTable flicks={fs.items} startingPosition={1 + (pageNumber - 1) * 10} />
-            <Paginator currentPage={pageNumber} lastPage={fs.totalPages} getPageHref={(p) => `?page=${p}`} />
+            <Paginator
+              currentPage={pageNumber}
+              lastPage={fs.totalPages}
+              getPageHref={(p) => `?page=${p}`}
+            />
           </>
         )}
       />
