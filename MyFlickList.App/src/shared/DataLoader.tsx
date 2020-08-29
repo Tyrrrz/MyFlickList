@@ -2,8 +2,13 @@ import React, { DependencyList } from 'react';
 import ErrorHandler from './ErrorHandler';
 import LoadingSpinner from './LoadingSpinner';
 import useAsyncStateEffect from './useAsyncStateEffect';
+import useDelay from './useDelay';
 
 function Busy() {
+  // Only show spinner after a delay, to prevent flickering
+  const spinnerVisible = useDelay(200);
+  if (!spinnerVisible) return <></>;
+
   return (
     <div className="mt-5 text-center">
       <LoadingSpinner kind="pulse" size={5} />
