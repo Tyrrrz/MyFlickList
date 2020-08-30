@@ -2,10 +2,10 @@
 
 namespace MyFlickList.Api.Models.Auth
 {
-    public class RegisterRequest
+    public class SignUpRequest
     {
         [Required(AllowEmptyStrings = false)]
-        public string UserName { get; set; } = default!;
+        public string Username { get; set; } = default!;
 
         [Required(AllowEmptyStrings = false)]
         public string Email { get; set; } = default!;

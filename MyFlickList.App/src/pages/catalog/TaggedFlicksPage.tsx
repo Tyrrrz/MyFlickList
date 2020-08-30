@@ -6,6 +6,7 @@ import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
 import useQueryParams from '../../shared/useQueryParams';
 import useRouteParams from '../../shared/useRouteParams';
+import { routes } from '../PageRouter';
 import FlickTable from './shared/FlickTable';
 
 export default function TaggedFlicksPage() {
@@ -24,8 +25,8 @@ export default function TaggedFlicksPage() {
 
           <Breadcrumb
             segments={[
-              { title: 'Home', href: '/' },
-              { title: 'Catalog', href: '/catalog' },
+              { title: 'Home', href: routes.home() },
+              { title: 'Catalog', href: routes.catalog() },
               { title: tagName }
             ]}
           />
@@ -35,7 +36,7 @@ export default function TaggedFlicksPage() {
           <Paginator
             currentPage={pageNumber}
             lastPage={flicks.totalPages}
-            getPageHref={(p) => `?page=${p}`}
+            getPageHref={(p) => routes.catalogTaggedFlicks(tagName, p)}
           />
         </div>
       )}

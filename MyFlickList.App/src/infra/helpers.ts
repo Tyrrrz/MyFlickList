@@ -3,14 +3,10 @@ import config from './config';
 import { getAbsoluteUrl } from './utils';
 
 export class FlickHelper {
-  flick: IFlickListingResponse;
+  readonly flick: IFlickListingResponse;
 
   constructor(flick: IFlickListingResponse) {
     this.flick = flick;
-  }
-
-  getUrl() {
-    return '/catalog/flicks/' + this.flick.id;
   }
 
   getImageUrl() {

@@ -18,14 +18,14 @@ namespace MyFlickList.Api.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(string userId, string userName, IReadOnlyList<Claim> claims)
+        public string GenerateToken(string userId, string username, IReadOnlyList<Claim> claims)
         {
             var coreClaims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userId),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Name, userName)
+                new Claim(ClaimTypes.Name, username)
             };
 
             var actualClaims = coreClaims.Concat(claims).ToArray();
@@ -51,7 +51,7 @@ namespace MyFlickList.Api.Services
             );
         }
 
-        public string GenerateToken(string userId, string userName) =>
-            GenerateToken(userId, userName, Array.Empty<Claim>());
+        public string GenerateToken(string userId, string username) =>
+            GenerateToken(userId, username, Array.Empty<Claim>());
     }
 }

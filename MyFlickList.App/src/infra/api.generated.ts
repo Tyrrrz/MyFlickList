@@ -17,8 +17,8 @@ export class AuthClient {
         this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
     }
 
-    register(request: RegisterRequest): Promise<void> {
-        let url_ = this.baseUrl + "/auth/register";
+    signUp(request: SignUpRequest): Promise<void> {
+        let url_ = this.baseUrl + "/auth/signup";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(request);
@@ -32,11 +32,11 @@ export class AuthClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRegister(_response);
+            return this.processSignUp(_response);
         });
     }
 
-    protected processRegister(response: Response): Promise<void> {
+    protected processSignUp(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 201) {
@@ -58,8 +58,8 @@ export class AuthClient {
         return Promise.resolve<void>(<any>null);
     }
 
-    login(request: LoginRequest): Promise<LoginResponse> {
-        let url_ = this.baseUrl + "/auth/login";
+    signIn(request: SignInRequest): Promise<SignInResponse> {
+        let url_ = this.baseUrl + "/auth/signin";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(request);
@@ -74,18 +74,18 @@ export class AuthClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processLogin(_response);
+            return this.processSignIn(_response);
         });
     }
 
-    protected processLogin(response: Response): Promise<LoginResponse> {
+    protected processSignIn(response: Response): Promise<SignInResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = LoginResponse.fromJS(resultData200);
+            result200 = SignInResponse.fromJS(resultData200);
             return result200;
             });
         } else if (status === 400) {
@@ -100,7 +100,7 @@ export class AuthClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<LoginResponse>(<any>null);
+        return Promise.resolve<SignInResponse>(<any>null);
     }
 }
 
@@ -544,12 +544,12 @@ export interface IProblemDetails {
     extensions?: { [key: string]: any; } | undefined;
 }
 
-export class RegisterRequest implements IRegisterRequest {
-    userName!: string;
+export class SignUpRequest implements ISignUpRequest {
+    username!: string;
     email!: string;
     password!: string;
 
-    constructor(data?: IRegisterRequest) {
+    constructor(data?: ISignUpRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -560,38 +560,38 @@ export class RegisterRequest implements IRegisterRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.userName = _data["userName"];
+            this.username = _data["username"];
             this.email = _data["email"];
             this.password = _data["password"];
         }
     }
 
-    static fromJS(data: any): RegisterRequest {
+    static fromJS(data: any): SignUpRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new RegisterRequest();
+        let result = new SignUpRequest();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["userName"] = this.userName;
+        data["username"] = this.username;
         data["email"] = this.email;
         data["password"] = this.password;
         return data; 
     }
 }
 
-export interface IRegisterRequest {
-    userName: string;
+export interface ISignUpRequest {
+    username: string;
     email: string;
     password: string;
 }
 
-export class LoginResponse implements ILoginResponse {
+export class SignInResponse implements ISignInResponse {
     token!: string;
 
-    constructor(data?: ILoginResponse) {
+    constructor(data?: ISignInResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -606,9 +606,9 @@ export class LoginResponse implements ILoginResponse {
         }
     }
 
-    static fromJS(data: any): LoginResponse {
+    static fromJS(data: any): SignInResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new LoginResponse();
+        let result = new SignInResponse();
         result.init(data);
         return result;
     }
@@ -620,15 +620,15 @@ export class LoginResponse implements ILoginResponse {
     }
 }
 
-export interface ILoginResponse {
+export interface ISignInResponse {
     token: string;
 }
 
-export class LoginRequest implements ILoginRequest {
-    userName!: string;
+export class SignInRequest implements ISignInRequest {
+    username!: string;
     password!: string;
 
-    constructor(data?: ILoginRequest) {
+    constructor(data?: ISignInRequest) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -639,28 +639,28 @@ export class LoginRequest implements ILoginRequest {
 
     init(_data?: any) {
         if (_data) {
-            this.userName = _data["userName"];
+            this.username = _data["username"];
             this.password = _data["password"];
         }
     }
 
-    static fromJS(data: any): LoginRequest {
+    static fromJS(data: any): SignInRequest {
         data = typeof data === 'object' ? data : {};
-        let result = new LoginRequest();
+        let result = new SignInRequest();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["userName"] = this.userName;
+        data["username"] = this.username;
         data["password"] = this.password;
         return data; 
     }
 }
 
-export interface ILoginRequest {
-    userName: string;
+export interface ISignInRequest {
+    username: string;
     password: string;
 }
 

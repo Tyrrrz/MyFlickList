@@ -1,34 +1,38 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
-import api from '../../infra/api';
-import { LoginRequest } from '../../infra/api.generated';
-import Breadcrumb from '../../shared/Breadcrumb';
-import ErrorHandler from '../../shared/ErrorHandler';
-import Meta from '../../shared/Meta';
+import api from '../infra/api';
+import { SignInRequest } from '../infra/api.generated';
+import Breadcrumb from '../shared/Breadcrumb';
+import ErrorHandler from '../shared/ErrorHandler';
+import Link from '../shared/Link';
+import Meta from '../shared/Meta';
+import useAuth from '../shared/useAuth';
+import { routes } from './PageRouter';
 
 interface FormData {
-  userName: string;
+  username: string;
   password: string;
 }
 
 function submitForm(formData: FormData) {
-  if (!formData.userName || !formData.password) {
+  if (!formData.username || !formData.password) {
     return Promise.reject('All fields are required');
   }
 
-  return api.auth.login(
-    new LoginRequest({
-      userName: formData.userName,
+  return api.auth.signIn(
+    new SignInRequest({
+      username: formData.username,
       password: formData.password
     })
   );
 }
 
-export default function LoginPage() {
+export default function SignInPage() {
   const history = useHistory();
+  const { setTokenValue } = useAuth();
 
   const [formData, setFormData] = useState<FormData>({
-    userName: '',
+    username: '',
     password: ''
   });
 
@@ -36,24 +40,24 @@ export default function LoginPage() {
 
   return (
     <div>
-      <Meta title="Log in" />
+      <Meta title="Sign in" />
 
-      <Breadcrumb
-        segments={[
-          { title: 'Home', href: '/' },
-          { title: 'Profile', href: '/profile' },
-          { title: 'Log in' }
-        ]}
-      />
+      <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: 'Sign in' }]} />
 
       <h1>Log in</h1>
 
+      <p className="lead">
+        Not registered yet? <Link href={routes.signUp()}>Create a new profile</Link>.
+      </p>
+
       <form
-        className="mt-3"
         onSubmit={(e) => {
           e.preventDefault();
           submitForm(formData)
-            .then(() => history.push('/profile'))
+            .then((res) => {
+              setTokenValue(res.token);
+              history.push(routes.profile());
+            })
             .catch(setError);
         }}
       >
@@ -63,11 +67,11 @@ export default function LoginPage() {
             type="text"
             className="form-control"
             id="username"
-            value={formData.userName}
+            value={formData.username}
             onChange={(e) =>
               setFormData({
                 ...formData,
-                userName: e.target.value
+                username: e.target.value
               })
             }
           />

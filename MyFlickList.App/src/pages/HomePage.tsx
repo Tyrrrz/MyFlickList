@@ -5,6 +5,7 @@ import { FlickHelper } from '../infra/helpers';
 import Breadcrumb from '../shared/Breadcrumb';
 import DataLoader from '../shared/DataLoader';
 import Link from '../shared/Link';
+import { routes } from './PageRouter';
 
 function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
   const flickHelper = new FlickHelper(flick);
@@ -15,7 +16,7 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
       style={{ width: '15rem' }}
       title={flick.title}
     >
-      <Link href={flickHelper.getUrl()}>
+      <Link href={routes.catalogFlick(flick.id)}>
         <img className="w-100 rounded" alt={flick.title} src={flickHelper.getImageUrl()} />
         <div
           className="position-absolute w-100 p-2 rounded text-white text-truncate font-weight-bold"
@@ -52,11 +53,11 @@ export default function HomePage() {
       getData={getData}
       render={({ topFlicks, trendingFlicks, newFlicks }) => (
         <div>
-          <Breadcrumb segments={[{ title: 'Home', href: '/' }]} />
+          <Breadcrumb segments={[{ title: 'Home', href: routes.home() }]} />
 
           {/* Top */}
           <div className="mt-4 mb-2">
-            <Link className="text-body" href="/catalog/flicks/top">
+            <Link className="text-body" href={routes.catalogFlicksTop()}>
               <h3>Top</h3>
             </Link>
             <div className="d-flex flex-row">
@@ -68,7 +69,7 @@ export default function HomePage() {
 
           {/* Trending */}
           <div className="mt-4 mb-2">
-            <Link className="text-body" href="/catalog/flicks/trending">
+            <Link className="text-body" href={routes.catalogFlicksTrending()}>
               <h3>Trending</h3>
             </Link>
             <div className="d-flex flex-row">
@@ -80,7 +81,7 @@ export default function HomePage() {
 
           {/* New */}
           <div className="mt-4 mb-2">
-            <Link className="text-body" href="/catalog/flicks/new">
+            <Link className="text-body" href={routes.catalogFlicksNew()}>
               <h3>New</h3>
             </Link>
             <div className="d-flex flex-row">

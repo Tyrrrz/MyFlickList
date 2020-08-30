@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
-import api from '../../infra/api';
-import { RegisterRequest } from '../../infra/api.generated';
-import Breadcrumb from '../../shared/Breadcrumb';
-import ErrorHandler from '../../shared/ErrorHandler';
-import Meta from '../../shared/Meta';
+import api from '../infra/api';
+import { SignUpRequest } from '../infra/api.generated';
+import Breadcrumb from '../shared/Breadcrumb';
+import ErrorHandler from '../shared/ErrorHandler';
+import Meta from '../shared/Meta';
+import { routes } from './PageRouter';
 
 interface FormData {
-  userName: string;
+  username: string;
   email: string;
   password: string;
   passwordConfirm: string;
 }
 
 function submitForm(formData: FormData) {
-  if (!formData.userName || !formData.email || !formData.password || !formData.passwordConfirm) {
+  if (!formData.username || !formData.email || !formData.password || !formData.passwordConfirm) {
     return Promise.reject('All fields are required');
   }
 
@@ -22,20 +23,20 @@ function submitForm(formData: FormData) {
     return Promise.reject('Passwords do not match');
   }
 
-  return api.auth.register(
-    new RegisterRequest({
-      userName: formData.userName,
+  return api.auth.signUp(
+    new SignUpRequest({
+      username: formData.username,
       email: formData.email,
       password: formData.password
     })
   );
 }
 
-export default function RegisterPage() {
+export default function SignUpPage() {
   const history = useHistory();
 
   const [formData, setFormData] = useState<FormData>({
-    userName: '',
+    username: '',
     email: '',
     password: '',
     passwordConfirm: ''
@@ -45,24 +46,18 @@ export default function RegisterPage() {
 
   return (
     <div>
-      <Meta title="Register" />
+      <Meta title="Sign up" />
 
-      <Breadcrumb
-        segments={[
-          { title: 'Home', href: '/' },
-          { title: 'Profile', href: '/profile' },
-          { title: 'Register' }
-        ]}
-      />
+      <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: 'Sign up' }]} />
 
-      <h1>Create profile</h1>
+      <h1>Sign up</h1>
 
       <form
         className="mt-3"
         onSubmit={(e) => {
           e.preventDefault();
           submitForm(formData)
-            .then(() => history.push('/profile/login'))
+            .then(() => history.push(routes.signIn()))
             .catch(setError);
         }}
       >
@@ -72,11 +67,11 @@ export default function RegisterPage() {
             type="text"
             className="form-control"
             id="username"
-            value={formData.userName}
+            value={formData.username}
             onChange={(e) =>
               setFormData({
                 ...formData,
-                userName: e.target.value
+                username: e.target.value
               })
             }
           />
@@ -133,7 +128,7 @@ export default function RegisterPage() {
         <ErrorHandler error={error} />
 
         <button type="submit" className="btn btn-primary">
-          Register
+          Sign up
         </button>
       </form>
     </div>

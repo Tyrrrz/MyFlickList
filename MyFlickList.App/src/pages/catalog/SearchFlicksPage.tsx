@@ -7,6 +7,7 @@ import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
 import useQueryParams from '../../shared/useQueryParams';
+import { routes } from '../PageRouter';
 import FlickTable from './shared/FlickTable';
 
 export default function SearchFlicksPage() {
@@ -23,8 +24,8 @@ export default function SearchFlicksPage() {
 
       <Breadcrumb
         segments={[
-          { title: 'Home', href: '/' },
-          { title: 'Catalog', href: '/catalog' },
+          { title: 'Home', href: routes.home() },
+          { title: 'Catalog', href: routes.catalog() },
           { title: 'Search' }
         ]}
       />
@@ -33,9 +34,7 @@ export default function SearchFlicksPage() {
         className="w-75 mx-auto my-5"
         onSubmit={(e) => {
           e.preventDefault();
-
-          // Update query and reset page
-          history.push(`?query=${stagingQuery}`);
+          history.push(routes.catalogFlicksSearch(stagingQuery));
         }}
       >
         <div className="form-row">
@@ -69,7 +68,7 @@ export default function SearchFlicksPage() {
                 <Paginator
                   currentPage={pageNumber}
                   lastPage={flicks.totalPages}
-                  getPageHref={(p) => `?query=${query}&page=${p}`}
+                  getPageHref={(p) => routes.catalogFlicksSearch(query, p)}
                 />
               )}
 
@@ -79,7 +78,7 @@ export default function SearchFlicksPage() {
 
               <p className="mt-5 lead text-center">
                 Didn&apos;t find what you were looking for? You can{' '}
-                <Link href="/catalog/flicks/request">request</Link> a new flick to be added.
+                <Link href={routes.catalogFlicksRequest()}>request</Link> a new flick to be added.
               </p>
             </>
           )}

@@ -6,6 +6,7 @@ import ErrorHandler from '../../shared/ErrorHandler';
 import Link from '../../shared/Link';
 import LoadingSpinner from '../../shared/LoadingSpinner';
 import Meta from '../../shared/Meta';
+import { routes } from '../PageRouter';
 
 function parseUrl(url: string) {
   try {
@@ -67,8 +68,8 @@ export default function RequestFlickPage() {
 
       <Breadcrumb
         segments={[
-          { title: 'Home', href: '/' },
-          { title: 'Catalog', href: '/catalog' },
+          { title: 'Home', href: routes.home() },
+          { title: 'Catalog', href: routes.catalog() },
           { title: 'Request' }
         ]}
       />
@@ -90,7 +91,7 @@ export default function RequestFlickPage() {
           setBusy(true);
 
           submitForm({ imdbUrl })
-            .then((res) => history.push('/catalog/flicks/' + res.flickId))
+            .then((res) => history.push(routes.catalogFlick(res.flickId)))
             .catch(setError)
             .finally(() => setBusy(false));
         }}

@@ -2,13 +2,14 @@ import React from 'react';
 import Breadcrumb from '../shared/Breadcrumb';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
+import { routes } from './PageRouter';
 
 export default function CreditsPage() {
   return (
     <div>
       <Meta title="Credits" />
 
-      <Breadcrumb segments={[{ title: 'Home', href: '/' }, { title: 'Credits' }]} />
+      <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: 'Credits' }]} />
 
       <h1>Credits</h1>
 

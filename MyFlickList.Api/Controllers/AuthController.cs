@@ -22,14 +22,14 @@ namespace MyFlickList.Api.Controllers
             _jwtProvider = jwtProvider;
         }
 
-        [HttpPost("register")]
+        [HttpPost("signup")]
         [ProducesResponseType(201)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Register(RegisterRequest request)
+        public async Task<IActionResult> SignUp(SignUpRequest request)
         {
             var result = await _signInManager.UserManager.CreateAsync(new UserEntity
             {
-                UserName = request.UserName,
+                UserName = request.Username,
                 Email = request.Email
             }, request.Password);
 
@@ -42,15 +42,15 @@ namespace MyFlickList.Api.Controllers
                 });
             }
 
-            return CreatedAtAction(nameof(Login), null);
+            return CreatedAtAction(nameof(SignIn), null);
         }
 
-        [HttpPost("login")]
-        [ProducesResponseType(typeof(LoginResponse), 200)]
+        [HttpPost("signin")]
+        [ProducesResponseType(typeof(SignInResponse), 200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> SignIn(SignInRequest request)
         {
-            var user = await _signInManager.UserManager.FindByNameAsync(request.UserName);
+            var user = await _signInManager.UserManager.FindByNameAsync(request.Username);
             if (user == null)
                 return BadRequest();
 
@@ -59,9 +59,9 @@ namespace MyFlickList.Api.Controllers
                 return BadRequest();
 
             // TODO: add user claims
-            var jwt = _jwtProvider.GenerateToken(user.Id.ToString(), user.NormalizedUserName);
+            var jwt = _jwtProvider.GenerateToken(user.Id.ToString(), user.UserName);
 
-            return Ok(new LoginResponse
+            return Ok(new SignInResponse
             {
                 Token = jwt
             });

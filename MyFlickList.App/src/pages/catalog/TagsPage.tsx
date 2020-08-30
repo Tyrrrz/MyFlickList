@@ -4,6 +4,7 @@ import Breadcrumb from '../../shared/Breadcrumb';
 import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
+import { routes } from '../PageRouter';
 
 export default function TagsPage() {
   return (
@@ -15,8 +16,8 @@ export default function TagsPage() {
 
           <Breadcrumb
             segments={[
-              { title: 'Home', href: '/' },
-              { title: 'Catalog', href: '/catalog' },
+              { title: 'Home', href: routes.home() },
+              { title: 'Catalog', href: routes.catalog() },
               { title: 'Tags' }
             ]}
           />
@@ -25,7 +26,7 @@ export default function TagsPage() {
             <Link
               key={tag}
               className="badge badge-pill badge-secondary m-1"
-              href={'/catalog/tags/' + encodeURIComponent(tag)}
+              href={routes.catalogTaggedFlicks(tag)}
             >
               {tag}
             </Link>

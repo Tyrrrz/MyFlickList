@@ -4,56 +4,58 @@ import api from '../../infra/api';
 import { FlickKind, FlickResponse } from '../../infra/api.generated';
 import config from '../../infra/config';
 import { FlickHelper } from '../../infra/helpers';
-import { getAbsoluteUrl } from '../../infra/utils';
+import { formatQueryParams, getAbsoluteUrl } from '../../infra/utils';
 import Breadcrumb from '../../shared/Breadcrumb';
 import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useRouteParams from '../../shared/useRouteParams';
+import { routes } from '../PageRouter';
 
 function getNetworkLinks(flick: FlickResponse) {
-  const idEncoded = encodeURIComponent(flick.id);
-  const titleEncoded = encodeURIComponent(flick.title);
-
   return [
     {
       name: 'IMDB',
-      url: `https://imdb.com/title/${idEncoded}`
+      url: 'https://imdb.com/title/' + encodeURIComponent(flick.id)
     },
     {
       name: 'TMDB',
-      url: `https://themoviedb.org/search?query=${titleEncoded}`
+      url: 'https://themoviedb.org/search' + formatQueryParams({ query: flick.title })
     },
     {
       name: 'Netflix',
-      url: `https://netflix.com/search?q=${titleEncoded}`
+      url: 'https://netflix.com/searc' + formatQueryParams({ q: flick.title })
     },
     {
       name: 'HBO',
-      url: `https://hbo.com/searchresults?q=${titleEncoded}`
+      url: 'https://hbo.com/searchresults' + formatQueryParams({ q: flick.title })
     }
   ];
 }
 
 function getShareLinks(flick: FlickResponse) {
-  const urlEncoded = encodeURIComponent(
-    getAbsoluteUrl(config.appUrl, '/catalog/flicks/' + flick.id)
-  );
-
-  const titleEncoded = encodeURIComponent(flick.title);
+  const absoluteUrl = getAbsoluteUrl(config.appUrl, routes.catalogFlick(flick.id));
 
   return [
     {
       name: 'Twitter',
-      url: `https://twitter.com/share?related=myflicklist.net&via=myflicklist&url=${urlEncoded}&text=${titleEncoded}&hashtags=myflicklist`
+      url:
+        'https://twitter.com/share' +
+        formatQueryParams({
+          related: config.appUrl,
+          via: 'myflicklist',
+          url: absoluteUrl,
+          text: flick.title,
+          hashtags: 'myflicklist'
+        })
     },
     {
       name: 'Reddit',
-      url: `https://reddit.com/submit?url=${urlEncoded}&title=${titleEncoded}`
+      url: 'https://reddit.com/submit' + formatQueryParams({ url: absoluteUrl, title: flick.title })
     },
     {
       name: 'Facebook',
-      url: `https://facebook.com/share.php?u=${urlEncoded}`
+      url: 'https://facebook.com/share.php' + formatQueryParams({ u: absoluteUrl })
     }
   ];
 }
@@ -72,9 +74,9 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
 
       <Breadcrumb
         segments={[
-          { title: 'Home', href: '/' },
-          { title: 'Catalog', href: '/catalog' },
-          { title: flick.title || '...' }
+          { title: 'Home', href: routes.home() },
+          { title: 'Catalog', href: routes.catalog() },
+          { title: flick.title }
         ]}
       />
 

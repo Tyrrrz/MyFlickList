@@ -2,7 +2,7 @@
 
 namespace MyFlickList.Api.Models.Auth
 {
-    public class LoginResponse
+    public class SignInResponse
     {
         [Required]
         public string Token { get; set; } = default!;

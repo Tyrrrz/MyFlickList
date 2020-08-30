@@ -2,6 +2,7 @@ import React from 'react';
 import { FlickListingResponse } from '../../../infra/api.generated';
 import { FlickHelper } from '../../../infra/helpers';
 import Link from '../../../shared/Link';
+import { routes } from '../../PageRouter';
 
 interface FlickRowProps {
   flick: FlickListingResponse;
@@ -24,7 +25,7 @@ function FlickRow({ flick, position }: FlickRowProps) {
           />
           <div>
             <div>
-              <Link className="font-weight-bold text-truncate" href={flickHelper.getUrl()}>
+              <Link className="font-weight-bold text-truncate" href={routes.catalogFlick(flick.id)}>
                 {flick.title}
               </Link>
             </div>

@@ -1,13 +1,9 @@
 import { useParams } from 'react-router';
 
-interface Dictionary {
-  [key: string]: string;
-}
-
 export default function useRouteParams() {
   const params = useParams();
 
-  const result = {} as Dictionary;
+  const result = {} as Record<string, string>;
 
   for (const entry of Object.entries(params)) {
     const [key, value] = entry;

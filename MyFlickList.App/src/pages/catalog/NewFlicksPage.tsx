@@ -5,6 +5,7 @@ import DataLoader from '../../shared/DataLoader';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
 import useQueryParams from '../../shared/useQueryParams';
+import { routes } from '../PageRouter';
 import FlickTable from './shared/FlickTable';
 
 export default function NewFlicksPage() {
@@ -21,8 +22,8 @@ export default function NewFlicksPage() {
 
           <Breadcrumb
             segments={[
-              { title: 'Home', href: '/' },
-              { title: 'Catalog', href: '/catalog' },
+              { title: 'Home', href: routes.home() },
+              { title: 'Catalog', href: routes.catalog() },
               { title: 'New' }
             ]}
           />
@@ -32,7 +33,7 @@ export default function NewFlicksPage() {
           <Paginator
             currentPage={pageNumber}
             lastPage={flicks.totalPages}
-            getPageHref={(p) => `?page=${p}`}
+            getPageHref={(p) => routes.catalogFlicksNew(p)}
           />
         </div>
       )}
