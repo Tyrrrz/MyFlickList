@@ -4,45 +4,66 @@
 [![Coverage](https://codecov.io/gh/Tyrrrz/MyFlickList/branch/master/graph/badge.svg)](https://codecov.io/gh/Tyrrrz/MyFlickList)
 [![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
 
-[MyFlickList](https://myflicklist.netlify.app) is a social cataloging platform where users can rate movies and TV shows they have watched, get recommendations, share their lists with friends, discuss related topics, and more. This website is inspired by similar projects, such as [MyAnimeList](https://myanimelist.net), [MyDramaList](https://mydramalist.com), and others.
+[MyFlickList](https://myflicklist.netlify.app) is a social cataloging platform where users can track movies and TV shows they have watched, leave reviews, get personal recommendations, share their lists with friends, discuss related topics, and many other things.
+
+The goal is to provide a completely open and unified platform for everyone to express and share their tastes in movies, TV shows, anime, and other motion picture media, with a heavy emphasis on the social aspect of the process. Inspired by other projects, such as [MyAnimeList](https://myanimelist.net), [MyDramaList](https://mydramalist.com), [Letterboxd](https://letterboxd.com).
 
 ## Local environment
 
-To work on MFL locally you will need the latest versions of [.NET SDK](https://dotnet.microsoft.com/download/dotnet-core), [Node](https://nodejs.org/en/download) and [Docker](https://docs.docker.com/desktop).
+MyFlickList consists of 3 major components: Postgres database (`mfl.db`), ASP.NET Core REST API (`mfl.api`), and a React client (`mfl.app`). There are a few different ways to run them.
 
-### Run the database
+### Isolated setup (Docker)
 
-- Execute `docker-compose up mfl.db`
+Using Docker Compose, you can easily spin up MFL in a virtualized environment. This option works well if you just need to get everything running, but is not very suitable for iterative development due to lack of debugging and longer feedback loop.
 
-The database will be available on `localhost:5432`.
+Prerequisites:
 
-### Run the API
+- [Docker](https://docs.docker.com/desktop)
 
-- Change directory to `MyFlickList.Api`
-- Execute `dotnet run`
+Steps:
 
-The API will be available on `localhost:5000`.
+- Change directory to repository root
+- Build & run: `docker-compose up --build`
 
-### Run the app
+Individual containers should be exposed on the following ports:
 
-- Change directory to `MyFlickList.App`
-- Execute `npm install` (if first time or if `package.json` was changed)
-- Execute `npm start`
+- Database: `localhost:5432`
+- API: `localhost:5000`
+- App: `localhost:3000`
 
-The app will be on `localhost:3000`.
+### Hybrid setup (Docker + local)
 
-### Run everything together
+When actively working on the project, it's more convenient to run only the database in Docker, while having everything else running locally. This makes it possible to debug individual components and iterate more quickly.
 
-- Execute `docker-compose up --build`
+Prerequisites:
 
-The database will be available on `localhost:5432`.
-The API will be available on `localhost:5000`.
-The app will be on `localhost:3000`.
+- [Docker](https://docs.docker.com/desktop)
+- [.NET SDK](https://dotnet.microsoft.com/download/dotnet-core)
+- [Node](https://nodejs.org/en/download)
+
+Steps:
+
+- Run database: `docker-compose up mfl.db` (Terminal 1)
+- Change directory to `/MyFlickList.Api` (Terminal 2)
+- Run API: `dotnet run`
+- Change directory to `/MyFlickList.App` (Terminal 3)
+- Install node packages: `npm install`
+- Run app: `npm start`
+
+Individual containers should be exposed on the following ports:
+
+- Database: `localhost:5432`
+- API: `localhost:5000`
+- App: `localhost:3000`
 
 ### Generate OpenAPI client
 
-- Run the API
-- Change directory to `MyFlickList.App`
+MyFlickList's API conforms with the OpenAPI standard, which is leveraged for automatic client generation. Whenever you make a change in the API, you will need to generate a new client so that frontend and backend stay in sync.
+
+Steps:
+
+- Make sure API is running on `localhost:5000`
+- Change directory to `/MyFlickList.App`
 - Execute `npm run update-client`
 
-The generated client is placed in `src/infra/api.generated.ts`.
+The generated client is placed in `src/infra/api.generated.ts`. Some editors may not load the type definitions immediately and you might need to open the file yourself to help.
