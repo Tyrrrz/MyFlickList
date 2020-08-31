@@ -7,12 +7,12 @@ import { routes } from './PageRouter';
 
 export default function SignOutPage() {
   const history = useHistory();
-  const { setTokenValue } = useAuth();
+  const { setToken } = useAuth();
 
+  // TODO: request token invalidation on the server?
   useEffect(() => {
-    setTokenValue(undefined);
-    history.push(routes.home());
-  }, [history, setTokenValue]);
+    setToken(undefined);
+  }, [history, setToken]);
 
   return (
     <div>
@@ -22,7 +22,7 @@ export default function SignOutPage() {
 
       <h1>Sign out</h1>
 
-      <p>Redirecting...</p>
+      <p>You can now sign in again</p>
     </div>
   );
 }

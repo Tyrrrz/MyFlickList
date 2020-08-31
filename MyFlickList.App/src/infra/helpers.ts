@@ -1,6 +1,42 @@
+import decodeJwt from 'jwt-decode';
 import { FlickKind, IFlickListingResponse } from './api.generated';
 import config from './config';
 import { getAbsoluteUrl } from './utils';
+
+export class AuthTokenHelper {
+  readonly value: string;
+
+  constructor(value: string) {
+    this.value = value;
+  }
+
+  private decode() {
+    return decodeJwt(this.value) as Record<string, string | number | undefined>;
+  }
+
+  getUserId() {
+    return this.decode()['nameid'] as string | undefined;
+  }
+
+  getUsername() {
+    return this.decode()['unique_name'] as string | undefined;
+  }
+
+  getExpiration() {
+    const unixTime = this.decode()['exp'] as number | undefined;
+    return unixTime ? new Date(unixTime * 1000) : undefined;
+  }
+
+  isExpired() {
+    const expiration = this.getExpiration();
+
+    if (!expiration) {
+      return true;
+    }
+
+    return new Date() < expiration;
+  }
+}
 
 export class FlickHelper {
   readonly flick: IFlickListingResponse;

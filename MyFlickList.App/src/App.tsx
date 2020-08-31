@@ -1,100 +1,83 @@
 import React, { useState } from 'react';
 import { matchPath, useHistory } from 'react-router-dom';
+import { AuthTokenHelper } from './infra/helpers';
 import PageRouter, { routes } from './pages/PageRouter';
 import Link from './shared/Link';
+import useAuth from './shared/useAuth';
 import useTracking from './shared/useTracking';
 
 function Header() {
   const history = useHistory();
+  const { token } = useAuth();
+
   const [searchQuery, setSearchQuery] = useState('');
 
   // Don't render search box on the search page
   const searchVisible = !matchPath(history.location.pathname, routes.catalogFlicksSearch());
 
+  const tokenHelper = token ? new AuthTokenHelper(token) : undefined;
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <Link className="navbar-brand" href={routes.home()}>
-        <img className="align-top" src="/logo.png" alt="Logo" width={32} height={32} />{' '}
-        <span>MyFlickList</span>
-      </Link>
+    <div>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <Link className="navbar-brand mr-auto" href={routes.home()}>
+          <img className="align-top" src="/logo.png" alt="Logo" width={32} height={32} />{' '}
+          <span>MyFlickList</span>
+        </Link>
 
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarCollapse"
-        aria-controls="navbarCollapse"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon" />
-      </button>
-
-      <div className="collapse navbar-collapse" id="navbarCollapse">
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <Link className="nav-link" href={routes.home()}>
-              Home
+        <div className="navbar-nav">
+          {token && (
+            <>
+              <div className="nav-link font-weight-bold">{tokenHelper?.getUsername()}</div>
+              <Link className="nav-link" href={routes.signOut()}>
+                Sign out
+              </Link>
+            </>
+          )}
+          {!token && (
+            <Link className="nav-link" href={routes.signIn()}>
+              Sign in
             </Link>
-          </li>
+          )}
+        </div>
+      </nav>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div className="navbar-nav mr-auto">
+          <Link className="nav-link" href={routes.catalogFlicksTop()}>
+            Top
+          </Link>
+          <Link className="nav-link" href={routes.catalogFlicksTrending()}>
+            Trending
+          </Link>
+          <Link className="nav-link" href={routes.catalogFlicksNew()}>
+            New
+          </Link>
+          <Link className="nav-link" href={routes.catalogFlicksRequest()}>
+            Request
+          </Link>
+        </div>
 
-          <li className="nav-item dropdown">
-            <Link
-              className="nav-link dropdown-toggle"
-              id="navbarDropdown"
-              role="button"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              href="#"
-            >
-              Catalog
-            </Link>
-
-            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-              <Link className="dropdown-item" href={routes.catalogFlicksTop()}>
-                Top
-              </Link>
-              <Link className="dropdown-item" href={routes.catalogFlicksTrending()}>
-                Trending
-              </Link>
-              <Link className="dropdown-item" href={routes.catalogFlicksNew()}>
-                New
-              </Link>
-              <Link className="dropdown-item" href={routes.catalogFlicksSearch()}>
-                Search
-              </Link>
-              <Link className="dropdown-item" href={routes.catalogFlicksRequest()}>
-                Add
-              </Link>
-              <Link className="dropdown-item" href={routes.catalogTags()}>
-                Tags
-              </Link>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      {searchVisible && (
-        <form
-          className="my-2 form-inline fade-unfocused"
-          onSubmit={(e) => {
-            e.preventDefault();
-            history.push(routes.catalogFlicksSearch(searchQuery));
-          }}
-        >
-          <input
-            className="form-control"
-            type="search"
-            aria-label="Search"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button type="submit" hidden />
-        </form>
-      )}
-    </nav>
+        {searchVisible && (
+          <form
+            className="my-2 form-inline fade-unfocused"
+            onSubmit={(e) => {
+              e.preventDefault();
+              history.push(routes.catalogFlicksSearch(searchQuery));
+            }}
+          >
+            <input
+              className="form-control"
+              type="search"
+              aria-label="Search"
+              placeholder="Search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button type="submit" hidden />
+          </form>
+        )}
+      </nav>
+    </div>
   );
 }
 

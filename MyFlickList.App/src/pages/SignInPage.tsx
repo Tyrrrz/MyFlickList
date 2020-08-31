@@ -29,7 +29,7 @@ function submitForm(formData: FormData) {
 
 export default function SignInPage() {
   const history = useHistory();
-  const { setTokenValue } = useAuth();
+  const { setToken } = useAuth();
 
   const [formData, setFormData] = useState<FormData>({
     username: '',
@@ -55,7 +55,7 @@ export default function SignInPage() {
           e.preventDefault();
           submitForm(formData)
             .then((res) => {
-              setTokenValue(res.token);
+              setToken(res.token);
               history.push(routes.profile());
             })
             .catch(setError);

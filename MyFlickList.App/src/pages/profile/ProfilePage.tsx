@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router';
+import { AuthTokenHelper } from '../../infra/helpers';
 import Breadcrumb from '../../shared/Breadcrumb';
 import Meta from '../../shared/Meta';
 import useAuth from '../../shared/useAuth';
@@ -12,6 +13,8 @@ export default function ProfilePage() {
     return <Redirect to={routes.signIn()} />;
   }
 
+  const tokenHelper = new AuthTokenHelper(token);
+
   return (
     <div>
       <Meta title="Profile" />
@@ -20,7 +23,7 @@ export default function ProfilePage() {
 
       <h1>Profile</h1>
 
-      <p>Hi, {token?.getUsername()}!</p>
+      <p>Hi, {tokenHelper.getUsername()}!</p>
     </div>
   );
 }
