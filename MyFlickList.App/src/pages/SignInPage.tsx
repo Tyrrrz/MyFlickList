@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../infra/api';
 import { SignInRequest } from '../infra/api.generated';
+import { AuthTokenHelper } from '../infra/helpers';
 import Breadcrumb from '../shared/Breadcrumb';
 import ErrorHandler from '../shared/ErrorHandler';
 import Link from '../shared/Link';
@@ -56,7 +57,8 @@ export default function SignInPage() {
           submitForm(formData)
             .then((res) => {
               setToken(res.token);
-              history.push(routes.profile());
+              const tokenHelper = new AuthTokenHelper(res.token);
+              history.push(routes.profile(tokenHelper.getUsername()));
             })
             .catch(setError);
         }}

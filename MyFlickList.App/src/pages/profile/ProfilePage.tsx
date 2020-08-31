@@ -1,19 +1,16 @@
 import React from 'react';
-import { Redirect } from 'react-router';
-import { AuthTokenHelper } from '../../infra/helpers';
+import config from '../../infra/config';
+import { getAbsoluteUrl } from '../../infra/utils';
 import Breadcrumb from '../../shared/Breadcrumb';
 import Meta from '../../shared/Meta';
-import useAuth from '../../shared/useAuth';
+import useRouteParams from '../../shared/useRouteParams';
 import { routes } from '../PageRouter';
 
 export default function ProfilePage() {
-  const { token } = useAuth();
+  const { username } = useRouteParams();
 
-  if (!token) {
-    return <Redirect to={routes.signIn()} />;
-  }
-
-  const tokenHelper = new AuthTokenHelper(token);
+  // TODO: move to some helper
+  const avatarUrl = getAbsoluteUrl(config.apiUrl, `/profile/${username}/avatar`);
 
   return (
     <div>
@@ -23,7 +20,9 @@ export default function ProfilePage() {
 
       <h1>Profile</h1>
 
-      <p>Hi, {tokenHelper.getUsername()}!</p>
+      <p>Hi, {username}!</p>
+
+      <img alt={`${username}'s avatar`} src={avatarUrl} />
     </div>
   );
 }

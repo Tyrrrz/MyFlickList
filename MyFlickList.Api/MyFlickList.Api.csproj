@@ -21,4 +21,8 @@
     <PackageReference Include="TMDbLib" Version="1.6.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MyFlickList.Domain\MyFlickList.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

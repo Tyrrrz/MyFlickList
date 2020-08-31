@@ -15,16 +15,16 @@ export class AuthTokenHelper {
   }
 
   getUserId() {
-    return this.decode()['nameid'] as string | undefined;
+    return this.decode()['nameid'] as string;
   }
 
   getUsername() {
-    return this.decode()['unique_name'] as string | undefined;
+    return this.decode()['unique_name'] as string;
   }
 
   getExpiration() {
-    const unixTime = this.decode()['exp'] as number | undefined;
-    return unixTime ? new Date(unixTime * 1000) : undefined;
+    const unixTime = this.decode()['exp'] as number;
+    return new Date(unixTime * 1000);
   }
 
   isExpired() {

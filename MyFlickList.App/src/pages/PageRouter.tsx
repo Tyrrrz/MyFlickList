@@ -51,7 +51,7 @@ export const routes = {
 
   catalog: () => '/catalog',
 
-  profile: () => '/profile',
+  profile: (username: string) => '/profile/' + username,
 
   signIn: () => '/signin',
   signOut: () => '/signout',
@@ -80,7 +80,7 @@ export default function PageRouter() {
         render={() => <Redirect to={routes.catalogFlicksTop()} />}
       />
 
-      <Route exact path={routes.profile()} component={ProfilePage} />
+      <Route exact path={routes.profile(':username')} component={ProfilePage} />
 
       <Route exact path={routes.signIn()} component={SignInPage} />
       <Route exact path={routes.signOut()} component={SignOutPage} />

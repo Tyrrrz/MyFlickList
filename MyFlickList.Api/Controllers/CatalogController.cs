@@ -161,7 +161,7 @@ namespace MyFlickList.Api.Controllers
         {
             await _catalogPopulator.PopulateFlickAsync(flickId);
 
-            return Ok(new  RequestFlickResponse
+            return Ok(new RequestFlickResponse
             {
                 FlickId = flickId
             });

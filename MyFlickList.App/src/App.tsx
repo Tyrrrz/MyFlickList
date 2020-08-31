@@ -26,9 +26,14 @@ function Header() {
         </Link>
 
         <div className="navbar-nav">
-          {token && (
+          {token && tokenHelper && (
             <>
-              <div className="nav-link font-weight-bold">{tokenHelper?.getUsername()}</div>
+              <Link
+                className="nav-link font-weight-bold"
+                href={routes.profile(tokenHelper.getUsername())}
+              >
+                {tokenHelper.getUsername()}
+              </Link>
               <Link className="nav-link" href={routes.signOut()}>
                 Sign out
               </Link>
