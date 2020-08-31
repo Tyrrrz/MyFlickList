@@ -1,8 +1,10 @@
-﻿using System.Net.Http;
+﻿using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace MyFlickList.Domain.Gravatar
 {
@@ -20,7 +22,7 @@ namespace MyFlickList.Domain.Gravatar
             var emailHash = GetEmailHash(email);
 
             using var response = await _httpClient.GetAsync(
-                $"https://gravatar.com/avatar/{emailHash}?s=200&d=robohash",
+                $"https://gravatar.com/avatar/{HttpUtility.UrlEncode(emailHash)}?s=200&d=robohash",
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken
             );
@@ -47,7 +49,7 @@ namespace MyFlickList.Domain.Gravatar
             var emailBytes = Encoding.UTF8.GetBytes(email);
             var hashBytes = md5.ComputeHash(emailBytes);
 
-            return Encoding.UTF8.GetString(hashBytes);
+            return string.Concat(hashBytes.Select(b => b.ToString("x2")));
         }
     }
 }
