@@ -62,7 +62,7 @@ function Header() {
             className="my-2 form-inline fade-unfocused"
             onSubmit={(e) => {
               e.preventDefault();
-              history.push(routes.catalogFlicksSearch(searchQuery));
+              history.push(routes.catalogFlicksSearch({ query: searchQuery }));
             }}
           >
             <input

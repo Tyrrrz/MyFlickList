@@ -33,7 +33,7 @@ export default function TopFlicksPage() {
           <Paginator
             currentPage={pageNumber}
             lastPage={flicks.totalPages}
-            getPageHref={(p) => routes.catalogFlicksTop(p)}
+            getPageHref={(p) => routes.catalogFlicksTop({ page: p })}
           />
         </div>
       )}

@@ -36,7 +36,7 @@ export default function TaggedFlicksPage() {
           <Paginator
             currentPage={pageNumber}
             lastPage={flicks.totalPages}
-            getPageHref={(p) => routes.catalogTaggedFlicks(tagName, p)}
+            getPageHref={(p) => routes.catalogTaggedFlicks(tagName, { page: p })}
           />
         </div>
       )}

@@ -34,7 +34,7 @@ export default function SearchFlicksPage() {
         className="w-75 mx-auto my-5"
         onSubmit={(e) => {
           e.preventDefault();
-          history.push(routes.catalogFlicksSearch(stagingQuery));
+          history.push(routes.catalogFlicksSearch({ query: stagingQuery }));
         }}
       >
         <div className="form-row">
@@ -68,7 +68,7 @@ export default function SearchFlicksPage() {
                 <Paginator
                   currentPage={pageNumber}
                   lastPage={flicks.totalPages}
-                  getPageHref={(p) => routes.catalogFlicksSearch(query, p)}
+                  getPageHref={(p) => routes.catalogFlicksSearch({ query, page: p })}
                 />
               )}
 

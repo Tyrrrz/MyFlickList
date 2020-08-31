@@ -24,7 +24,7 @@ function getNetworkLinks(flick: FlickResponse) {
     },
     {
       name: 'Netflix',
-      url: 'https://netflix.com/searc' + formatQueryParams({ q: flick.title })
+      url: 'https://netflix.com/search' + formatQueryParams({ q: flick.title })
     },
     {
       name: 'HBO',

@@ -33,7 +33,7 @@ export default function TrendingFlicksPage() {
           <Paginator
             currentPage={pageNumber}
             lastPage={flicks.totalPages}
-            getPageHref={(p) => routes.catalogFlicksTrending(p)}
+            getPageHref={(p) => routes.catalogFlicksTrending({ page: p })}
           />
         </div>
       )}

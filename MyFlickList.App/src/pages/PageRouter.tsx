@@ -17,18 +17,28 @@ import SignInPage from './SignInPage';
 import SignOutPage from './SignOutPage';
 import SignUpPage from './SignUpPage';
 
+type QueryParams = Record<string, string | number | undefined>;
+
+export interface PaginationQueryParams extends QueryParams {
+  page?: number | undefined;
+}
+
+export interface SearchQueryParams extends PaginationQueryParams {
+  query?: string | undefined;
+}
+
 export const routes = {
-  catalogFlicksTop: (page?: number | undefined) =>
-    '/catalog/flicks/top' + formatQueryParams({ page }),
+  catalogFlicksTop: (query: PaginationQueryParams = {}) =>
+    '/catalog/flicks/top' + formatQueryParams(query),
 
-  catalogFlicksTrending: (page?: number | undefined) =>
-    '/catalog/flicks/trending' + formatQueryParams({ page }),
+  catalogFlicksTrending: (query: PaginationQueryParams = {}) =>
+    '/catalog/flicks/trending' + formatQueryParams(query),
 
-  catalogFlicksNew: (page?: number | undefined) =>
-    '/catalog/flicks/new' + formatQueryParams({ page }),
+  catalogFlicksNew: (query: PaginationQueryParams = {}) =>
+    '/catalog/flicks/new' + formatQueryParams(query),
 
-  catalogFlicksSearch: (query?: string | undefined, page?: number | undefined) =>
-    '/catalog/flicks/search' + formatQueryParams({ query, page }),
+  catalogFlicksSearch: (query: SearchQueryParams = {}) =>
+    '/catalog/flicks/search' + formatQueryParams(query),
 
   catalogFlicksRequest: () => '/catalog/flicks/request',
 
@@ -36,8 +46,8 @@ export const routes = {
 
   catalogTags: () => '/catalog/tags',
 
-  catalogTaggedFlicks: (tagName: string, page?: number | undefined) =>
-    '/catalog/tags/' + tagName + formatQueryParams({ page }),
+  catalogTaggedFlicks: (tagName: string, query: PaginationQueryParams = {}) =>
+    '/catalog/tags/' + tagName + formatQueryParams(query),
 
   catalog: () => '/catalog',
 
@@ -63,7 +73,12 @@ export default function PageRouter() {
       <Route exact path={routes.catalogFlick(':flickId')} component={FlickPage} />
       <Route exact path={routes.catalogTags()} component={TagsPage} />
       <Route exact path={routes.catalogTaggedFlicks(':tagName')} component={TaggedFlicksPage} />
-      <Route exact path={routes.catalog()} render={() => <Redirect to="/catalog/flicks/top" />} />
+
+      <Route
+        exact
+        path={routes.catalog()}
+        render={() => <Redirect to={routes.catalogFlicksTop()} />}
+      />
 
       <Route exact path={routes.profile()} component={ProfilePage} />
 
