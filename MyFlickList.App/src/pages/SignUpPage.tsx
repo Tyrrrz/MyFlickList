@@ -14,20 +14,20 @@ interface FormData {
   passwordConfirm: string;
 }
 
-function submitForm(formData: FormData) {
-  if (!formData.username || !formData.email || !formData.password || !formData.passwordConfirm) {
+function submitForm({ username, email, password, passwordConfirm }: FormData) {
+  if (!username || !email || !password || !passwordConfirm) {
     return Promise.reject('All fields are required');
   }
 
-  if (formData.password !== formData.passwordConfirm) {
+  if (password !== passwordConfirm) {
     return Promise.reject('Passwords do not match');
   }
 
   return api.auth.signUp(
     new SignUpRequest({
-      username: formData.username,
-      email: formData.email,
-      password: formData.password
+      username,
+      email,
+      password
     })
   );
 }

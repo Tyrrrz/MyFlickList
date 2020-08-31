@@ -14,15 +14,15 @@ interface FormData {
   password: string;
 }
 
-function submitForm(formData: FormData) {
-  if (!formData.username || !formData.password) {
+function submitForm({ username, password }: FormData) {
+  if (!username || !password) {
     return Promise.reject('All fields are required');
   }
 
   return api.auth.signIn(
     new SignInRequest({
-      username: formData.username,
-      password: formData.password
+      username: username,
+      password: password
     })
   );
 }

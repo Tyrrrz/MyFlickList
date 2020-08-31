@@ -45,8 +45,8 @@ interface FormData {
   imdbUrl: string;
 }
 
-function submitForm(formData: FormData) {
-  const parsedImdbId = parseImdbId(formData.imdbUrl);
+function submitForm({ imdbUrl }: FormData) {
+  const parsedImdbId = parseImdbId(imdbUrl);
 
   if (!parseImdbId) {
     return Promise.reject('Provided IMDB link appears invalid');

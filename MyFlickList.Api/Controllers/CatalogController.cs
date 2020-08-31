@@ -160,7 +160,11 @@ namespace MyFlickList.Api.Controllers
         public async Task<IActionResult> RequestFlick(string flickId) => await HandleExceptionsAsync(async () =>
         {
             await _catalogPopulator.PopulateFlickAsync(flickId);
-            return Ok(flickId);
+
+            return Ok(new  RequestFlickResponse
+            {
+                FlickId = flickId
+            });
         });
     }
 }
