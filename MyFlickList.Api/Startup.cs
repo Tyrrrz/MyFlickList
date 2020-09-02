@@ -1,17 +1,17 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using MyFlickList.Api.Entities.Auth;
 using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Api.Models;
 using MyFlickList.Api.Services;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -29,11 +29,12 @@ namespace MyFlickList.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            // Request handling
-            services.AddCors();
-            services.AddResponseCaching();
-            services.AddResponseCompression();
-            services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.Converters.Add(new StringEnumConverter()));
+            // Database
+            services.AddDbContextPool<AppDbContext>(o =>
+            {
+                o.UseNpgsql(Configuration.GetDatabaseConnectionString());
+                o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }, 20);
 
             // Infrastructure
             services.AddOpenApiDocument(o =>
@@ -52,32 +53,19 @@ namespace MyFlickList.Api
             services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
             services.AddAutoMapper(typeof(Mapping));
 
-            // Database
-            services.AddDbContextPool<AppDbContext>(o =>
+            // Request pipeline
+            services.AddCors();
+            services.AddResponseCaching();
+            services.AddResponseCompression();
+            services.AddControllers().AddNewtonsoftJson(o =>
             {
-                o.UseNpgsql(Configuration.GetDatabaseConnectionString());
-                o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            }, 20);
+                o.SerializerSettings.Converters.Add(new StringEnumConverter());
+                o.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
 
             // Auth
-            services.AddIdentityCore<UserEntity>(o =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
             {
-                // Lenient password requirements because we're not storing any sensitive data
-                o.Password.RequiredLength = 6;
-                o.Password.RequireDigit = false;
-                o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-            }).AddSignInManager().AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
-
-            services.AddAuthentication(o =>
-            {
-                o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
-            {
-                o.SaveToken = true;
                 o.RequireHttpsMetadata = Configuration.GetJwtRequireHttps();
                 o.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -90,11 +78,16 @@ namespace MyFlickList.Api
                 };
             });
 
-            services.AddAuthorization();
+            services.AddAuthorization(o =>
+            {
+                o.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
 
             // Local services
             services.AddHttpClient<ICatalogPopulator, TmdbCatalogPopulator>();
-            services.AddSingleton<JwtProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

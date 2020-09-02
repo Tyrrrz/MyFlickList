@@ -1,28 +1,25 @@
-﻿using System;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Entities.Auth;
-using MyFlickList.Api.Entities.Catalog;
+using MyFlickList.Api.Entities.Files;
+using MyFlickList.Api.Entities.Flicks;
+using MyFlickList.Api.Entities.Profiles;
 using MyFlickList.Api.Internal;
 
 namespace MyFlickList.Api
 {
-    public class AppDbContext : IdentityUserContext<UserEntity, Guid>
+    public class AppDbContext : DbContext
     {
-        public DbSet<ActorEntity> Actors { get; set; } = default!;
-
-        public DbSet<CharacterEntity> Characters { get; set; } = default!;
-
-        public DbSet<ExternalResourceEntity> ExternalResources { get; set; } = default!;
+        public DbSet<FileEntity> Files { get; set; } = default!;
 
         public DbSet<FlickEntity> Flicks { get; set; } = default!;
 
-        public DbSet<ImageEntity> Images { get; set; } = default!;
-
-        public DbSet<TagEntity> Tags { get; set; } = default!;
+        public DbSet<FlickExternalLinkEntity> FlickExternalLinks { get; set; } = default!;
 
         public DbSet<FlickTagEntity> FlickTags { get; set; } = default!;
+
+        public DbSet<UserEntity> Users { get; set; } = default!;
+
+        public DbSet<ProfileEntity> Profiles { get; set; } = default!;
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -33,18 +30,17 @@ namespace MyFlickList.Api
         {
             base.OnModelCreating(modelBuilder);
 
-            // Unaccent extension
+            // TODO: add collations with EFc5
+            // http://npgsql.org/efcore/misc/collations-and-case-sensitivity.html?tabs=data-annotations
+
+            // Unaccent extension (will not need when collations are added)
             modelBuilder.HasPostgresExtension("unaccent");
-            modelBuilder.HasDbFunction(typeof(Postgres.Functions).GetMethod(nameof(Postgres.Functions.Unaccent))).HasName("unaccent");
+            modelBuilder
+                .HasDbFunction(typeof(Postgres.Functions).GetMethod(nameof(Postgres.Functions.Unaccent)))
+                .HasName("unaccent");
 
-            // Auth
-            modelBuilder.Entity<UserEntity>().ToTable("Users");
-            modelBuilder.Entity<IdentityUserClaim<Guid>>().ToTable("UserClaims");
-            modelBuilder.Entity<IdentityUserLogin<Guid>>().ToTable("UserLogins");
-            modelBuilder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens");
-
-            // Catalog
-            modelBuilder.Entity<FlickTagEntity>().HasKey(o => new {o.FlickId, o.TagName});
+            // Local configurations
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
     }
 }

@@ -8,9 +8,9 @@ namespace MyFlickList.Api
 {
     public static class Program
     {
-        private static IHostBuilder CreateHostBuilder(string[] args) => Host
-            .CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(b => b.UseStartup<Startup>());
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(b => b.UseStartup<Startup>());
 
         private static async Task ApplyMigrationsAsync(IHost host)
         {

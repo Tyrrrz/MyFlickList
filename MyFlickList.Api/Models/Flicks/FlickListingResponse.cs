@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using MyFlickList.Api.Entities.Catalog;
+using MyFlickList.Api.Entities.Flicks;
 
-namespace MyFlickList.Api.Models.Catalog
+namespace MyFlickList.Api.Models.Flicks
 {
     public class FlickListingResponse
     {
         [Required]
-        public string Id { get; set; } = default!;
+        public int Id { get; set; }
 
         [Required]
         public FlickKind Kind { get; set; }
@@ -20,14 +20,14 @@ namespace MyFlickList.Api.Models.Catalog
 
         public DateTimeOffset? FinaleDate { get; set; }
 
-        public TimeSpan? Runtime { get; set; }
-
         public int? EpisodeCount { get; set; }
+
+        public TimeSpan? Runtime { get; set; }
 
         public double? ExternalRating { get; set; }
 
-        public Guid? ImageId { get; set; }
+        public int? CoverImageId { get; set; }
 
-        public IReadOnlyList<string> Tags { get; set; } = Array.Empty<string>();
+        public IReadOnlyList<string>? Tags { get; set; }
     }
 }

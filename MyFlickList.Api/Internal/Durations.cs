@@ -1,6 +1,6 @@
 ﻿namespace MyFlickList.Api.Internal
 {
-    internal static class CacheDurations
+    internal static class Durations
     {
         public const int OneSecond = 1;
 

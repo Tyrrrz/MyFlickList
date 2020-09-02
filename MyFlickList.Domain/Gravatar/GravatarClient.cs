@@ -12,10 +12,8 @@ namespace MyFlickList.Domain.Gravatar
     {
         private readonly HttpClient _httpClient;
 
-        public GravatarClient(HttpClient httpClient)
-        {
+        public GravatarClient(HttpClient httpClient) =>
             _httpClient = httpClient;
-        }
 
         public async Task<GravatarImage> GetAvatarAsync(string email, CancellationToken cancellationToken = default)
         {
@@ -32,11 +30,7 @@ namespace MyFlickList.Domain.Gravatar
             var content = await response.Content.ReadAsByteArrayAsync();
             var contentType = response.Content.Headers.ContentType.MediaType;
 
-            return new GravatarImage(
-                email,
-                content,
-                contentType
-            );
+            return new GravatarImage(content, contentType);
         }
     }
 

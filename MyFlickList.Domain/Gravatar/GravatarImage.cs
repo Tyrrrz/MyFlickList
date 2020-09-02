@@ -2,16 +2,13 @@
 {
     public class GravatarImage
     {
-        public string Email { get; }
-
-        public byte[] Content { get; }
+        public byte[] Data { get; }
 
         public string ContentType { get; }
 
-        public GravatarImage(string email, byte[] content, string contentType)
+        public GravatarImage(byte[] data, string contentType)
         {
-            Email = email;
-            Content = content;
+            Data = data;
             ContentType = contentType;
         }
     }

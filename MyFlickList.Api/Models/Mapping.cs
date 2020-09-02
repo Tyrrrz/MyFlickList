@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
-using MyFlickList.Api.Entities.Catalog;
-using MyFlickList.Api.Models.Catalog;
+using MyFlickList.Api.Entities.Flicks;
+using MyFlickList.Api.Entities.Profiles;
+using MyFlickList.Api.Models.Flicks;
+using MyFlickList.Api.Models.Profiles;
 
 namespace MyFlickList.Api.Models
 {
@@ -8,17 +10,16 @@ namespace MyFlickList.Api.Models
     {
         public Mapping()
         {
-            CreateMap<TagEntity, string>()
+            CreateMap<FlickTagEntity, string>()
                 .ConvertUsing(o => o.Name);
 
-            CreateMap<FlickTagEntity, string>()
-                .ConvertUsing(o => o.TagName);
-
             CreateMap<FlickEntity, FlickListingResponse>()
-                .ForMember(o => o.Tags, x => x.MapFrom(o => o.FlickTags));
+                .ForMember(o => o.Tags, x => x.MapFrom(o => o.Tags));
 
             CreateMap<FlickEntity, FlickResponse>()
-                .ForMember(o => o.Tags, x => x.MapFrom(o => o.FlickTags));
+                .ForMember(o => o.Tags, x => x.MapFrom(o => o.Tags));
+
+            CreateMap<ProfileEntity, ProfileResponse>();
         }
     }
 }

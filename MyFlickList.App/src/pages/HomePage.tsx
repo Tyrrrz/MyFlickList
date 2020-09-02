@@ -5,6 +5,7 @@ import { FlickHelper } from '../infra/helpers';
 import Breadcrumb from '../shared/Breadcrumb';
 import DataLoader from '../shared/DataLoader';
 import Link from '../shared/Link';
+import Meta from '../shared/Meta';
 import { routes } from './PageRouter';
 
 function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
@@ -53,6 +54,8 @@ export default function HomePage() {
       getData={getData}
       render={({ topFlicks, trendingFlicks, newFlicks }) => (
         <div>
+          <Meta />
+
           <Breadcrumb segments={[{ title: 'Home', href: routes.home() }]} />
 
           {/* Top */}

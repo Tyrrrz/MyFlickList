@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 
 namespace MyFlickList.Api.Services
 {
     public interface ICatalogPopulator
     {
-        Task PopulateFlickAsync(string flickId);
+        Task<int?> PopulateFlickAsync(string imdbId, CancellationToken cancellationToken = default);
     }
 }

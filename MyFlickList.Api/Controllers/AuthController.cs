@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MyFlickList.Api.Entities.Auth;
+using MyFlickList.Api.Entities.Profiles;
+using MyFlickList.Api.Internal;
+using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Api.Models.Auth;
-using MyFlickList.Api.Services;
 
 namespace MyFlickList.Api.Controllers
 {
@@ -13,13 +16,13 @@ namespace MyFlickList.Api.Controllers
     [Route("auth")]
     public class AuthController : ControllerBase
     {
-        private readonly SignInManager<UserEntity> _signInManager;
-        private readonly JwtProvider _jwtProvider;
+        private readonly IConfiguration _configuration;
+        private readonly AppDbContext _dbContext;
 
-        public AuthController(SignInManager<UserEntity> signInManager, JwtProvider jwtProvider)
+        public AuthController(IConfiguration configuration, AppDbContext dbContext)
         {
-            _signInManager = signInManager;
-            _jwtProvider = jwtProvider;
+            _configuration = configuration;
+            _dbContext = dbContext;
         }
 
         [HttpPost("signup")]
@@ -27,19 +30,32 @@ namespace MyFlickList.Api.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> SignUp(SignUpRequest request)
         {
-            var result = await _signInManager.UserManager.CreateAsync(new UserEntity
-            {
-                UserName = request.Username,
-                Email = request.Email
-            }, request.Password);
+            var cancellation = HttpContext.RequestAborted;
 
-            if (!result.Succeeded)
+            var user = new UserEntity
             {
-                return BadRequest(new ProblemDetails
+                Username = request.Username,
+                Email = request.Email,
+                PasswordHash = PasswordHash.Generate(request.Password),
+                Profile = new ProfileEntity
                 {
-                    Title = "Registration failed",
-                    Detail = string.Join(Environment.NewLine, result.Errors.Select(e => e.Description))
-                });
+                    Name = request.Username
+                }
+            };
+
+            try
+            {
+                await _dbContext.Users.AddAsync(user, cancellation);
+                await _dbContext.SaveChangesAsync(cancellation);
+            }
+            // TODO: better handling for exceptions on duplicate usernames/emails (as mandated by indexes)
+            catch (Exception ex)
+            {
+                return Problem(
+                    statusCode: 400,
+                    title: "Error",
+                    detail: ex.Message
+                );
             }
 
             return CreatedAtAction(nameof(SignIn), null);
@@ -47,23 +63,53 @@ namespace MyFlickList.Api.Controllers
 
         [HttpPost("signin")]
         [ProducesResponseType(typeof(SignInResponse), 200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> SignIn(SignInRequest request)
         {
-            var user = await _signInManager.UserManager.FindByNameAsync(request.Username);
+            var cancellation = HttpContext.RequestAborted;
+
+            var user = await _dbContext.Users
+                .Include(u => u.Profile)
+                .FirstOrDefaultAsync(u => u.Username == request.Username, cancellation);
+
             if (user == null)
-                return BadRequest();
+            {
+                return Problem(
+                    statusCode: 401,
+                    title: "Invalid credentials",
+                    detail: "Provided username is invalid"
+                );
+            }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            if (!result.Succeeded)
-                return BadRequest();
+            if (!PasswordHash.Verify(user.PasswordHash, request.Password))
+            {
+                return Problem(
+                    statusCode: 401,
+                    title: "Invalid credentials",
+                    detail: "Provided password is invalid"
+                );
+            }
 
-            // TODO: add user claims
-            var jwt = _jwtProvider.GenerateToken(user.Id.ToString(), user.UserName);
+            var claims = new[]
+            {
+                new Claim("jti", Guid.NewGuid().ToString()),
+                new Claim("sub", user.Id.ToString()),
+                new Claim("preferred_username", user.Username),
+                new Claim("email", user.Email),
+                new Claim("email_verified", user.IsEmailConfirmed.ToString()),
+                new Claim("mfl_profile_id", user.Profile!.Id.ToString()),
+            };
+
+            var token = Jwt.Generate(
+                _configuration.GetJwtIssuer(),
+                _configuration.GetJwtSecret(),
+                _configuration.GetJwtExpiration(),
+                claims
+            );
 
             return Ok(new SignInResponse
             {
-                Token = jwt
+                Token = token
             });
         }
     }

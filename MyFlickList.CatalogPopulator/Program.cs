@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using CliFx;
 
-namespace MyFlickList.CatalogUpdater
+namespace MyFlickList.CatalogPopulator
 {
     public static class Program
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CliFx;
@@ -8,7 +9,7 @@ using CliFx.Attributes;
 using TMDbLib.Client;
 using TMDbLib.Objects.Discover;
 
-namespace MyFlickList.CatalogUpdater.Commands
+namespace MyFlickList.CatalogPopulator.Commands
 {
     [Command("populate", Description = "Populate catalog.")]
     public class PopulateCommand : ICommand
@@ -21,10 +22,15 @@ namespace MyFlickList.CatalogUpdater.Commands
         [CommandOption("tmdb-key", 'k', IsRequired = true, EnvironmentVariableName = "ApiKeys__Tmdb", Description = "TMDB API Key.")]
         public string TmdbApiKey { get; set; } = default!;
 
-        private async Task RequestFlickAsync(string flickId, CancellationToken cancellationToken)
+        private async Task RequestFlickAsync(string imdbId, CancellationToken cancellationToken)
         {
-            var url = new Uri(new Uri(ApiUrl), $"/catalog/flicks/{flickId}");
-            using var request = new HttpRequestMessage(HttpMethod.Post, url);
+            var url = new Uri(new Uri(ApiUrl), "/flicks");
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, url)
+            {
+                Content = new StringContent($"{{ \"sourceUrl\": \"https://imdb.com/title/{imdbId}\" }}", Encoding.UTF8, "application/json")
+            };
+
             using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
             // Skip not found

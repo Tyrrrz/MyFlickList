@@ -2,11 +2,12 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MyFlickList.Api.Entities.Catalog;
-using MyFlickList.Api.Exceptions;
+using MyFlickList.Api.Entities.Files;
+using MyFlickList.Api.Entities.Flicks;
 using MyFlickList.Api.Internal.Extensions;
 using TMDbLib.Client;
 using TMDbLib.Objects.Find;
@@ -33,7 +34,7 @@ namespace MyFlickList.Api.Services
             _tmdbClientLazy = new Lazy<TMDbClient>(() => new TMDbClient(configuration.GetTmdbApiKey()));
         }
 
-        private async Task<Guid> StoreImageAsync(string imagePath)
+        private async Task<FileEntity> StoreImageAsync(string imagePath, CancellationToken cancellationToken = default)
         {
             var imageUri = new Uri(
                 new Uri(TmDbClient.Config.Images.BaseUrl, UriKind.Absolute),
@@ -43,148 +44,140 @@ namespace MyFlickList.Api.Services
             var extension = Path.GetExtension(imageUri.AbsolutePath).Trim('.');
             var data = await _httpClient.GetByteArrayAsync(imageUri);
 
-            var entity = new ImageEntity
+            var entity = new FileEntity
             {
-                Id = Guid.NewGuid(),
                 Data = data,
                 ContentType = $"image/{extension}"
             };
 
-            await _dbContext.Images.AddAsync(entity);
+            await _dbContext.Files.AddAsync(entity, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return entity.Id;
+            return entity;
         }
 
-        private async Task AddOrUpdateTagAsync(TagEntity tagEntity)
-        {
-            var existing = await _dbContext.Tags.FindAsync(tagEntity.Name);
-
-            if (existing != null)
-            {
-                return;
-            }
-
-            await _dbContext.Tags.AddAsync(tagEntity);
-        }
-
-        private async Task AddOrUpdateFlickAsync(FlickEntity flickEntity)
+        private async Task AddOrUpdateFlickAsync(FlickEntity flickEntity, CancellationToken cancellationToken = default)
         {
             var existing = await _dbContext.Flicks
-                .Include(f => f.FlickTags)
-                .SingleOrDefaultAsync(f => f.Id == flickEntity.Id);
+                .Include(f => f.Tags)
+                .FirstOrDefaultAsync(f => f.ImdbId == flickEntity.ImdbId, cancellationToken);
 
             if (existing != null)
             {
-                _dbContext.Flicks.Remove(existing);
-                _dbContext.FlickTags.RemoveRange(existing.FlickTags);
-            }
+                if (existing.CoverImageId != null)
+                    _dbContext.Files.RemoveRange(_dbContext.Files.Where(f => f.Id == existing.CoverImageId));
 
-            await _dbContext.Flicks.AddAsync(flickEntity);
+                _dbContext.FlickExternalLinks.RemoveRange(existing.ExternalLinks);
+                _dbContext.FlickTags.RemoveRange(existing.Tags);
+
+                flickEntity.Id = existing.Id;
+                _dbContext.Entry(existing).CurrentValues.SetValues(flickEntity);
+            }
+            else
+            {
+                await _dbContext.Flicks.AddAsync(flickEntity, cancellationToken);
+            }
         }
 
-        private async Task PopulateMovieFlickAsync(Movie movie)
+        private async Task<FlickEntity> PopulateMovieFlickAsync(Movie movie, CancellationToken cancellationToken = default)
         {
-            var id = movie.ImdbId;
-
             // Poster image
-            var imageId = !string.IsNullOrWhiteSpace(movie.PosterPath)
-                ? await StoreImageAsync(movie.PosterPath)
-                : (Guid?) null;
+            var image = !string.IsNullOrWhiteSpace(movie.PosterPath)
+                ? await StoreImageAsync(movie.PosterPath, cancellationToken)
+                : null;
 
             // TODO: get external rating from IMDB, not TMDB
             var flickEntity = new FlickEntity
             {
-                Id = id,
                 Kind = FlickKind.Movie,
+                ImdbId = movie.ImdbId,
                 Title = movie.Title,
+                OriginalTitle = movie.OriginalTitle,
                 PremiereDate = movie.ReleaseDate,
                 Runtime = movie.Runtime?.Pipe(m => TimeSpan.FromMinutes(m)).NullIf(t => t.TotalSeconds <= 0),
                 ExternalRating = movie.VoteAverage,
                 Synopsis = movie.Overview,
-                ImageId = imageId
+                CoverImageId = image?.Id,
+                Tags = movie.Genres.Select(g => new FlickTagEntity
+                {
+                    Name = g.Name
+                }).ToList()
             };
 
-            // Tags
-            foreach (var genre in movie.Genres)
-            {
-                await AddOrUpdateTagAsync(new TagEntity {Name = genre.Name});
+            await AddOrUpdateFlickAsync(flickEntity, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-                flickEntity.FlickTags.Add(new FlickTagEntity
-                {
-                    FlickId = id,
-                    TagName = genre.Name
-                });
-            }
-
-            await AddOrUpdateFlickAsync(flickEntity);
+            return flickEntity;
         }
 
-        private async Task PopulateSeriesFlickAsync(TvShow series)
+        private async Task<FlickEntity> PopulateSeriesFlickAsync(TvShow series, CancellationToken cancellationToken = default)
         {
-            var externalIds = await TmDbClient.GetTvShowExternalIdsAsync(series.Id);
-            var id = externalIds.ImdbId;
+            var externalIds = await TmDbClient.GetTvShowExternalIdsAsync(series.Id, cancellationToken);
 
             // Poster image
-            var imageId = !string.IsNullOrWhiteSpace(series.PosterPath)
-                ? await StoreImageAsync(series.PosterPath)
-                : (Guid?) null;
+            var image = !string.IsNullOrWhiteSpace(series.PosterPath)
+                ? await StoreImageAsync(series.PosterPath, cancellationToken)
+                : null;
 
             // TODO: get external rating from IMDB, not TMDB
             var flickEntity = new FlickEntity
             {
-                Id = id,
                 Kind = FlickKind.Series,
+                ImdbId = externalIds.ImdbId,
                 Title = series.Name,
+                OriginalTitle = series.OriginalName,
                 PremiereDate = series.FirstAirDate,
                 FinaleDate = series.LastAirDate?.NullIf(series.InProduction),
                 Runtime = series.EpisodeRunTime.NullIfEmpty()?.Average().Pipe(TimeSpan.FromMinutes),
                 EpisodeCount = series.NumberOfEpisodes,
                 ExternalRating = series.VoteAverage,
                 Synopsis = series.Overview,
-                ImageId = imageId
+                CoverImageId = image?.Id,
+                Tags = series.Genres.Select(g => new FlickTagEntity
+                {
+                    Name = g.Name
+                }).ToList()
             };
 
-            // Tags
-            foreach (var genre in series.Genres)
-            {
-                await AddOrUpdateTagAsync(new TagEntity {Name = genre.Name});
+            await AddOrUpdateFlickAsync(flickEntity, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-                flickEntity.FlickTags.Add(new FlickTagEntity
-                {
-                    FlickId = id,
-                    TagName = genre.Name
-                });
-            }
-
-            await AddOrUpdateFlickAsync(flickEntity);
+            return flickEntity;
         }
 
-        public async Task PopulateFlickAsync(string flickId)
+        public async Task<int?> PopulateFlickAsync(string imdbId, CancellationToken cancellationToken = default)
         {
             await TmDbClient.GetConfigAsync();
 
-            var item = await TmDbClient.FindAsync(FindExternalSource.Imdb, flickId);
+            var item = await TmDbClient.FindAsync(FindExternalSource.Imdb, imdbId, cancellationToken);
             var movieMatch = item.MovieResults.FirstOrDefault();
             var seriesMatch = item.TvResults.FirstOrDefault();
 
             if (movieMatch != null)
             {
-                var movie = await TmDbClient.GetMovieAsync(movieMatch.Id);
+                await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-                await PopulateMovieFlickAsync(movie);
-                await _dbContext.SaveChangesAsync();
-            }
-            else if (seriesMatch != null)
-            {
-                var series = await TmDbClient.GetTvShowAsync(seriesMatch.Id);
+                var movie = await TmDbClient.GetMovieAsync(movieMatch.Id, cancellationToken: cancellationToken);
+                var flickEntity = await PopulateMovieFlickAsync(movie, cancellationToken);
 
-                await PopulateSeriesFlickAsync(series);
-                await _dbContext.SaveChangesAsync();
+                await transaction.CommitAsync(cancellationToken);
+
+                return flickEntity.Id;
             }
-            else
+
+            if (seriesMatch != null)
             {
-                throw new DomainException($"Cannot find IMDB title with ID '{flickId}'.", StatusCodeHint.NotFound);
+                await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+
+                var series = await TmDbClient.GetTvShowAsync(seriesMatch.Id, cancellationToken: cancellationToken);
+                var flickEntity = await PopulateSeriesFlickAsync(series, cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+
+                return flickEntity.Id;
             }
+
+            return null;
         }
     }
 }
