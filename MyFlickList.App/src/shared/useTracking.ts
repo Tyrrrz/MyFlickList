@@ -1,21 +1,31 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import GoogleAnalytics from 'react-ga';
 import { useLocation } from 'react-router';
 import config from '../infra/config';
 
-export default function useTracking() {
-  const token = config.secrets.googleAnalyticsToken;
-  const location = useLocation();
+const token = config.secrets.googleAnalyticsToken;
 
+export default function useTracking() {
+  const [isInitialized, setIsInitialized] = useState(false);
+  const { pathname, search } = useLocation();
+
+  // Initialize GA
   useEffect(() => {
-    if (token) {
+    if (!isInitialized && token) {
       GoogleAnalytics.initialize(token, {
         gaOptions: {
           sampleRate: 100
         }
       });
 
-      GoogleAnalytics.pageview(location.pathname + location.search);
+      setIsInitialized(true);
     }
-  }, [token, location]);
+  }, [isInitialized]);
+
+  // Track navigation
+  useEffect(() => {
+    if (isInitialized && token) {
+      GoogleAnalytics.pageview(pathname + search);
+    }
+  }, [isInitialized, pathname, search]);
 }
