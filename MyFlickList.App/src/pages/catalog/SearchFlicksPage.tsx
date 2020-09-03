@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { SearchResponse } from '../../infra/api.generated';
-import Breadcrumb from '../../shared/Breadcrumb';
 import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
@@ -19,9 +18,9 @@ function SearchResults({ results }: { results: SearchResponse }) {
         <FlickTable flicks={results.flicks} startingPosition={1} />
       )}
 
-      {isNothingFound && <p className="display-4 text-center">Nothing found :(</p>}
+      {isNothingFound && <p className="text-3xl text-center">Nothing found :(</p>}
 
-      <p className="mt-5 lead text-center">
+      <p className="mt-3 text-center">
         Didn&apos;t find what you were looking for? You can{' '}
         <Link href={routes.flickAdd()}>request</Link> a new flick to be added.
       </p>
@@ -40,31 +39,26 @@ export default function SearchFlicksPage() {
     <div>
       <Meta title="Search" />
 
-      <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: 'Search' }]} />
+      <h1>Search</h1>
 
       <form
-        className="w-75 mx-auto my-5"
+        className="w-9/12 mx-auto my-5 flex flex-row"
         onSubmit={(e) => {
           e.preventDefault();
           history.push(routes.search({ query: stagingQuery }));
         }}
       >
-        <div className="form-row">
-          <div className="col">
-            <input
-              className="form-control-lg w-100"
-              type="text"
-              autoFocus
-              value={stagingQuery}
-              onChange={(e) => setStagingQuery(e.target.value)}
-            />
-          </div>
-          <div className="col-auto">
-            <button className="btn-lg btn-primary btn-block" type="submit">
-              Search
-            </button>
-          </div>
-        </div>
+        <input
+          className="flex-grow"
+          type="search"
+          autoFocus
+          value={stagingQuery}
+          onChange={(e) => setStagingQuery(e.target.value)}
+        />
+
+        <button className="ml-2" type="submit">
+          Search
+        </button>
       </form>
 
       {query && (

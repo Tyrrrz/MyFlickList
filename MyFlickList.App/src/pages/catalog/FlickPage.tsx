@@ -5,7 +5,6 @@ import { FlickKind, FlickResponse } from '../../infra/api.generated';
 import config from '../../infra/config';
 import { FlickHelper } from '../../infra/helpers';
 import { formatQueryParams, getAbsoluteUrl } from '../../infra/utils';
-import Breadcrumb from '../../shared/Breadcrumb';
 import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
@@ -16,7 +15,7 @@ function getNetworkLinks(flick: FlickResponse) {
   return [
     {
       name: 'IMDB',
-      url: 'https://imdb.com/title/' + encodeURIComponent(flick.id)
+      url: 'https://imdb.com/title/' + encodeURIComponent(flick.imdbId)
     },
     {
       name: 'TMDB',
@@ -72,82 +71,92 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
         contentType={flick.kind === FlickKind.Movie ? 'video.movie' : 'video.tv_show'}
       />
 
-      <Breadcrumb
-        segments={[
-          { title: 'Home', href: routes.home() },
-          { title: 'Flicks', href: routes.flicks() },
-          { title: flick.title }
-        ]}
-      />
+      <h1>{flick.title}</h1>
 
-      <div>
-        <h1>{flick.title}</h1>
+      {/* Main info */}
+      <div className="inline-block -mt-2 space-x-3">
+        <div className="inline-flex items-center">
+          <FiTv /> <span className="ml-1">{flickHelper.formatKind()}</span>
+        </div>
 
-        <div className="m-0 mt-3 p-0 container container-fluid">
-          <div className="row">
-            <div className="col col-3">
-              <img
-                className="mw-100 rounded"
-                alt={flick.title}
-                src={flickHelper.getCoverImageUrl()}
-              />
+        <div className="inline-flex items-center">
+          <FiClock /> <span className="ml-1">{flickHelper.formatRuntime()}</span>
+        </div>
 
-              <div className="my-1 mt-3">
-                <FiStar /> <span>{flickHelper.formatRating()}</span>
-              </div>
-              <div className="my-1">
-                <FiCalendar /> <span>{flickHelper.formatDate()}</span>
-              </div>
-              <div className="my-1">
-                <FiTv /> <span>{flickHelper.formatKind()}</span>
-              </div>
-              <div className="my-1">
-                <FiClock /> <span>{flickHelper.formatRuntime()}</span>
-              </div>
-              <div className="my-1">
-                <FiTag /> <span>{flickHelper.formatTags()}</span>
-              </div>
+        <div className="inline-flex items-center">
+          <FiCalendar /> <span className="ml-1">{flickHelper.formatDate()}</span>
+        </div>
 
-              <hr className="w-75" />
+        <div className="inline-flex items-center">
+          <FiStar /> <span className="ml-1">{flickHelper.formatRating()}</span>
+        </div>
+      </div>
 
-              <div>
-                {getNetworkLinks(flick).map((networkLink) => (
-                  <div key={networkLink.name} className="my-1">
-                    <FiExternalLink />{' '}
-                    <Link href={networkLink.url} target="_blank">
-                      Find on {networkLink.name}
-                    </Link>
-                  </div>
+      <div className="mt-5 flex flex-row space-x-3">
+        {/* Cover image & additional info */}
+        <div className="w-auto">
+          <img
+            className="rounded-md"
+            alt={flick.title}
+            src={flickHelper.getCoverImageUrl()}
+            width={500}
+          />
+
+          <div className="mt-5">
+            <div className="inline-flex items-center font-semibold">
+              <FiTag /> <span className="ml-1">Tags</span>
+            </div>
+            {flick.tags && flick.tags.length > 0 ? (
+              <div className="space-x-1 space-y-1">
+                {flick.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    className="inline-block px-3 py-1 rounded-full bg-gray-200 text-sm"
+                    href={routes.flicks({ filterTag: tag })}
+                  >
+                    {tag}
+                  </Link>
                 ))}
               </div>
-
-              <div className="mt-4">
-                {getShareLinks(flick).map((shareLink) => (
-                  <div key={shareLink.name} className="my-1">
-                    <FiShare2 />{' '}
-                    <Link href={shareLink.url} target="_blank">
-                      Share on {shareLink.name}
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="col">
-              <div className="jumbotron">
-                <h3>
-                  Create account to add this {flick.kind.toString().toLowerCase()} to your list
-                </h3>
-                <p>
-                  <button className="btn btn-outline-primary">Sign up</button>
-                </p>
-              </div>
-
-              <div>
-                <h5>Synopsis</h5>
-                <article>{flick.synopsis}</article>
-              </div>
-            </div>
+            ) : (
+              '--'
+            )}
           </div>
+
+          <div className="mt-5">
+            <div className="inline-flex items-center font-semibold">
+              <FiExternalLink /> <span className="ml-1">External</span>
+            </div>
+            <ul>
+              {getNetworkLinks(flick).map((networkLink) => (
+                <li key={networkLink.name}>
+                  <Link className="text-sm" href={networkLink.url} target="_blank">
+                    Find on {networkLink.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-5">
+            <div className="inline-flex items-center font-semibold">
+              <FiShare2 /> <span className="ml-1">Share</span>
+            </div>
+            <ul>
+              {getShareLinks(flick).map((shareLink) => (
+                <li key={shareLink.name}>
+                  <Link className="text-sm" href={shareLink.url} target="_blank">
+                    {shareLink.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="w-full">
+          <article>{flick.synopsis}</article>
         </div>
       </div>
     </div>

@@ -329,3 +329,4 @@ yarn-error.log
 
 # Build output
 MyFlickList.App/build
+MyFlickList.App/src/tailwind.output.css

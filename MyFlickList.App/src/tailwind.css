@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+
+* {
+  @apply transition duration-200;
+}
+
+html {
+  font-size: 18px;
+}
+
+a {
+  @apply text-gray-700 font-medium;
+}
+
+a:hover {
+  @apply text-black;
+}
+
+h1 {
+  @apply text-4xl;
+}
+
+h2 {
+  @apply text-3xl;
+}
+
+h3 {
+  @apply text-2xl;
+}
+
+h4 {
+  @apply text-xl;
+}
+
+h5 {
+  @apply text-lg;
+}
+
+h6 {
+  @apply text-base;
+}
+
+ul {
+  @apply ml-5 list-disc;
+}
+
+code {
+  @apply px-1 border rounded bg-gray-200;
+}
+
+label {
+  @apply block py-1 font-semibold;
+}
+
+input {
+  @apply appearance-none px-4 py-2 border border-gray-400 rounded-md text-gray-700;
+}
+
+input:hover {
+  @apply border-gray-500;
+}
+
+input:focus {
+  @apply border-gray-500 outline-none;
+}
+
+button {
+  @apply appearance-none px-4 py-2 border border-gray-400 rounded-md font-semibold;
+}
+
+button:hover {
+  @apply border-gray-500;
+}
+
+@tailwind utilities;

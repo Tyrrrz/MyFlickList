@@ -49,16 +49,12 @@ export default function ErrorHandler({ error }: ErrorHandlerProps) {
   const resolvedError = resolveError(error);
 
   return (
-    <div className="alert alert-danger" role="alert">
-      <div className="font-weight-bold">{resolvedError.title}</div>
+    <div className="px-4 py-3 border rounded border-red-400 bg-red-100 text-red-700">
+      <div className="font-bold">{resolvedError.title}</div>
 
       {resolvedError.details && <div>{resolvedError.details}</div>}
 
-      {resolvedError.code && (
-        <div>
-          <small>Code: {resolvedError.code}</small>
-        </div>
-      )}
+      {resolvedError.code && <div className="text-sm italic">Code: {resolvedError.code}</div>}
     </div>
   );
 }

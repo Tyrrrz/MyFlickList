@@ -3,7 +3,6 @@ import { useHistory } from 'react-router';
 import api from '../infra/api';
 import { SignInRequest } from '../infra/api.generated';
 import { AuthTokenHelper } from '../infra/helpers';
-import Breadcrumb from '../shared/Breadcrumb';
 import ErrorHandler from '../shared/ErrorHandler';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
@@ -43,15 +42,14 @@ export default function SignInPage() {
     <div>
       <Meta title="Sign in" />
 
-      <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: 'Sign in' }]} />
+      <h1>Sign in</h1>
 
-      <h1>Log in</h1>
-
-      <p className="lead">
-        Not registered yet? <Link href={routes.signUp()}>Create a new profile</Link>.
-      </p>
+      <div>
+        Don&apos;t have a profile yet? <Link href={routes.signUp()}>Sign up</Link> to create one!
+      </div>
 
       <form
+        className="my-4"
         onSubmit={(e) => {
           e.preventDefault();
           submitForm(formData)
@@ -63,11 +61,10 @@ export default function SignInPage() {
             .catch(setError);
         }}
       >
-        <div className="form-group">
+        <div className="my-2">
           <label htmlFor="username">User name:</label>
           <input
             type="text"
-            className="form-control"
             id="username"
             value={formData.username}
             onChange={(e) =>
@@ -79,11 +76,10 @@ export default function SignInPage() {
           />
         </div>
 
-        <div className="form-group">
+        <div className="my-2">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
-            className="form-control"
             id="password"
             value={formData.password}
             onChange={(e) =>
@@ -97,8 +93,8 @@ export default function SignInPage() {
 
         <ErrorHandler error={error} />
 
-        <button type="submit" className="btn btn-primary">
-          Log in
+        <button className="my-2" type="submit">
+          Sign in
         </button>
       </form>
     </div>

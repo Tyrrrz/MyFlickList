@@ -20,6 +20,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
+    "tailwindcss": "^1.7.6",
     "typescript": "^3.9.7"
   },
   "devDependencies": {
@@ -31,12 +32,15 @@
     "prettier-plugin-organize-imports": "^1.1.1"
   },
   "scripts": {
+    "generate-client": "node_modules/.bin/nswag openapi2tsclient /Input:http://localhost:5000/swagger/v1/swagger.json /Output:src/infra/api.generated.ts /GenerateOptionalParameters:true",
+    "generate-tailwind": "node_modules/.bin/tailwindcss build src/tailwind.css -o src/tailwind.output.css",
+    "prestart": "npm run generate-tailwind",
+    "prebuild": "npm run generate-tailwind",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint */**/*.{js,jsx,ts,tsx} --fix",
-    "update-client": "node_modules/.bin/nswag openapi2tsclient /Input:http://localhost:5000/swagger/v1/swagger.json /Output:src/infra/api.generated.ts /GenerateOptionalParameters:true"
+    "lint": "eslint */**/*.{js,jsx,ts,tsx} --fix"
   },
   "eslintConfig": {
     "extends": "react-app"

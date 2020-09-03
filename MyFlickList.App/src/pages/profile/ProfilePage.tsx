@@ -2,11 +2,9 @@ import React from 'react';
 import api from '../../infra/api';
 import { ProfileResponse } from '../../infra/api.generated';
 import { ProfileHelper } from '../../infra/helpers';
-import Breadcrumb from '../../shared/Breadcrumb';
 import DataLoader from '../../shared/DataLoader';
 import Meta from '../../shared/Meta';
 import useRouteParams from '../../shared/useRouteParams';
-import { routes } from '../PageRouter';
 
 function ProfileLoaded({ profile }: { profile: ProfileResponse }) {
   const profileHelper = new ProfileHelper(profile);
@@ -14,8 +12,6 @@ function ProfileLoaded({ profile }: { profile: ProfileResponse }) {
   return (
     <div>
       <Meta title={profile.name} />
-
-      <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: profile.name }]} />
 
       <h1>{profile.name}</h1>
 

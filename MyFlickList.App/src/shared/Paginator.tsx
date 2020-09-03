@@ -30,19 +30,13 @@ interface PageButtonProps {
 
 function PageButton({ href, active, children }: PageButtonProps) {
   if (active) {
-    return (
-      <li className="page-item active">
-        <span className="page-link">{children}</span>
-      </li>
-    );
+    return <Link href="#">{children}</Link>;
   }
 
   return (
-    <li className="page-item">
-      <Link className="page-link" href={href} onClick={() => scrollToTop()}>
-        {children}
-      </Link>
-    </li>
+    <Link href={href} onClick={() => scrollToTop()}>
+      {children}
+    </Link>
   );
 }
 
@@ -77,9 +71,5 @@ export default function Paginator({ currentPage, lastPage, getPageHref }: Pagina
     );
   }
 
-  return (
-    <nav aria-label="Page navigation">
-      <ul className="pagination justify-content-center">{pageButtons}</ul>
-    </nav>
-  );
+  return <nav className="m-3 flex flex-row justify-center space-x-3 text-2xl">{pageButtons}</nav>;
 }

@@ -1,17 +1,17 @@
 import React, { DependencyList } from 'react';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import ErrorHandler from './ErrorHandler';
-import LoadingSpinner from './LoadingSpinner';
 import useAsyncStateEffect from './useAsyncStateEffect';
 import useDelay from './useDelay';
 
 function Busy() {
   // Only show spinner after a delay, to prevent flickering
-  const spinnerVisible = useDelay(200);
-  if (!spinnerVisible) return <></>;
+  const isSpinnerVisible = useDelay(200);
+  if (!isSpinnerVisible) return <></>;
 
   return (
-    <div className="mt-5 text-center">
-      <LoadingSpinner kind="pulse" size={5} />
+    <div className="p-12 text-center">
+      <AiOutlineLoading3Quarters className="mx-auto animate-spin text-6xl text-blue-600" />
     </div>
   );
 }

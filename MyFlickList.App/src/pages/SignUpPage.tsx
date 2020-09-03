@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../infra/api';
 import { SignUpRequest } from '../infra/api.generated';
-import Breadcrumb from '../shared/Breadcrumb';
 import ErrorHandler from '../shared/ErrorHandler';
+import Link from '../shared/Link';
 import Meta from '../shared/Meta';
 import { routes } from './PageRouter';
 
@@ -48,12 +48,15 @@ export default function SignUpPage() {
     <div>
       <Meta title="Sign up" />
 
-      <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: 'Sign up' }]} />
-
       <h1>Sign up</h1>
 
+      <div>
+        Already have a profile? <Link href={routes.signIn()}>Sign in</Link> with your existing
+        account.
+      </div>
+
       <form
-        className="mt-3"
+        className="my-4"
         onSubmit={(e) => {
           e.preventDefault();
           submitForm(formData)
@@ -61,11 +64,10 @@ export default function SignUpPage() {
             .catch(setError);
         }}
       >
-        <div className="form-group">
+        <div className="my-2">
           <label htmlFor="username">User name:</label>
           <input
             type="text"
-            className="form-control"
             id="username"
             value={formData.username}
             onChange={(e) =>
@@ -77,11 +79,10 @@ export default function SignUpPage() {
           />
         </div>
 
-        <div className="form-group">
+        <div className="my-2">
           <label htmlFor="email">Email:</label>
           <input
             type="email"
-            className="form-control"
             id="email"
             value={formData.email}
             onChange={(e) =>
@@ -93,11 +94,10 @@ export default function SignUpPage() {
           />
         </div>
 
-        <div className="form-group">
+        <div className="my-2">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
-            className="form-control"
             id="password"
             value={formData.password}
             onChange={(e) =>
@@ -109,11 +109,10 @@ export default function SignUpPage() {
           />
         </div>
 
-        <div className="form-group">
+        <div className="my-2">
           <label htmlFor="password-confirm">Password (confirm):</label>
           <input
             type="password"
-            className="form-control"
             id="password-confirm"
             value={formData.passwordConfirm}
             onChange={(e) =>
@@ -127,7 +126,7 @@ export default function SignUpPage() {
 
         <ErrorHandler error={error} />
 
-        <button type="submit" className="btn btn-primary">
+        <button className="my-2" type="submit">
           Sign up
         </button>
       </form>

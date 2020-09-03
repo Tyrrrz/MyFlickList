@@ -1,4 +1,5 @@
 import React from 'react';
+import { FiStar } from 'react-icons/fi';
 import { FlickListingResponse } from '../../../infra/api.generated';
 import { FlickHelper } from '../../../infra/helpers';
 import Link from '../../../shared/Link';
@@ -14,28 +15,26 @@ function FlickRow({ flick, position }: FlickRowProps) {
 
   return (
     <tr>
-      <td className="h1 font-weight-bold text-center text-muted align-middle">{position}</td>
-      <td>
-        <div className="d-flex m-0 p-0 flex-row">
-          <img
-            className="mr-3"
-            style={{ width: '4rem' }}
-            alt={flick.title}
-            src={flickHelper.getCoverImageUrl()}
-          />
+      <td className="px-6 py-2 text-center text-4xl font-bold text-gray-600">{position}</td>
+      <td className="py-2">
+        <div className="flex flex-row space-x-3">
+          <img alt={flick.title} src={flickHelper.getCoverImageUrl()} width={100} />
+
           <div>
             <div>
-              <Link className="font-weight-bold text-truncate" href={routes.flick(flick.id)}>
+              <Link className="font-bold text-truncate" href={routes.flick(flick.id)}>
                 {flick.title}
               </Link>
             </div>
+
             <div>{flickHelper.formatKind()}</div>
             <div>{flickHelper.formatDate()}</div>
-            <div>
-              {flick.tags?.slice(0, 5).map((t) => (
+
+            <div className="mt-3 space-x-2">
+              {flick.tags?.slice(0, 3).map((t) => (
                 <Link
                   key={t}
-                  className="badge badge-pill badge-secondary mr-1"
+                  className="inline-block px-3 py-1 rounded-full bg-gray-200 text-sm"
                   href={routes.flicks({ filterTag: t })}
                 >
                   {t}
@@ -45,9 +44,9 @@ function FlickRow({ flick, position }: FlickRowProps) {
           </div>
         </div>
       </td>
-      <td className="h5 text-center text-muted align-middle">{flickHelper.formatRating()}</td>
-      <td className="h5 text-center text-muted align-middle">N/A</td>
-      <td className="h5 text-center text-muted align-middle">N/A</td>
+      <td className="py-2 flex flex-row items-center text-center text-2xl font-semibold text-gray-700">
+        <FiStar /> <span className="ml-1">{flickHelper.formatRating()}</span>
+      </td>
     </tr>
   );
 }
@@ -59,24 +58,12 @@ interface FlickTableProps {
 
 export default function FlickTable({ flicks, startingPosition }: FlickTableProps) {
   return (
-    <table className="table table-striped table-borderless">
+    <table className="w-full">
       <colgroup>
-        <col className="w-auto" />
+        <col className="w-auto mw-12" />
         <col />
         <col className="w-auto" />
-        <col className="w-auto" />
-        <col className="w-auto" />
       </colgroup>
-
-      <thead>
-        <tr>
-          <th className="text-center">#</th>
-          <th>Flick</th>
-          <th className="text-center">Avg. Rating</th>
-          <th className="text-center">Your Rating</th>
-          <th className="text-center">Listing</th>
-        </tr>
-      </thead>
 
       <tbody>
         {flicks.map((flick, i) => (

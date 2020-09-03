@@ -1,7 +1,6 @@
 import React from 'react';
 import api from '../../infra/api';
 import { FlickOrder } from '../../infra/api.generated';
-import Breadcrumb from '../../shared/Breadcrumb';
 import DataLoader from '../../shared/DataLoader';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
@@ -19,9 +18,9 @@ export default function FlicksPage() {
       deps={[order, filterTag, pageNumber]}
       render={(flicks) => (
         <div>
-          <Meta title={`${order} Flicks`} />
+          <Meta title={order ? `${order} Flicks` : 'Flicks'} />
 
-          <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: 'Flicks' }]} />
+          <h1>Flicks</h1>
 
           <FlickTable flicks={flicks.items} startingPosition={1 + (pageNumber - 1) * 10} />
 
