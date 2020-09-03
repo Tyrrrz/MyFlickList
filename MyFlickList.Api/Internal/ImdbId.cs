@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace MyFlickList.Domain.Imdb
+namespace MyFlickList.Api.Internal
 {
-    public class ImdbId
+    internal static class ImdbId
     {
         public static string? TryFromUrl(string url)
         {

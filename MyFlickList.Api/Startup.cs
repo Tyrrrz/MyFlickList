@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MyFlickList.Api.Internal.Extensions;
+using MyFlickList.Api.Internal.Infrastructure;
 using MyFlickList.Api.Models;
 using MyFlickList.Api.Services;
 using Newtonsoft.Json;
@@ -40,6 +41,8 @@ namespace MyFlickList.Api
             services.AddOpenApiDocument(o =>
             {
                 o.Title = ApplicationTitle;
+                o.RequireParametersWithoutDefault = true;
+
                 o.AddSecurity("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -57,7 +60,11 @@ namespace MyFlickList.Api
             services.AddCors();
             services.AddResponseCaching();
             services.AddResponseCompression();
-            services.AddControllers().AddNewtonsoftJson(o =>
+
+            services.AddControllers(o =>
+            {
+                o.ModelMetadataDetailsProviders.Add(new RequiredBindingMetadataProvider());
+            }).AddNewtonsoftJson(o =>
             {
                 o.SerializerSettings.Converters.Add(new StringEnumConverter());
                 o.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;

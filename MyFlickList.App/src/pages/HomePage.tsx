@@ -1,6 +1,6 @@
 import React from 'react';
 import api from '../infra/api';
-import { FlickListingResponse } from '../infra/api.generated';
+import { FlickListingResponse, FlickOrder } from '../infra/api.generated';
 import { FlickHelper } from '../infra/helpers';
 import Breadcrumb from '../shared/Breadcrumb';
 import DataLoader from '../shared/DataLoader';
@@ -17,8 +17,8 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
       style={{ width: '15rem' }}
       title={flick.title}
     >
-      <Link href={routes.catalogFlick(flick.id)}>
-        <img className="w-100 rounded" alt={flick.title} src={flickHelper.getImageUrl()} />
+      <Link href={routes.flick(flick.id)}>
+        <img className="w-100 rounded" alt={flick.title} src={flickHelper.getCoverImageUrl()} />
         <div
           className="position-absolute w-100 p-2 rounded text-white text-truncate font-weight-bold"
           style={{
@@ -36,9 +36,9 @@ function FlickSpotlight({ flick }: { flick: FlickListingResponse }) {
 
 async function getData() {
   const [topFlicks, trendingFlicks, newFlicks] = await Promise.all([
-    api.catalog.getTopFlicks(),
-    api.catalog.getTrendingFlicks(),
-    api.catalog.getNewFlicks()
+    api.flicks.getFlicks(FlickOrder.Top),
+    api.flicks.getFlicks(FlickOrder.Trending),
+    api.flicks.getFlicks(FlickOrder.New)
   ]);
 
   return {
@@ -56,11 +56,11 @@ export default function HomePage() {
         <div>
           <Meta />
 
-          <Breadcrumb segments={[{ title: 'Home', href: routes.home() }]} />
+          <Breadcrumb segments={[{ title: 'Home' }]} />
 
           {/* Top */}
           <div className="mt-4 mb-2">
-            <Link className="text-body" href={routes.catalogFlicksTop()}>
+            <Link className="text-body" href={routes.flicks({ order: FlickOrder.Top })}>
               <h3>Top</h3>
             </Link>
             <div className="d-flex flex-row">
@@ -72,7 +72,7 @@ export default function HomePage() {
 
           {/* Trending */}
           <div className="mt-4 mb-2">
-            <Link className="text-body" href={routes.catalogFlicksTrending()}>
+            <Link className="text-body" href={routes.flicks({ order: FlickOrder.Trending })}>
               <h3>Trending</h3>
             </Link>
             <div className="d-flex flex-row">
@@ -84,7 +84,7 @@ export default function HomePage() {
 
           {/* New */}
           <div className="mt-4 mb-2">
-            <Link className="text-body" href={routes.catalogFlicksNew()}>
+            <Link className="text-body" href={routes.flicks({ order: FlickOrder.New })}>
               <h3>New</h3>
             </Link>
             <div className="d-flex flex-row">

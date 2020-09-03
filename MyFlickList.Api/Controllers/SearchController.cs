@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -26,7 +27,7 @@ namespace MyFlickList.Api.Controllers
         // TODO: in the future this should search for everything, not just flicks
         [HttpGet]
         [ProducesResponseType(typeof(SearchResponse), 200)]
-        public async Task<IActionResult> SearchFlicks(string query)
+        public async Task<IActionResult> GetResults(string query)
         {
             var cancellation = HttpContext.RequestAborted;
 

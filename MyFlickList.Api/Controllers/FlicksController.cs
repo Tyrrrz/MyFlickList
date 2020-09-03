@@ -5,10 +5,10 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Entities.Flicks;
+using MyFlickList.Api.Internal;
 using MyFlickList.Api.Models;
 using MyFlickList.Api.Models.Flicks;
 using MyFlickList.Api.Services;
-using MyFlickList.Domain.Imdb;
 
 namespace MyFlickList.Api.Controllers
 {
@@ -58,7 +58,10 @@ namespace MyFlickList.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
-        public async Task<IActionResult> GetFlicks(FlickOrder order, string? filterTag = null, int page = 1)
+        public async Task<IActionResult> GetFlicks(
+            FlickOrder order = FlickOrder.Top,
+            string? filterTag = null,
+            int page = 1)
         {
             var cancellation = HttpContext.RequestAborted;
 

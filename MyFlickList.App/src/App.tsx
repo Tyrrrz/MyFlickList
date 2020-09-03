@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { matchPath, useHistory } from 'react-router-dom';
+import { FlickOrder } from './infra/api.generated';
 import { AuthTokenHelper } from './infra/helpers';
 import PageRouter, { routes } from './pages/PageRouter';
 import Link from './shared/Link';
@@ -13,7 +14,7 @@ function Header() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Don't render search box on the search page
-  const searchVisible = !matchPath(history.location.pathname, routes.catalogFlicksSearch());
+  const isSearchVisible = !matchPath(history.location.pathname, routes.search());
 
   const tokenHelper = token ? new AuthTokenHelper(token) : undefined;
 
@@ -30,7 +31,7 @@ function Header() {
             <>
               <Link
                 className="nav-link font-weight-bold"
-                href={routes.profile(tokenHelper.getUsername())}
+                href={routes.profile(tokenHelper.getProfileId())}
               >
                 {tokenHelper.getUsername()}
               </Link>
@@ -48,26 +49,26 @@ function Header() {
       </nav>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="navbar-nav mr-auto">
-          <Link className="nav-link" href={routes.catalogFlicksTop()}>
+          <Link className="nav-link" href={routes.flicks({ order: FlickOrder.Top })}>
             Top
           </Link>
-          <Link className="nav-link" href={routes.catalogFlicksTrending()}>
+          <Link className="nav-link" href={routes.flicks({ order: FlickOrder.Trending })}>
             Trending
           </Link>
-          <Link className="nav-link" href={routes.catalogFlicksNew()}>
+          <Link className="nav-link" href={routes.flicks({ order: FlickOrder.New })}>
             New
           </Link>
-          <Link className="nav-link" href={routes.catalogFlicksRequest()}>
+          <Link className="nav-link" href={routes.flickAdd()}>
             Request
           </Link>
         </div>
 
-        {searchVisible && (
+        {isSearchVisible && (
           <form
             className="my-2 form-inline fade-unfocused"
             onSubmit={(e) => {
               e.preventDefault();
-              history.push(routes.catalogFlicksSearch({ query: searchQuery }));
+              history.push(routes.search({ query: searchQuery }));
             }}
           >
             <input

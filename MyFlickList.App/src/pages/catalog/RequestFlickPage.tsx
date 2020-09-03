@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
+import { AddFlickRequest } from '../../infra/api.generated';
 import Breadcrumb from '../../shared/Breadcrumb';
 import ErrorHandler from '../../shared/ErrorHandler';
 import Link from '../../shared/Link';
@@ -8,58 +9,11 @@ import LoadingSpinner from '../../shared/LoadingSpinner';
 import Meta from '../../shared/Meta';
 import { routes } from '../PageRouter';
 
-function parseUrl(url: string) {
-  try {
-    return new URL(url);
-  } catch {
-    return null;
-  }
-}
-
-function parseImdbId(url: string) {
-  if (!url) {
-    return null;
-  }
-
-  // Check if already is a parsed ID
-  if (/^\w\w\d+$/i.test(url)) {
-    return url;
-  }
-
-  // Ensure that the link comes from IMDB
-  const urlParsed = parseUrl(url);
-  if (!urlParsed || !/(?:^|\.)imdb\.com$/i.test(urlParsed.hostname)) {
-    return null;
-  }
-
-  // Get the ID
-  const match = /(?:^|\/)title\/(\w\w\d+)(?:$|\/)/i.exec(urlParsed.pathname);
-  if (!match) {
-    return null;
-  }
-
-  return match[1];
-}
-
-interface FormData {
-  imdbUrl: string;
-}
-
-function submitForm({ imdbUrl }: FormData) {
-  const parsedImdbId = parseImdbId(imdbUrl);
-
-  if (!parseImdbId) {
-    return Promise.reject('Provided IMDB link appears invalid');
-  }
-
-  return api.catalog.requestFlick(parsedImdbId);
-}
-
 export default function RequestFlickPage() {
   const history = useHistory();
 
-  const [busy, setBusy] = useState(false);
-  const [imdbUrl, setImdbUrl] = useState('');
+  const [isBusy, setIsBusy] = useState(false);
+  const [sourceUrl, setSourceUrl] = useState('');
   const [error, setError] = useState<unknown>();
 
   return (
@@ -69,7 +23,7 @@ export default function RequestFlickPage() {
       <Breadcrumb
         segments={[
           { title: 'Home', href: routes.home() },
-          { title: 'Catalog', href: routes.catalog() },
+          { title: 'Flicks', href: routes.flicks() },
           { title: 'Request' }
         ]}
       />
@@ -88,35 +42,36 @@ export default function RequestFlickPage() {
         onSubmit={(e) => {
           e.preventDefault();
 
-          setBusy(true);
+          setIsBusy(true);
 
-          submitForm({ imdbUrl })
-            .then((res) => history.push(routes.catalogFlick(res.flickId)))
+          api.flicks
+            .addFlick(new AddFlickRequest({ sourceUrl }))
+            .then((res) => history.push(routes.flick(res.flickId)))
             .catch(setError)
-            .finally(() => setBusy(false));
+            .finally(() => setIsBusy(false));
         }}
       >
         <div className="form-group">
-          <label htmlFor="imdbUrl">IMDB link</label>
+          <label htmlFor="sourceUrl">IMDB link</label>
           <input
             className="form-control"
             type="url"
-            id="imdbUrl"
-            disabled={busy}
-            value={imdbUrl}
-            onChange={(e) => setImdbUrl(e.target.value)}
+            id="sourceUrl"
+            disabled={isBusy}
+            value={sourceUrl}
+            onChange={(e) => setSourceUrl(e.target.value)}
           />
         </div>
 
         <ErrorHandler error={error} />
 
-        {!busy && (
-          <button className="btn btn-primary" type="submit" disabled={busy}>
+        {!isBusy && (
+          <button className="btn btn-primary" type="submit" disabled={isBusy}>
             Submit
           </button>
         )}
 
-        {busy && <LoadingSpinner />}
+        {isBusy && <LoadingSpinner />}
       </form>
     </div>
   );

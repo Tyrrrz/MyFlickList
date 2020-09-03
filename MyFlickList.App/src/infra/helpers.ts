@@ -1,5 +1,5 @@
 import decodeJwt from 'jwt-decode';
-import { FlickKind, IFlickListingResponse } from './api.generated';
+import { FlickKind, IFlickListingResponse, IProfileResponse } from './api.generated';
 import config from './config';
 import { getAbsoluteUrl } from './utils';
 
@@ -14,16 +14,8 @@ export class AuthTokenHelper {
     return decodeJwt(this.value) as Record<string, string | number | undefined>;
   }
 
-  getUserId() {
-    return this.decode()['nameid'] as string;
-  }
-
-  getUsername() {
-    return this.decode()['unique_name'] as string;
-  }
-
   getExpiration() {
-    const unixTime = this.decode()['exp'] as number;
+    const unixTime = Number(this.decode()['exp']);
     return new Date(unixTime * 1000);
   }
 
@@ -36,6 +28,26 @@ export class AuthTokenHelper {
 
     return new Date() < expiration;
   }
+
+  getUserId() {
+    return Number(this.decode()['sub']);
+  }
+
+  getUsername() {
+    return this.decode()['preferred_username'] as string;
+  }
+
+  getEmail() {
+    return this.decode()['email'] as string;
+  }
+
+  isEmailVerified() {
+    return (this.decode()['email_verified'] as string) === 'True';
+  }
+
+  getProfileId() {
+    return Number(this.decode()['mfl_profile_id']);
+  }
 }
 
 export class FlickHelper {
@@ -45,12 +57,12 @@ export class FlickHelper {
     this.flick = flick;
   }
 
-  getImageUrl() {
-    if (!this.flick.imageId) {
+  getCoverImageUrl() {
+    if (!this.flick.coverImageId) {
       return '/images/poster-placeholder.png';
     }
 
-    return getAbsoluteUrl(config.apiUrl, '/catalog/images/' + this.flick.imageId);
+    return getAbsoluteUrl(config.apiUrl, `/files/${this.flick.coverImageId}`);
   }
 
   formatKind() {
@@ -126,5 +138,21 @@ export class FlickHelper {
     if (!this.flick.tags || this.flick.tags.length <= 0) return '--';
 
     return this.flick.tags.join(', ');
+  }
+}
+
+export class ProfileHelper {
+  readonly profile: IProfileResponse;
+
+  constructor(profile: IProfileResponse) {
+    this.profile = profile;
+  }
+
+  getAvatarImageUrl() {
+    if (!this.profile.avatarImageId) {
+      return `https://robohash.org/${this.profile.id}_${this.profile.name}.png?set=any&bgset=any&size=200x200`;
+    }
+
+    return getAbsoluteUrl(config.apiUrl, `/files/${this.profile.avatarImageId}`);
   }
 }

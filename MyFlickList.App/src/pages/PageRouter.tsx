@@ -1,14 +1,11 @@
 import React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+import { FlickOrder } from '../infra/api.generated';
 import { formatQueryParams } from '../infra/utils';
 import FlickPage from './catalog/FlickPage';
-import NewFlicksPage from './catalog/NewFlicksPage';
+import FlicksPage from './catalog/FlicksPage';
 import RequestFlickPage from './catalog/RequestFlickPage';
 import SearchFlicksPage from './catalog/SearchFlicksPage';
-import TaggedFlicksPage from './catalog/TaggedFlicksPage';
-import TagsPage from './catalog/TagsPage';
-import TopFlicksPage from './catalog/TopFlicksPage';
-import TrendingFlicksPage from './catalog/TrendingFlicksPage';
 import CreditsPage from './CreditsPage';
 import HomePage from './HomePage';
 import NotFoundPage from './NotFoundPage';
@@ -17,10 +14,17 @@ import SignInPage from './SignInPage';
 import SignOutPage from './SignOutPage';
 import SignUpPage from './SignUpPage';
 
+// TODO: figure out a better way to approach named routes
+
 type QueryParams = Record<string, string | number | undefined>;
 
 export interface PaginationQueryParams extends QueryParams {
   page?: number | undefined;
+}
+
+export interface FlicksQueryParams extends PaginationQueryParams {
+  order?: FlickOrder | undefined;
+  filterTag?: string | undefined;
 }
 
 export interface SearchQueryParams extends PaginationQueryParams {
@@ -28,30 +32,13 @@ export interface SearchQueryParams extends PaginationQueryParams {
 }
 
 export const routes = {
-  catalogFlicksTop: (query: PaginationQueryParams = {}) =>
-    '/catalog/flicks/top' + formatQueryParams(query),
+  flicks: (query: FlicksQueryParams = {}) => '/flicks' + formatQueryParams(query),
+  flickAdd: () => '/flicks/request',
+  flick: (flickId: number | string) => '/flicks/' + flickId,
 
-  catalogFlicksTrending: (query: PaginationQueryParams = {}) =>
-    '/catalog/flicks/trending' + formatQueryParams(query),
+  search: (query: SearchQueryParams = {}) => '/search' + formatQueryParams(query),
 
-  catalogFlicksNew: (query: PaginationQueryParams = {}) =>
-    '/catalog/flicks/new' + formatQueryParams(query),
-
-  catalogFlicksSearch: (query: SearchQueryParams = {}) =>
-    '/catalog/flicks/search' + formatQueryParams(query),
-
-  catalogFlicksRequest: () => '/catalog/flicks/request',
-
-  catalogFlick: (flickId: string) => '/catalog/flicks/' + flickId,
-
-  catalogTags: () => '/catalog/tags',
-
-  catalogTaggedFlicks: (tagName: string, query: PaginationQueryParams = {}) =>
-    '/catalog/tags/' + tagName + formatQueryParams(query),
-
-  catalog: () => '/catalog',
-
-  profile: (username: string) => '/profile/' + username,
+  profile: (profileId: number | string) => '/profile/' + profileId,
 
   signIn: () => '/signin',
   signOut: () => '/signout',
@@ -65,22 +52,13 @@ export const routes = {
 export default function PageRouter() {
   return (
     <Switch>
-      <Route exact path={routes.catalogFlicksTop()} component={TopFlicksPage} />
-      <Route exact path={routes.catalogFlicksTrending()} component={TrendingFlicksPage} />
-      <Route exact path={routes.catalogFlicksNew()} component={NewFlicksPage} />
-      <Route exact path={routes.catalogFlicksSearch()} component={SearchFlicksPage} />
-      <Route exact path={routes.catalogFlicksRequest()} component={RequestFlickPage} />
-      <Route exact path={routes.catalogFlick(':flickId')} component={FlickPage} />
-      <Route exact path={routes.catalogTags()} component={TagsPage} />
-      <Route exact path={routes.catalogTaggedFlicks(':tagName')} component={TaggedFlicksPage} />
+      <Route exact path={routes.flicks()} component={FlicksPage} />
+      <Route exact path={routes.flickAdd()} component={RequestFlickPage} />
+      <Route exact path={routes.flick(':flickId')} component={FlickPage} />
 
-      <Route
-        exact
-        path={routes.catalog()}
-        render={() => <Redirect to={routes.catalogFlicksTop()} />}
-      />
+      <Route exact path={routes.search()} component={SearchFlicksPage} />
 
-      <Route exact path={routes.profile(':username')} component={ProfilePage} />
+      <Route exact path={routes.profile(':profileId')} component={ProfilePage} />
 
       <Route exact path={routes.signIn()} component={SignInPage} />
       <Route exact path={routes.signOut()} component={SignOutPage} />

@@ -21,11 +21,11 @@ function FlickRow({ flick, position }: FlickRowProps) {
             className="mr-3"
             style={{ width: '4rem' }}
             alt={flick.title}
-            src={flickHelper.getImageUrl()}
+            src={flickHelper.getCoverImageUrl()}
           />
           <div>
             <div>
-              <Link className="font-weight-bold text-truncate" href={routes.catalogFlick(flick.id)}>
+              <Link className="font-weight-bold text-truncate" href={routes.flick(flick.id)}>
                 {flick.title}
               </Link>
             </div>
@@ -36,7 +36,7 @@ function FlickRow({ flick, position }: FlickRowProps) {
                 <Link
                   key={t}
                   className="badge badge-pill badge-secondary mr-1"
-                  href={`/catalog/tags/${encodeURIComponent(t)}`}
+                  href={routes.flicks({ filterTag: t })}
                 >
                   {t}
                 </Link>

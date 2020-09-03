@@ -88,12 +88,12 @@ export class AuthClient {
             result200 = SignInResponse.fromJS(resultData200);
             return result200;
             });
-        } else if (status === 400) {
+        } else if (status === 401) {
             return response.text().then((_responseText) => {
-            let result400: any = null;
-            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result400 = ProblemDetails.fromJS(resultData400);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ProblemDetails.fromJS(resultData401);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
@@ -104,7 +104,7 @@ export class AuthClient {
     }
 }
 
-export class CatalogClient {
+export class FilesClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -114,11 +114,11 @@ export class CatalogClient {
         this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
     }
 
-    getImage(imageId: string): Promise<void> {
-        let url_ = this.baseUrl + "/catalog/images/{imageId}";
-        if (imageId === undefined || imageId === null)
-            throw new Error("The parameter 'imageId' must be defined.");
-        url_ = url_.replace("{imageId}", encodeURIComponent("" + imageId));
+    getFile(id: number): Promise<void> {
+        let url_ = this.baseUrl + "/files/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -128,11 +128,11 @@ export class CatalogClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetImage(_response);
+            return this.processGetFile(_response);
         });
     }
 
-    protected processGetImage(response: Response): Promise<void> {
+    protected processGetFile(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -153,242 +153,20 @@ export class CatalogClient {
         }
         return Promise.resolve<void>(<any>null);
     }
+}
 
-    getTopFlicks(page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
-        let url_ = this.baseUrl + "/catalog/flicks/top?";
-        if (page === null)
-            throw new Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
-            url_ += "page=" + encodeURIComponent("" + page) + "&";
-        url_ = url_.replace(/[?&]$/, "");
+export class FlicksClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetTopFlicks(_response);
-        });
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
     }
 
-    protected processGetTopFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
-    }
-
-    getTrendingFlicks(page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
-        let url_ = this.baseUrl + "/catalog/flicks/trending?";
-        if (page === null)
-            throw new Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
-            url_ += "page=" + encodeURIComponent("" + page) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetTrendingFlicks(_response);
-        });
-    }
-
-    protected processGetTrendingFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
-    }
-
-    getNewFlicks(page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
-        let url_ = this.baseUrl + "/catalog/flicks/new?";
-        if (page === null)
-            throw new Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
-            url_ += "page=" + encodeURIComponent("" + page) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetNewFlicks(_response);
-        });
-    }
-
-    protected processGetNewFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
-    }
-
-    searchFlicks(query?: string | null | undefined, page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
-        let url_ = this.baseUrl + "/catalog/flicks/search?";
-        if (query !== undefined && query !== null)
-            url_ += "query=" + encodeURIComponent("" + query) + "&";
-        if (page === null)
-            throw new Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
-            url_ += "page=" + encodeURIComponent("" + page) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSearchFlicks(_response);
-        });
-    }
-
-    protected processSearchFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
-    }
-
-    getTags(): Promise<string[]> {
-        let url_ = this.baseUrl + "/catalog/tags";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetTags(_response);
-        });
-    }
-
-    protected processGetTags(response: Response): Promise<string[]> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(item);
-            }
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<string[]>(<any>null);
-    }
-
-    getTaggedFlicks(tagName: string | null, page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
-        let url_ = this.baseUrl + "/catalog/tags/{tagName}?";
-        if (tagName === undefined || tagName === null)
-            throw new Error("The parameter 'tagName' must be defined.");
-        url_ = url_.replace("{tagName}", encodeURIComponent("" + tagName));
-        if (page === null)
-            throw new Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
-            url_ += "page=" + encodeURIComponent("" + page) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetTaggedFlicks(_response);
-        });
-    }
-
-    protected processGetTaggedFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
-    }
-
-    getFlick(flickId: string | null): Promise<FlickResponse> {
-        let url_ = this.baseUrl + "/catalog/flicks/{flickId}";
+    getFlick(flickId: number): Promise<FlickResponse> {
+        let url_ = this.baseUrl + "/flicks/{flickId}";
         if (flickId === undefined || flickId === null)
             throw new Error("The parameter 'flickId' must be defined.");
         url_ = url_.replace("{flickId}", encodeURIComponent("" + flickId));
@@ -431,34 +209,86 @@ export class CatalogClient {
         return Promise.resolve<FlickResponse>(<any>null);
     }
 
-    requestFlick(flickId: string | null): Promise<RequestFlickResponse> {
-        let url_ = this.baseUrl + "/catalog/flicks/{flickId}";
-        if (flickId === undefined || flickId === null)
-            throw new Error("The parameter 'flickId' must be defined.");
-        url_ = url_.replace("{flickId}", encodeURIComponent("" + flickId));
+    getFlicks(order?: FlickOrder | undefined, filterTag?: string | null | undefined, page?: number | undefined): Promise<PaginatedResponseOfFlickListingResponse> {
+        let url_ = this.baseUrl + "/flicks?";
+        if (order === null)
+            throw new Error("The parameter 'order' cannot be null.");
+        else if (order !== undefined)
+            url_ += "order=" + encodeURIComponent("" + order) + "&";
+        if (filterTag !== undefined && filterTag !== null)
+            url_ += "filterTag=" + encodeURIComponent("" + filterTag) + "&";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
-            method: "POST",
+            method: "GET",
             headers: {
                 "Accept": "application/json"
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRequestFlick(_response);
+            return this.processGetFlicks(_response);
         });
     }
 
-    protected processRequestFlick(response: Response): Promise<RequestFlickResponse> {
+    protected processGetFlicks(response: Response): Promise<PaginatedResponseOfFlickListingResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = RequestFlickResponse.fromJS(resultData200);
+            result200 = PaginatedResponseOfFlickListingResponse.fromJS(resultData200);
             return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PaginatedResponseOfFlickListingResponse>(<any>null);
+    }
+
+    addFlick(request: AddFlickRequest): Promise<AddFlickResponse> {
+        let url_ = this.baseUrl + "/flicks";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAddFlick(_response);
+        });
+    }
+
+    protected processAddFlick(response: Response): Promise<AddFlickResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = AddFlickResponse.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ProblemDetails.fromJS(resultData400);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
@@ -472,11 +302,11 @@ export class CatalogClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<RequestFlickResponse>(<any>null);
+        return Promise.resolve<AddFlickResponse>(<any>null);
     }
 }
 
-export class ProfileClient {
+export class ProfilesClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -486,30 +316,34 @@ export class ProfileClient {
         this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
     }
 
-    getAvatar(username: string | null): Promise<void> {
-        let url_ = this.baseUrl + "/profile/{username}/avatar";
-        if (username === undefined || username === null)
-            throw new Error("The parameter 'username' must be defined.");
-        url_ = url_.replace("{username}", encodeURIComponent("" + username));
+    getProfile(profileId: number): Promise<ProfileResponse> {
+        let url_ = this.baseUrl + "/profiles/{profileId}";
+        if (profileId === undefined || profileId === null)
+            throw new Error("The parameter 'profileId' must be defined.");
+        url_ = url_.replace("{profileId}", encodeURIComponent("" + profileId));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
             method: "GET",
             headers: {
+                "Accept": "application/json"
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetAvatar(_response);
+            return this.processGetProfile(_response);
         });
     }
 
-    protected processGetAvatar(response: Response): Promise<void> {
+    protected processGetProfile(response: Response): Promise<ProfileResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProfileResponse.fromJS(resultData200);
+            return result200;
             });
         } else if (status === 404) {
             return response.text().then((_responseText) => {
@@ -518,12 +352,68 @@ export class ProfileClient {
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
             });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(<any>null);
+        return Promise.resolve<ProfileResponse>(<any>null);
+    }
+}
+
+export class SearchClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : <any>window;
+        this.baseUrl = baseUrl ? baseUrl : "http://localhost:5000";
+    }
+
+    getResults(query: string | null): Promise<SearchResponse> {
+        let url_ = this.baseUrl + "/search?";
+        if (query === undefined)
+            throw new Error("The parameter 'query' must be defined.");
+        else if(query !== null)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetResults(_response);
+        });
+    }
+
+    protected processGetResults(response: Response): Promise<SearchResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SearchResponse.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SearchResponse>(<any>null);
     }
 }
 
@@ -715,6 +605,132 @@ export interface ISignInRequest {
     password: string;
 }
 
+export class FlickListingResponse implements IFlickListingResponse {
+    id!: number;
+    kind!: FlickKind;
+    title!: string;
+    premiereDate?: Date | undefined;
+    finaleDate?: Date | undefined;
+    episodeCount?: number | undefined;
+    runtime?: string | undefined;
+    externalRating?: number | undefined;
+    coverImageId?: number | undefined;
+    tags?: string[] | undefined;
+
+    constructor(data?: IFlickListingResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.kind = _data["kind"];
+            this.title = _data["title"];
+            this.premiereDate = _data["premiereDate"] ? new Date(_data["premiereDate"].toString()) : <any>undefined;
+            this.finaleDate = _data["finaleDate"] ? new Date(_data["finaleDate"].toString()) : <any>undefined;
+            this.episodeCount = _data["episodeCount"];
+            this.runtime = _data["runtime"];
+            this.externalRating = _data["externalRating"];
+            this.coverImageId = _data["coverImageId"];
+            if (Array.isArray(_data["tags"])) {
+                this.tags = [] as any;
+                for (let item of _data["tags"])
+                    this.tags!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): FlickListingResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new FlickListingResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["kind"] = this.kind;
+        data["title"] = this.title;
+        data["premiereDate"] = this.premiereDate ? this.premiereDate.toISOString() : <any>undefined;
+        data["finaleDate"] = this.finaleDate ? this.finaleDate.toISOString() : <any>undefined;
+        data["episodeCount"] = this.episodeCount;
+        data["runtime"] = this.runtime;
+        data["externalRating"] = this.externalRating;
+        data["coverImageId"] = this.coverImageId;
+        if (Array.isArray(this.tags)) {
+            data["tags"] = [];
+            for (let item of this.tags)
+                data["tags"].push(item);
+        }
+        return data; 
+    }
+}
+
+export interface IFlickListingResponse {
+    id: number;
+    kind: FlickKind;
+    title: string;
+    premiereDate?: Date | undefined;
+    finaleDate?: Date | undefined;
+    episodeCount?: number | undefined;
+    runtime?: string | undefined;
+    externalRating?: number | undefined;
+    coverImageId?: number | undefined;
+    tags?: string[] | undefined;
+}
+
+export class FlickResponse extends FlickListingResponse implements IFlickResponse {
+    imdbId!: string;
+    originalTitle?: string | undefined;
+    synopsis?: string | undefined;
+
+    constructor(data?: IFlickResponse) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.imdbId = _data["imdbId"];
+            this.originalTitle = _data["originalTitle"];
+            this.synopsis = _data["synopsis"];
+        }
+    }
+
+    static fromJS(data: any): FlickResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new FlickResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["imdbId"] = this.imdbId;
+        data["originalTitle"] = this.originalTitle;
+        data["synopsis"] = this.synopsis;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IFlickResponse extends IFlickListingResponse {
+    imdbId: string;
+    originalTitle?: string | undefined;
+    synopsis?: string | undefined;
+}
+
+export enum FlickKind {
+    Movie = "Movie",
+    Series = "Series",
+}
+
 export class PaginatedResponseOfFlickListingResponse implements IPaginatedResponseOfFlickListingResponse {
     items!: FlickListingResponse[];
     page!: number;
@@ -770,128 +786,16 @@ export interface IPaginatedResponseOfFlickListingResponse {
     totalPages: number;
 }
 
-export class FlickListingResponse implements IFlickListingResponse {
-    id!: string;
-    kind!: FlickKind;
-    title!: string;
-    premiereDate?: Date | undefined;
-    finaleDate?: Date | undefined;
-    runtime?: string | undefined;
-    episodeCount?: number | undefined;
-    externalRating?: number | undefined;
-    imageId?: string | undefined;
-    tags?: string[];
-
-    constructor(data?: IFlickListingResponse) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.kind = _data["kind"];
-            this.title = _data["title"];
-            this.premiereDate = _data["premiereDate"] ? new Date(_data["premiereDate"].toString()) : <any>undefined;
-            this.finaleDate = _data["finaleDate"] ? new Date(_data["finaleDate"].toString()) : <any>undefined;
-            this.runtime = _data["runtime"];
-            this.episodeCount = _data["episodeCount"];
-            this.externalRating = _data["externalRating"];
-            this.imageId = _data["imageId"];
-            if (Array.isArray(_data["tags"])) {
-                this.tags = [] as any;
-                for (let item of _data["tags"])
-                    this.tags!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): FlickListingResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new FlickListingResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["kind"] = this.kind;
-        data["title"] = this.title;
-        data["premiereDate"] = this.premiereDate ? this.premiereDate.toISOString() : <any>undefined;
-        data["finaleDate"] = this.finaleDate ? this.finaleDate.toISOString() : <any>undefined;
-        data["runtime"] = this.runtime;
-        data["episodeCount"] = this.episodeCount;
-        data["externalRating"] = this.externalRating;
-        data["imageId"] = this.imageId;
-        if (Array.isArray(this.tags)) {
-            data["tags"] = [];
-            for (let item of this.tags)
-                data["tags"].push(item);
-        }
-        return data; 
-    }
+export enum FlickOrder {
+    Top = "Top",
+    Trending = "Trending",
+    New = "New",
 }
 
-export interface IFlickListingResponse {
-    id: string;
-    kind: FlickKind;
-    title: string;
-    premiereDate?: Date | undefined;
-    finaleDate?: Date | undefined;
-    runtime?: string | undefined;
-    episodeCount?: number | undefined;
-    externalRating?: number | undefined;
-    imageId?: string | undefined;
-    tags?: string[];
-}
+export class AddFlickResponse implements IAddFlickResponse {
+    flickId!: number;
 
-export enum FlickKind {
-    Movie = "Movie",
-    Series = "Series",
-}
-
-export class FlickResponse extends FlickListingResponse implements IFlickResponse {
-    synopsis?: string | undefined;
-
-    constructor(data?: IFlickResponse) {
-        super(data);
-    }
-
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.synopsis = _data["synopsis"];
-        }
-    }
-
-    static fromJS(data: any): FlickResponse {
-        data = typeof data === 'object' ? data : {};
-        let result = new FlickResponse();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["synopsis"] = this.synopsis;
-        super.toJSON(data);
-        return data; 
-    }
-}
-
-export interface IFlickResponse extends IFlickListingResponse {
-    synopsis?: string | undefined;
-}
-
-export class RequestFlickResponse implements IRequestFlickResponse {
-    flickId!: string;
-
-    constructor(data?: IRequestFlickResponse) {
+    constructor(data?: IAddFlickResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -906,9 +810,9 @@ export class RequestFlickResponse implements IRequestFlickResponse {
         }
     }
 
-    static fromJS(data: any): RequestFlickResponse {
+    static fromJS(data: any): AddFlickResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new RequestFlickResponse();
+        let result = new AddFlickResponse();
         result.init(data);
         return result;
     }
@@ -920,8 +824,136 @@ export class RequestFlickResponse implements IRequestFlickResponse {
     }
 }
 
-export interface IRequestFlickResponse {
-    flickId: string;
+export interface IAddFlickResponse {
+    flickId: number;
+}
+
+export class AddFlickRequest implements IAddFlickRequest {
+    sourceUrl!: string;
+
+    constructor(data?: IAddFlickRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.sourceUrl = _data["sourceUrl"];
+        }
+    }
+
+    static fromJS(data: any): AddFlickRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddFlickRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["sourceUrl"] = this.sourceUrl;
+        return data; 
+    }
+}
+
+export interface IAddFlickRequest {
+    sourceUrl: string;
+}
+
+export class ProfileResponse implements IProfileResponse {
+    id!: number;
+    name!: string;
+    bio?: string | undefined;
+    avatarImageId?: number | undefined;
+
+    constructor(data?: IProfileResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.bio = _data["bio"];
+            this.avatarImageId = _data["avatarImageId"];
+        }
+    }
+
+    static fromJS(data: any): ProfileResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProfileResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["bio"] = this.bio;
+        data["avatarImageId"] = this.avatarImageId;
+        return data; 
+    }
+}
+
+export interface IProfileResponse {
+    id: number;
+    name: string;
+    bio?: string | undefined;
+    avatarImageId?: number | undefined;
+}
+
+export class SearchResponse implements ISearchResponse {
+    flicks?: FlickListingResponse[] | undefined;
+
+    constructor(data?: ISearchResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["flicks"])) {
+                this.flicks = [] as any;
+                for (let item of _data["flicks"])
+                    this.flicks!.push(FlickListingResponse.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SearchResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.flicks)) {
+            data["flicks"] = [];
+            for (let item of this.flicks)
+                data["flicks"].push(item.toJSON());
+        }
+        return data; 
+    }
+}
+
+export interface ISearchResponse {
+    flicks?: FlickListingResponse[] | undefined;
 }
 
 export class ApiException extends Error {

@@ -34,7 +34,7 @@ function getNetworkLinks(flick: FlickResponse) {
 }
 
 function getShareLinks(flick: FlickResponse) {
-  const absoluteUrl = getAbsoluteUrl(config.appUrl, routes.catalogFlick(flick.id));
+  const absoluteUrl = getAbsoluteUrl(config.appUrl, routes.flick(flick.id));
 
   return [
     {
@@ -68,14 +68,14 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
       <Meta
         title={flick.title}
         description={flick.synopsis}
-        imageUrl={flickHelper.getImageUrl()}
+        imageUrl={flickHelper.getCoverImageUrl()}
         contentType={flick.kind === FlickKind.Movie ? 'video.movie' : 'video.tv_show'}
       />
 
       <Breadcrumb
         segments={[
           { title: 'Home', href: routes.home() },
-          { title: 'Catalog', href: routes.catalog() },
+          { title: 'Flicks', href: routes.flicks() },
           { title: flick.title }
         ]}
       />
@@ -86,7 +86,11 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
         <div className="m-0 mt-3 p-0 container container-fluid">
           <div className="row">
             <div className="col col-3">
-              <img className="mw-100 rounded" alt={flick.title} src={flickHelper.getImageUrl()} />
+              <img
+                className="mw-100 rounded"
+                alt={flick.title}
+                src={flickHelper.getCoverImageUrl()}
+              />
 
               <div className="my-1 mt-3">
                 <FiStar /> <span>{flickHelper.formatRating()}</span>
@@ -155,7 +159,7 @@ export default function FlickPage() {
 
   return (
     <DataLoader
-      getData={() => api.catalog.getFlick(flickId)}
+      getData={() => api.flicks.getFlick(Number(flickId))}
       deps={[flickId]}
       render={(flick) => <FlickPageLoaded flick={flick} />}
     />

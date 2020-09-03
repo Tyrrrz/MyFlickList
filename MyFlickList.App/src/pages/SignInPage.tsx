@@ -58,7 +58,7 @@ export default function SignInPage() {
             .then((res) => {
               setToken(res.token);
               const tokenHelper = new AuthTokenHelper(res.token);
-              history.push(routes.profile(tokenHelper.getUsername()));
+              history.push(routes.profile(tokenHelper.getProfileId()));
             })
             .catch(setError);
         }}

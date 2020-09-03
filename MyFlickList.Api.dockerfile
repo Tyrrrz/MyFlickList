@@ -4,7 +4,6 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
 
 COPY Directory.Build.props ./
-COPY MyFlickList.Domain MyFlickList.Domain
 COPY MyFlickList.Api MyFlickList.Api
 
 RUN dotnet publish MyFlickList.Api -o MyFlickList.Api/artifacts -c Release

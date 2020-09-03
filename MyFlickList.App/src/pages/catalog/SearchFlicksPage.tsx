@@ -1,20 +1,38 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
+import { SearchResponse } from '../../infra/api.generated';
 import Breadcrumb from '../../shared/Breadcrumb';
 import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
-import Paginator from '../../shared/Paginator';
 import useQueryParams from '../../shared/useQueryParams';
 import { routes } from '../PageRouter';
 import FlickTable from './shared/FlickTable';
 
+function SearchResults({ results }: { results: SearchResponse }) {
+  const isNothingFound = !results.flicks || results.flicks.length <= 0;
+
+  return (
+    <div>
+      {results.flicks && results.flicks.length > 0 && (
+        <FlickTable flicks={results.flicks} startingPosition={1} />
+      )}
+
+      {isNothingFound && <p className="display-4 text-center">Nothing found :(</p>}
+
+      <p className="mt-5 lead text-center">
+        Didn&apos;t find what you were looking for? You can{' '}
+        <Link href={routes.flickAdd()}>request</Link> a new flick to be added.
+      </p>
+    </div>
+  );
+}
+
 export default function SearchFlicksPage() {
   const history = useHistory();
 
-  const { query, page } = useQueryParams();
-  const pageNumber = Number(page) || 1;
+  const { query } = useQueryParams();
 
   const [stagingQuery, setStagingQuery] = useState(query ?? '');
 
@@ -22,19 +40,13 @@ export default function SearchFlicksPage() {
     <div>
       <Meta title="Search" />
 
-      <Breadcrumb
-        segments={[
-          { title: 'Home', href: routes.home() },
-          { title: 'Catalog', href: routes.catalog() },
-          { title: 'Search' }
-        ]}
-      />
+      <Breadcrumb segments={[{ title: 'Home', href: routes.home() }, { title: 'Search' }]} />
 
       <form
         className="w-75 mx-auto my-5"
         onSubmit={(e) => {
           e.preventDefault();
-          history.push(routes.catalogFlicksSearch({ query: stagingQuery }));
+          history.push(routes.search({ query: stagingQuery }));
         }}
       >
         <div className="form-row">
@@ -57,31 +69,9 @@ export default function SearchFlicksPage() {
 
       {query && (
         <DataLoader
-          getData={() => api.catalog.searchFlicks(query, pageNumber)}
-          deps={[query, pageNumber]}
-          render={(flicks) => (
-            <>
-              {flicks.items.length > 0 && (
-                <FlickTable flicks={flicks.items} startingPosition={1 + (pageNumber - 1) * 10} />
-              )}
-              {flicks.items.length > 0 && (
-                <Paginator
-                  currentPage={pageNumber}
-                  lastPage={flicks.totalPages}
-                  getPageHref={(p) => routes.catalogFlicksSearch({ query, page: p })}
-                />
-              )}
-
-              {flicks.items.length <= 0 && (
-                <p className="display-4 text-center">Nothing found :(</p>
-              )}
-
-              <p className="mt-5 lead text-center">
-                Didn&apos;t find what you were looking for? You can{' '}
-                <Link href={routes.catalogFlicksRequest()}>request</Link> a new flick to be added.
-              </p>
-            </>
-          )}
+          getData={() => api.search.getResults(query)}
+          deps={[query]}
+          render={(results) => <SearchResults results={results} />}
         />
       )}
     </div>

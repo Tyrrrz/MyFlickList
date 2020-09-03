@@ -14,6 +14,7 @@ const fetchProvider = {
 
 export default {
   auth: new generated.AuthClient(apiUrl, fetchProvider),
-  catalog: new generated.CatalogClient(apiUrl, fetchProvider),
-  profile: new generated.ProfileClient(apiUrl, fetchProvider)
+  flicks: new generated.FlicksClient(apiUrl, fetchProvider),
+  search: new generated.SearchClient(apiUrl, fetchProvider),
+  profiles: new generated.ProfilesClient(apiUrl, fetchProvider)
 };
