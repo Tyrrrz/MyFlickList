@@ -4,9 +4,9 @@ export default function useDelay(delayMs: number) {
   const [isTriggered, setIsTriggered] = useState(false);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setIsTriggered(true), delayMs);
+    const timeout = window.setTimeout(() => setIsTriggered(true), delayMs);
 
-    return () => clearTimeout(timeout);
+    return () => window.clearTimeout(timeout);
   }, [delayMs]);
 
   return isTriggered;

@@ -2,15 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';
-import AuthProvider from './shared/AuthProvider';
+import LocalStorageProvider from './shared/LocalStorageProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
+    <LocalStorageProvider>
       <Router>
         <App />
       </Router>
-    </AuthProvider>
+    </LocalStorageProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

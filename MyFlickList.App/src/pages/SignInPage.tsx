@@ -7,7 +7,7 @@ import Breadcrumb from '../shared/Breadcrumb';
 import ErrorHandler from '../shared/ErrorHandler';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
-import useAuth from '../shared/useAuth';
+import useAuthToken from '../shared/useAuthToken';
 import { routes } from './PageRouter';
 
 interface FormData {
@@ -30,7 +30,7 @@ function submitForm({ username, password }: FormData) {
 
 export default function SignInPage() {
   const history = useHistory();
-  const { setToken } = useAuth();
+  const [, setToken] = useAuthToken();
 
   const [formData, setFormData] = useState<FormData>({
     username: '',

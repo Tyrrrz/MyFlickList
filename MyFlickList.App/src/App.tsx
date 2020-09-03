@@ -4,12 +4,12 @@ import { FlickOrder } from './infra/api.generated';
 import { AuthTokenHelper } from './infra/helpers';
 import PageRouter, { routes } from './pages/PageRouter';
 import Link from './shared/Link';
-import useAuth from './shared/useAuth';
+import useAuthToken from './shared/useAuthToken';
 import useTracking from './shared/useTracking';
 
 function Header() {
   const history = useHistory();
-  const { token } = useAuth();
+  const [token] = useAuthToken();
 
   const [searchQuery, setSearchQuery] = useState('');
 

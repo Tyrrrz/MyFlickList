@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
 import Breadcrumb from '../shared/Breadcrumb';
 import Meta from '../shared/Meta';
-import useAuth from '../shared/useAuth';
+import useAuthToken from '../shared/useAuthToken';
 import { routes } from './PageRouter';
 
 export default function SignOutPage() {
   const history = useHistory();
-  const { setToken } = useAuth();
+  const [, setToken] = useAuthToken();
 
   // TODO: request token invalidation on the server?
   useEffect(() => {
