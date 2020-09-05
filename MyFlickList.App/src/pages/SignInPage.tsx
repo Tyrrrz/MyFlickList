@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import api from '../infra/api';
 import { SignInRequest } from '../infra/api.generated';
@@ -30,12 +31,7 @@ function submitForm({ username, password }: FormData) {
 export default function SignInPage() {
   const history = useHistory();
   const [, setToken] = useAuthToken();
-
-  const [formData, setFormData] = useState<FormData>({
-    username: '',
-    password: ''
-  });
-
+  const { register, handleSubmit } = useForm<FormData>();
   const [error, setError] = useState<unknown>();
 
   return (
@@ -50,45 +46,24 @@ export default function SignInPage() {
 
       <form
         className="my-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          submitForm(formData)
+        onSubmit={handleSubmit((data) => {
+          submitForm(data)
             .then((res) => {
               setToken(res.token);
               const tokenHelper = new AuthTokenHelper(res.token);
               history.push(routes.profile(tokenHelper.getProfileId()));
             })
             .catch(setError);
-        }}
+        })}
       >
         <div className="my-2">
           <label htmlFor="username">User name:</label>
-          <input
-            type="text"
-            id="username"
-            value={formData.username}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                username: e.target.value
-              })
-            }
-          />
+          <input type="text" name="username" ref={register} />
         </div>
 
         <div className="my-2">
           <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                password: e.target.value
-              })
-            }
-          />
+          <input type="password" name="password" ref={register} />
         </div>
 
         <ErrorHandler error={error} />
