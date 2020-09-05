@@ -2,12 +2,6 @@ import React, { createContext, Dispatch, SetStateAction, useEffect, useState } f
 
 type LocalStorage = Record<string, string | undefined>;
 
-function getInitialLocalStorage(): LocalStorage {
-  return Object.fromEntries(
-    Object.entries(window.localStorage).filter(([, value]) => typeof value !== 'function')
-  );
-}
-
 type LocalStorageContextValue = [LocalStorage, Dispatch<SetStateAction<LocalStorage>>];
 
 // Used when there is no provider in the tree
@@ -25,7 +19,9 @@ interface LocalStorageProviderProps {
 }
 
 export default function LocalStorageProvider({ children }: LocalStorageProviderProps) {
-  const [localStorage, setLocalStorage] = useState<LocalStorage>(getInitialLocalStorage);
+  const [localStorage, setLocalStorage] = useState<LocalStorage>({
+    ...window.localStorage
+  });
 
   useEffect(() => {
     window.localStorage.clear();
