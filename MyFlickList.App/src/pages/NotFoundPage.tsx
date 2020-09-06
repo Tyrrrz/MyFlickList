@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation } from 'react-router';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
-import { routes } from './PageRouter';
+import { routes } from './Routing';
 
 export default function NotFoundPage() {
   const { pathname } = useLocation();
@@ -18,7 +18,7 @@ export default function NotFoundPage() {
       </div>
 
       <div className="mt-3">
-        <Link href={routes.home()}>Go to home page</Link>
+        <Link href={routes.home.href()}>Go to home page</Link>
       </div>
     </div>
   );

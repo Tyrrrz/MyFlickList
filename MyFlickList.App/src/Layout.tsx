@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FiTv } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import { AuthTokenHelper } from './infra/helpers';
-import PageRouter, { routes } from './pages/PageRouter';
+import Routing, { routes } from './pages/Routing';
 import Link from './shared/Link';
 import useAuthToken from './shared/useAuthToken';
 import useTracking from './shared/useTracking';
@@ -13,7 +13,7 @@ function HeaderUserBox() {
   // Not signed in
   if (!token) {
     return (
-      <Link className="text-xl font-semibold" href={routes.signIn()}>
+      <Link className="text-xl font-semibold" href={routes.signIn.href()}>
         Sign in
       </Link>
     );
@@ -28,7 +28,10 @@ function HeaderUserBox() {
   return (
     <Link
       className="inline-flex items-center text-xl font-semibold"
-      href={routes.profile(tokenHelper.getProfileId())}
+      href={routes.profile.href({
+        profileId: tokenHelper.getProfileId(),
+        profileName: tokenHelper.getUsername()
+      })}
     >
       <img className="mt-1 rounded-full" alt="Avatar" width={32} height={32} src={avatarUrl} />
 
@@ -45,7 +48,7 @@ function HeaderSearchBox() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        history.push(routes.search({ query: searchQuery }));
+        history.push(routes.search.href({ query: searchQuery }));
       }}
     >
       <input
@@ -67,7 +70,7 @@ function Header() {
       <div className="flex-grow">
         <Link
           className="inline-flex items-center text-4xl text-black tracking-wide font-normal"
-          href={routes.home()}
+          href={routes.home.href()}
         >
           <FiTv /> <span className="ml-2">MyFlickList</span>
         </Link>
@@ -81,16 +84,16 @@ function Header() {
 
       {/* Navigation */}
       <nav className="mr-6 text-xl space-x-4">
-        <Link className="font-normal" href={routes.flicks()}>
+        <Link className="font-normal" href={routes.flicks.href()}>
           Flicks
         </Link>
-        <Link className="font-normal" href={routes.flicks()}>
+        <Link className="font-normal" href={routes.flicks.href()}>
           Characters
         </Link>
-        <Link className="font-normal" href={routes.flicks()}>
+        <Link className="font-normal" href={routes.flicks.href()}>
           Actors
         </Link>
-        <Link className="font-normal" href={routes.flicks()}>
+        <Link className="font-normal" href={routes.flicks.href()}>
           Network
         </Link>
       </nav>
@@ -104,7 +107,7 @@ function Header() {
 function PageContainer() {
   return (
     <main className="flex-grow py-5">
-      <PageRouter />
+      <Routing />
     </main>
   );
 }
@@ -124,7 +127,7 @@ function Footer() {
         Source
       </Link>
       {' • '}
-      <Link className="font-normal" href={routes.credits()}>
+      <Link className="font-normal" href={routes.credits.href()}>
         Credits
       </Link>
       {' • '}

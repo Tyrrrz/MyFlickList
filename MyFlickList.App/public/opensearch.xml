@@ -2,7 +2,7 @@
   <ShortName>MyFlickList</ShortName>
   <Description>Search through MFL's catalog</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">/favicon.ico</Image>
-  <Url type="text/html" template="/catalog/flicks/search?query={searchTerms}" />
-  <moz:SearchForm>/catalog/flicks/search</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">http://myflicklist.netlify.app/favicon.ico</Image>
+  <Url type="text/html" template="http://myflicklist.netlify.app/search?query={searchTerms}" />
+  <moz:SearchForm>http://myflicklist.netlify.app/search</moz:SearchForm>
 </OpenSearchDescription>

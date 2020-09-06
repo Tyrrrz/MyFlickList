@@ -5,7 +5,7 @@ import DataLoader from '../../shared/DataLoader';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
 import useQueryParams from '../../shared/useQueryParams';
-import { routes } from '../PageRouter';
+import { routes } from '../Routing';
 import FlickTable from './shared/FlickTable';
 
 export default function FlicksPage() {
@@ -27,7 +27,9 @@ export default function FlicksPage() {
           <Paginator
             currentPage={pageNumber}
             lastPage={flicks.totalPages}
-            getPageHref={(p) => routes.flicks({ order: order as FlickOrder, filterTag, page: p })}
+            getPageHref={(p) =>
+              routes.flicks.href({ order: order as FlickOrder, filterTag, page: p })
+            }
           />
         </div>
       )}

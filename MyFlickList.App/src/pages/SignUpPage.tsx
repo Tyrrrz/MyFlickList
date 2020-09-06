@@ -6,7 +6,7 @@ import { SignUpRequest } from '../infra/api.generated';
 import ErrorHandler from '../shared/ErrorHandler';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
-import { routes } from './PageRouter';
+import { routes } from './Routing';
 
 interface FormData {
   username: string;
@@ -45,7 +45,7 @@ export default function SignUpPage() {
       <h1>Sign up</h1>
 
       <div>
-        Already have a profile? <Link href={routes.signIn()}>Sign in</Link> with your existing
+        Already have a profile? <Link href={routes.signIn.href()}>Sign in</Link> with your existing
         account.
       </div>
 
@@ -53,7 +53,7 @@ export default function SignUpPage() {
         className="my-4"
         onSubmit={handleSubmit((data) => {
           submitForm(data)
-            .then(() => history.push(routes.signIn()))
+            .then(() => history.push(routes.signIn.href()))
             .catch(setError);
         })}
       >

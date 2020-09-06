@@ -11,7 +11,11 @@ function ProfileLoaded({ profile }: { profile: ProfileResponse }) {
 
   return (
     <div>
-      <Meta title={profile.name} />
+      <Meta
+        title={profile.name}
+        description={profile.bio}
+        imageUrl={profileHelper.getAvatarImageUrl()}
+      />
 
       <h1>{profile.name}</h1>
 

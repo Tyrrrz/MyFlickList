@@ -2,8 +2,9 @@ import React from 'react';
 import { FiStar } from 'react-icons/fi';
 import { FlickListingResponse } from '../../../infra/api.generated';
 import { FlickHelper } from '../../../infra/helpers';
+import { slugify } from '../../../infra/utils';
 import Link from '../../../shared/Link';
-import { routes } from '../../PageRouter';
+import { routes } from '../../Routing';
 
 interface FlickRowProps {
   flick: FlickListingResponse;
@@ -22,7 +23,10 @@ function FlickRow({ flick, position }: FlickRowProps) {
 
           <div>
             <div>
-              <Link className="font-bold text-truncate" href={routes.flick(flick.id)}>
+              <Link
+                className="font-bold text-truncate"
+                href={routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) })}
+              >
                 {flick.title}
               </Link>
             </div>
@@ -35,7 +39,7 @@ function FlickRow({ flick, position }: FlickRowProps) {
                 <Link
                   key={t}
                   className="inline-block px-3 py-1 rounded-full bg-gray-200 text-sm"
-                  href={routes.flicks({ filterTag: t })}
+                  href={routes.flicks.href({ filterTag: t })}
                 >
                   {t}
                 </Link>

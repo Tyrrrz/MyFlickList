@@ -4,12 +4,12 @@ import api from '../../infra/api';
 import { FlickKind, FlickResponse } from '../../infra/api.generated';
 import config from '../../infra/config';
 import { FlickHelper } from '../../infra/helpers';
-import { formatQueryParams, getAbsoluteUrl } from '../../infra/utils';
+import { getAbsoluteUrl, slugify } from '../../infra/utils';
 import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useRouteParams from '../../shared/useRouteParams';
-import { routes } from '../PageRouter';
+import { routes } from '../Routing';
 
 function getNetworkLinks(flick: FlickResponse) {
   return [
@@ -19,42 +19,47 @@ function getNetworkLinks(flick: FlickResponse) {
     },
     {
       name: 'TMDB',
-      url: 'https://themoviedb.org/search' + formatQueryParams({ query: flick.title })
+      url: 'https://themoviedb.org/search?' + new URLSearchParams({ query: flick.title }).toString()
     },
     {
       name: 'Netflix',
-      url: 'https://netflix.com/search' + formatQueryParams({ q: flick.title })
+      url: 'https://netflix.com/search?' + new URLSearchParams({ q: flick.title }).toString()
     },
     {
       name: 'HBO',
-      url: 'https://hbo.com/searchresults' + formatQueryParams({ q: flick.title })
+      url: 'https://hbo.com/searchresults?' + new URLSearchParams({ q: flick.title }).toString()
     }
   ];
 }
 
 function getShareLinks(flick: FlickResponse) {
-  const absoluteUrl = getAbsoluteUrl(config.appUrl, routes.flick(flick.id));
+  const absoluteUrl = getAbsoluteUrl(
+    config.appUrl,
+    routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) })
+  );
 
   return [
     {
       name: 'Twitter',
       url:
-        'https://twitter.com/share' +
-        formatQueryParams({
+        'https://twitter.com/share?' +
+        new URLSearchParams({
           related: config.appUrl,
           via: 'myflicklist',
           url: absoluteUrl,
           text: flick.title,
           hashtags: 'myflicklist'
-        })
+        }).toString()
     },
     {
       name: 'Reddit',
-      url: 'https://reddit.com/submit' + formatQueryParams({ url: absoluteUrl, title: flick.title })
+      url:
+        'https://reddit.com/submit?' +
+        new URLSearchParams({ url: absoluteUrl, title: flick.title }).toString()
     },
     {
       name: 'Facebook',
-      url: 'https://facebook.com/share.php' + formatQueryParams({ u: absoluteUrl })
+      url: 'https://facebook.com/share.php?' + new URLSearchParams({ u: absoluteUrl }).toString()
     }
   ];
 }
@@ -112,7 +117,7 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
                   <Link
                     key={tag}
                     className="inline-block px-3 py-1 rounded-full bg-gray-200 text-sm"
-                    href={routes.flicks({ filterTag: tag })}
+                    href={routes.flicks.href({ filterTag: tag })}
                   >
                     {tag}
                   </Link>

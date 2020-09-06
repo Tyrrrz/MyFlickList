@@ -8,7 +8,7 @@ import ErrorHandler from '../shared/ErrorHandler';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
 import useAuthToken from '../shared/useAuthToken';
-import { routes } from './PageRouter';
+import { routes } from './Routing';
 
 interface FormData {
   username: string;
@@ -41,7 +41,8 @@ export default function SignInPage() {
       <h1>Sign in</h1>
 
       <div>
-        Don&apos;t have a profile yet? <Link href={routes.signUp()}>Sign up</Link> to create one!
+        Don&apos;t have a profile yet? <Link href={routes.signUp.href()}>Sign up</Link> to create
+        one!
       </div>
 
       <form
@@ -51,7 +52,13 @@ export default function SignInPage() {
             .then((res) => {
               setToken(res.token);
               const tokenHelper = new AuthTokenHelper(res.token);
-              history.push(routes.profile(tokenHelper.getProfileId()));
+
+              history.push(
+                routes.profile.href({
+                  profileId: tokenHelper.getProfileId(),
+                  profileName: tokenHelper.getUsername()
+                })
+              );
             })
             .catch(setError);
         })}

@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import api from '../infra/api';
 import { FlickListingResponse, FlickOrder } from '../infra/api.generated';
 import { FlickHelper } from '../infra/helpers';
+import { slugify } from '../infra/utils';
 import DataLoader from '../shared/DataLoader';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
-import { routes } from './PageRouter';
+import { routes } from './Routing';
 
 interface FlickSpotlightItemProps {
   flick: FlickListingResponse;
@@ -20,7 +21,7 @@ function FlickSpotlightItem({ flick, position }: FlickSpotlightItemProps) {
   return (
     <Link
       className="block"
-      href={routes.flick(flick.id)}
+      href={routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) })}
       style={{
         marginLeft: -15 * position,
         transform: !isHover ? `scale(${1 - 0.05 * position})` : 'scale(1.1)',

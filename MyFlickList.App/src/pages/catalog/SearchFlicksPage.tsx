@@ -6,7 +6,7 @@ import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useQueryParams from '../../shared/useQueryParams';
-import { routes } from '../PageRouter';
+import { routes } from '../Routing';
 import FlickTable from './shared/FlickTable';
 
 function SearchResults({ results }: { results: SearchResponse }) {
@@ -22,7 +22,7 @@ function SearchResults({ results }: { results: SearchResponse }) {
 
       <p className="mt-3 text-center">
         Didn&apos;t find what you were looking for? You can{' '}
-        <Link href={routes.flickAdd()}>request</Link> a new flick to be added.
+        <Link href={routes.flickAdd.href()}>request</Link> a new flick to be added.
       </p>
     </div>
   );
@@ -30,9 +30,7 @@ function SearchResults({ results }: { results: SearchResponse }) {
 
 export default function SearchFlicksPage() {
   const history = useHistory();
-
   const { query } = useQueryParams();
-
   const [stagingQuery, setStagingQuery] = useState(query ?? '');
 
   return (
@@ -45,7 +43,7 @@ export default function SearchFlicksPage() {
         className="w-9/12 mx-auto my-5 flex flex-row"
         onSubmit={(e) => {
           e.preventDefault();
-          history.push(routes.search({ query: stagingQuery }));
+          history.push(routes.search.href({ query: stagingQuery }));
         }}
       >
         <input

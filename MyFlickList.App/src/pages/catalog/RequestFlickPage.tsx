@@ -5,7 +5,7 @@ import { AddFlickRequest } from '../../infra/api.generated';
 import ErrorHandler from '../../shared/ErrorHandler';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
-import { routes } from '../PageRouter';
+import { routes } from '../Routing';
 
 export default function RequestFlickPage() {
   const history = useHistory();
@@ -38,7 +38,7 @@ export default function RequestFlickPage() {
 
           api.flicks
             .addFlick(new AddFlickRequest({ sourceUrl }))
-            .then((res) => history.push(routes.flick(res.flickId)))
+            .then((res) => history.push(routes.flick.href({ flickId: res.flickId })))
             .catch(setError)
             .finally(() => setIsBusy(false));
         }}
