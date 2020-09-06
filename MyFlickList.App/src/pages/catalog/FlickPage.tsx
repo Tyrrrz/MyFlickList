@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FiCalendar, FiClock, FiExternalLink, FiShare2, FiStar, FiTag, FiTv } from 'react-icons/fi';
+import { useHistory, useParams } from 'react-router';
 import api from '../../infra/api';
 import { FlickKind, FlickResponse } from '../../infra/api.generated';
 import config from '../../infra/config';
@@ -65,6 +66,16 @@ function getShareLinks(flick: FlickResponse) {
 }
 
 function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
+  const history = useHistory();
+  const { flickTitle } = useParams();
+
+  // Make sure the URL includes the correct title
+  useEffect(() => {
+    if (flickTitle !== slugify(flick.title)) {
+      history.replace(routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) }));
+    }
+  }, [flick.id, flick.title, history, flickTitle]);
+
   const flickHelper = new FlickHelper(flick);
 
   return (
