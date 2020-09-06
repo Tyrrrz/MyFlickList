@@ -22,10 +22,10 @@ function Error({ error }: { error: unknown }) {
 
 interface DataLoaderProps<T> {
   getData: () => Promise<T>;
-  deps?: DependencyList | undefined;
+  deps?: DependencyList;
   render: (data: T) => React.ReactNode;
-  renderBusy?: () => React.ReactNode | undefined;
-  renderError?: (error: unknown) => React.ReactNode | undefined;
+  renderBusy?: () => React.ReactNode;
+  renderError?: (error: unknown) => React.ReactNode;
 }
 
 export default function DataLoader<T>({

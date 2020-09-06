@@ -69,12 +69,12 @@ class RouteDescriptor<TParams extends Params> {
 }
 
 interface PaginationParams extends Params {
-  page?: number | undefined;
+  page?: number;
 }
 
 interface FlicksParams extends PaginationParams {
-  order?: FlickOrder | undefined;
-  filterTag?: string | undefined;
+  order?: FlickOrder;
+  filterTag?: string;
 }
 
 interface FlickParams extends Params {
@@ -83,7 +83,7 @@ interface FlickParams extends Params {
 }
 
 interface SearchParams extends Params {
-  query?: string | undefined;
+  query?: string;
 }
 
 interface ProfileParams extends Params {

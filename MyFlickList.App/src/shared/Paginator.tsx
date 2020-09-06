@@ -24,7 +24,7 @@ function getAvailablePageNumbers(currentPage: number, lastPage: number) {
 
 interface PageButtonProps {
   href: string;
-  active?: boolean | undefined;
+  active?: boolean;
   children: React.ReactNode;
 }
 

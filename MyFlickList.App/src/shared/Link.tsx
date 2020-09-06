@@ -5,7 +5,7 @@ import { isAbsoluteUrl } from '../infra/utils';
 
 interface LinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
   href: string;
-  target?: string | undefined;
+  target?: string;
 }
 
 export default function Link({ href, target, ...props }: LinkProps) {

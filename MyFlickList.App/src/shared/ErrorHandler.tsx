@@ -20,8 +20,8 @@ function castToNumber(x: any) {
 
 interface ResolvedError {
   title: string;
-  details?: string | undefined;
-  code?: number | undefined;
+  details?: string;
+  code?: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,7 +39,7 @@ function resolveError(error: any): ResolvedError {
 }
 
 interface ErrorHandlerProps {
-  error?: unknown | undefined;
+  error?: unknown;
 }
 
 export default function ErrorHandler({ error }: ErrorHandlerProps) {

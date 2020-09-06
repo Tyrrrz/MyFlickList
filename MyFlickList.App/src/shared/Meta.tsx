@@ -4,11 +4,11 @@ import config from '../infra/config';
 import { getAbsoluteUrl } from '../infra/utils';
 
 interface MetaProps {
-  title?: string | undefined;
-  description?: string | undefined;
-  keywords?: string[] | undefined;
-  imageUrl?: string | undefined;
-  contentType?: 'website' | 'profile' | 'video.movie' | 'video.tv_show' | undefined;
+  title?: string;
+  description?: string;
+  keywords?: string[];
+  imageUrl?: string;
+  contentType?: 'website' | 'profile' | 'video.movie' | 'video.tv_show';
 }
 
 export default function Meta({ title, description, keywords, imageUrl, contentType }: MetaProps) {
