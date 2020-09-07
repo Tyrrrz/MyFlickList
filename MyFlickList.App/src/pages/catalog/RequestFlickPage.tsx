@@ -5,9 +5,11 @@ import { AddFlickRequest } from '../../infra/api.generated';
 import ErrorHandler from '../../shared/ErrorHandler';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
+import useAuthToken from '../../shared/useAuthToken';
 import { routes } from '../Routing';
 
 export default function RequestFlickPage() {
+  const [token] = useAuthToken();
   const history = useHistory();
 
   const [isBusy, setIsBusy] = useState(false);
@@ -36,7 +38,8 @@ export default function RequestFlickPage() {
 
           setIsBusy(true);
 
-          api.flicks
+          api
+            .flicks(token)
             .addFlick(new AddFlickRequest({ sourceUrl }))
             .then((res) => history.push(routes.flick.href({ flickId: res.flickId })))
             .catch(setError)

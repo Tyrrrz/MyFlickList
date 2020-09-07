@@ -4,8 +4,8 @@ import Meta from '../shared/Meta';
 import useAuthToken from '../shared/useAuthToken';
 
 export default function SignOutPage() {
-  const history = useHistory();
   const [, setToken] = useAuthToken();
+  const history = useHistory();
 
   // TODO: request token invalidation on the server?
   useEffect(() => {

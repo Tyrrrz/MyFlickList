@@ -6,6 +6,7 @@ import { slugify } from '../infra/utils';
 import DataLoader from '../shared/DataLoader';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
+import useAuthToken from '../shared/useAuthToken';
 import { routes } from './Routing';
 
 interface FlickSpotlightItemProps {
@@ -48,9 +49,11 @@ function FlickSpotlight({ flicks }: { flicks: FlickListingResponse[] }) {
 }
 
 export default function HomePage() {
+  const [token] = useAuthToken();
+
   return (
     <DataLoader
-      getData={() => api.flicks.getFlicks(FlickOrder.Top)}
+      getData={() => api.flicks(token).getFlicks(FlickOrder.Top)}
       render={(flicks) => (
         <div>
           <Meta />

@@ -150,7 +150,7 @@ export class ProfileHelper {
 
   getAvatarImageUrl() {
     if (!this.profile.avatarImageId) {
-      return `https://robohash.org/${this.profile.id}_${this.profile.name}.png?set=any&bgset=any&size=200x200`;
+      return `https://robohash.org/${this.profile.id}_${this.profile.name}.png?size=300x300`;
     }
 
     return getAbsoluteUrl(config.apiUrl, `/files/${this.profile.avatarImageId}`);

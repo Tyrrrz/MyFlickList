@@ -6,6 +6,7 @@ import { SignUpRequest } from '../infra/api.generated';
 import ErrorHandler from '../shared/ErrorHandler';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
+import useAuthToken from '../shared/useAuthToken';
 import { routes } from './Routing';
 
 interface FormData {
@@ -15,27 +16,10 @@ interface FormData {
   passwordConfirm: string;
 }
 
-function submitForm({ username, email, password, passwordConfirm }: FormData) {
-  if (!username || !email || !password || !passwordConfirm) {
-    return Promise.reject('All fields are required');
-  }
-
-  if (password !== passwordConfirm) {
-    return Promise.reject('Passwords do not match');
-  }
-
-  return api.auth.signUp(
-    new SignUpRequest({
-      username,
-      email,
-      password
-    })
-  );
-}
-
 export default function SignUpPage() {
+  const [token] = useAuthToken();
   const history = useHistory();
-  const { register, handleSubmit } = useForm<FormData>();
+  const { register, handleSubmit, watch } = useForm<FormData>();
   const [error, setError] = useState<unknown>();
 
   return (
@@ -50,38 +34,47 @@ export default function SignUpPage() {
       </div>
 
       <form
-        className="my-4"
+        className="my-4 space-y-4"
         onSubmit={handleSubmit((data) => {
-          submitForm(data)
+          api
+            .auth(token)
+            .signUp(
+              new SignUpRequest({
+                ...data
+              })
+            )
             .then(() => history.push(routes.signIn.href()))
             .catch(setError);
         })}
       >
-        <div className="my-2">
+        <div>
           <label htmlFor="username">User name:</label>
-          <input type="text" name="username" ref={register} />
+          <input type="text" name="username" required ref={register} />
         </div>
 
-        <div className="my-2">
+        <div>
           <label htmlFor="email">Email:</label>
-          <input type="email" name="email" ref={register} />
+          <input type="email" name="email" required ref={register} />
         </div>
 
-        <div className="my-2">
+        <div>
           <label htmlFor="password">Password:</label>
-          <input type="password" name="password" ref={register} />
+          <input type="password" name="password" required ref={register} />
         </div>
 
-        <div className="my-2">
+        <div>
           <label htmlFor="passwordConfirm">Password (confirm):</label>
-          <input type="password" name="passwordConfirm" ref={register} />
+          <input
+            type="password"
+            name="passwordConfirm"
+            required
+            ref={register({ validate: (v: string) => v === watch('password') })}
+          />
         </div>
 
         <ErrorHandler error={error} />
 
-        <button className="my-2" type="submit">
-          Sign up
-        </button>
+        <button type="submit">Sign up</button>
       </form>
     </div>
   );

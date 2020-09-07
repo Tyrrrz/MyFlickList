@@ -9,6 +9,7 @@ import { getAbsoluteUrl, slugify } from '../../infra/utils';
 import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
+import useAuthToken from '../../shared/useAuthToken';
 import useRouteParams from '../../shared/useRouteParams';
 import { routes } from '../Routing';
 
@@ -69,7 +70,7 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
   const history = useHistory();
   const { flickTitle } = useParams();
 
-  // Make sure the URL includes the correct title
+  // Normalize URL
   useEffect(() => {
     if (flickTitle !== slugify(flick.title)) {
       history.replace(routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) }));
@@ -180,11 +181,12 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
 }
 
 export default function FlickPage() {
+  const [token] = useAuthToken();
   const { flickId } = useRouteParams();
 
   return (
     <DataLoader
-      getData={() => api.flicks.getFlick(Number(flickId))}
+      getData={() => api.flicks(token).getFlick(Number(flickId))}
       deps={[flickId]}
       render={(flick) => <FlickPageLoaded flick={flick} />}
     />

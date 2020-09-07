@@ -5,6 +5,7 @@ import { SearchResponse } from '../../infra/api.generated';
 import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
+import useAuthToken from '../../shared/useAuthToken';
 import useQueryParams from '../../shared/useQueryParams';
 import { routes } from '../Routing';
 import FlickTable from './shared/FlickTable';
@@ -29,6 +30,7 @@ function SearchResults({ results }: { results: SearchResponse }) {
 }
 
 export default function SearchFlicksPage() {
+  const [token] = useAuthToken();
   const history = useHistory();
   const { query } = useQueryParams();
   const [stagingQuery, setStagingQuery] = useState(query ?? '');
@@ -61,7 +63,7 @@ export default function SearchFlicksPage() {
 
       {query && (
         <DataLoader
-          getData={() => api.search.getResults(query)}
+          getData={() => api.search(token).getResults(query)}
           deps={[query]}
           render={(results) => <SearchResults results={results} />}
         />

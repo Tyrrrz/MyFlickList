@@ -113,6 +113,7 @@ namespace MyFlickList.Api
             {
                 o.WithOrigins(Configuration.GetAllowedOrigins());
                 o.AllowAnyHeader();
+                o.AllowAnyMethod();
             });
 
             app.UseAuthentication();

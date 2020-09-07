@@ -12,7 +12,17 @@ namespace MyFlickList.Api.Entities.Profiles
 
         public bool IsPublic { get; set; } = true;
 
+        public string? Location { get; set; }
+
         public string? Bio { get; set; }
+
+        public string? WebsiteUrl { get; set; }
+
+        public string? TwitterId { get; set; }
+
+        public string? InstagramId { get; set; }
+
+        public string? GitHubId { get; set; }
 
         public int? AvatarImageId { get; set; }
 
@@ -28,6 +38,18 @@ namespace MyFlickList.Api.Entities.Profiles
             builder.Property(o => o.Name)
                 .IsRequired()
                 .HasMaxLength(48);
+
+            builder.Property(o => o.WebsiteUrl)
+                .HasMaxLength(2048);
+
+            builder.Property(o => o.TwitterId)
+                .HasMaxLength(15);
+
+            builder.Property(o => o.InstagramId)
+                .HasMaxLength(30);
+
+            builder.Property(o => o.GitHubId)
+                .HasMaxLength(39);
         }
     }
 }

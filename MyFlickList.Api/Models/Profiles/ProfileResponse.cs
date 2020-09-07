@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using MyFlickList.Api.Models.Flicks;
 
 namespace MyFlickList.Api.Models.Profiles
 {
@@ -10,8 +12,20 @@ namespace MyFlickList.Api.Models.Profiles
         [Required]
         public string Name { get; set; } = default!;
 
+        public string? Location { get; set; }
+
         public string? Bio { get; set; }
 
+        public string? WebsiteUrl { get; set; }
+
+        public string? TwitterId { get; set; }
+
+        public string? InstagramId { get; set; }
+
+        public string? GitHubId { get; set; }
+
         public int? AvatarImageId { get; set; }
+
+        public IReadOnlyList<FlickListingResponse>? FavoriteFlicks { get; set; }
     }
 }

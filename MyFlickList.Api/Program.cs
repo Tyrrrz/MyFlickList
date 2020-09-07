@@ -8,14 +8,14 @@ namespace MyFlickList.Api
 {
     public static class Program
     {
-        private static IHost CreateHost(string[] args) =>
+        // This signature is required for EF design-time tools to work
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(o =>
                 {
                     o.UseStartup<Startup>();
                     o.UseSentry();
-                })
-                .Build();
+                });
 
         private static async Task ApplyMigrationsAsync(IHost host)
         {
@@ -27,7 +27,7 @@ namespace MyFlickList.Api
 
         public static async Task Main(string[] args)
         {
-            var host = CreateHost(args);
+            var host = CreateHostBuilder(args).Build();
 
             await ApplyMigrationsAsync(host);
             await host.RunAsync();

@@ -366,6 +366,57 @@ export class ProfilesClient {
         }
         return Promise.resolve<ProfileResponse>(<any>null);
     }
+
+    updateProfile(profileId: number, request: UpdateProfileRequest): Promise<void> {
+        let url_ = this.baseUrl + "/profiles/{profileId}";
+        if (profileId === undefined || profileId === null)
+            throw new Error("The parameter 'profileId' must be defined.");
+        url_ = url_.replace("{profileId}", encodeURIComponent("" + profileId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateProfile(_response);
+        });
+    }
+
+    protected processUpdateProfile(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            });
+        } else if (status === 403) {
+            return response.text().then((_responseText) => {
+            let result403: any = null;
+            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result403 = ProblemDetails.fromJS(resultData403);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result403);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
 }
 
 export class SearchClient {
@@ -867,8 +918,14 @@ export interface IAddFlickRequest {
 export class ProfileResponse implements IProfileResponse {
     id!: number;
     name!: string;
+    location?: string | undefined;
     bio?: string | undefined;
+    websiteUrl?: string | undefined;
+    twitterId?: string | undefined;
+    instagramId?: string | undefined;
+    gitHubId?: string | undefined;
     avatarImageId?: number | undefined;
+    favoriteFlicks?: FlickListingResponse[] | undefined;
 
     constructor(data?: IProfileResponse) {
         if (data) {
@@ -883,8 +940,18 @@ export class ProfileResponse implements IProfileResponse {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.location = _data["location"];
             this.bio = _data["bio"];
+            this.websiteUrl = _data["websiteUrl"];
+            this.twitterId = _data["twitterId"];
+            this.instagramId = _data["instagramId"];
+            this.gitHubId = _data["gitHubId"];
             this.avatarImageId = _data["avatarImageId"];
+            if (Array.isArray(_data["favoriteFlicks"])) {
+                this.favoriteFlicks = [] as any;
+                for (let item of _data["favoriteFlicks"])
+                    this.favoriteFlicks!.push(FlickListingResponse.fromJS(item));
+            }
         }
     }
 
@@ -899,8 +966,18 @@ export class ProfileResponse implements IProfileResponse {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["location"] = this.location;
         data["bio"] = this.bio;
+        data["websiteUrl"] = this.websiteUrl;
+        data["twitterId"] = this.twitterId;
+        data["instagramId"] = this.instagramId;
+        data["gitHubId"] = this.gitHubId;
         data["avatarImageId"] = this.avatarImageId;
+        if (Array.isArray(this.favoriteFlicks)) {
+            data["favoriteFlicks"] = [];
+            for (let item of this.favoriteFlicks)
+                data["favoriteFlicks"].push(item.toJSON());
+        }
         return data; 
     }
 }
@@ -908,8 +985,70 @@ export class ProfileResponse implements IProfileResponse {
 export interface IProfileResponse {
     id: number;
     name: string;
+    location?: string | undefined;
     bio?: string | undefined;
+    websiteUrl?: string | undefined;
+    twitterId?: string | undefined;
+    instagramId?: string | undefined;
+    gitHubId?: string | undefined;
     avatarImageId?: number | undefined;
+    favoriteFlicks?: FlickListingResponse[] | undefined;
+}
+
+export class UpdateProfileRequest implements IUpdateProfileRequest {
+    location?: string | undefined;
+    bio?: string | undefined;
+    websiteUrl?: string | undefined;
+    twitterId?: string | undefined;
+    instagramId?: string | undefined;
+    gitHubId?: string | undefined;
+
+    constructor(data?: IUpdateProfileRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.location = _data["location"];
+            this.bio = _data["bio"];
+            this.websiteUrl = _data["websiteUrl"];
+            this.twitterId = _data["twitterId"];
+            this.instagramId = _data["instagramId"];
+            this.gitHubId = _data["gitHubId"];
+        }
+    }
+
+    static fromJS(data: any): UpdateProfileRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateProfileRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["location"] = this.location;
+        data["bio"] = this.bio;
+        data["websiteUrl"] = this.websiteUrl;
+        data["twitterId"] = this.twitterId;
+        data["instagramId"] = this.instagramId;
+        data["gitHubId"] = this.gitHubId;
+        return data; 
+    }
+}
+
+export interface IUpdateProfileRequest {
+    location?: string | undefined;
+    bio?: string | undefined;
+    websiteUrl?: string | undefined;
+    twitterId?: string | undefined;
+    instagramId?: string | undefined;
+    gitHubId?: string | undefined;
 }
 
 export class SearchResponse implements ISearchResponse {

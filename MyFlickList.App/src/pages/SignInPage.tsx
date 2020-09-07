@@ -15,22 +15,9 @@ interface FormData {
   password: string;
 }
 
-function submitForm({ username, password }: FormData) {
-  if (!username || !password) {
-    return Promise.reject('All fields are required');
-  }
-
-  return api.auth.signIn(
-    new SignInRequest({
-      username: username,
-      password: password
-    })
-  );
-}
-
 export default function SignInPage() {
+  const [token, setToken] = useAuthToken();
   const history = useHistory();
-  const [, setToken] = useAuthToken();
   const { register, handleSubmit } = useForm<FormData>();
   const [error, setError] = useState<unknown>();
 
@@ -46,9 +33,15 @@ export default function SignInPage() {
       </div>
 
       <form
-        className="my-4"
+        className="my-4 space-y-4"
         onSubmit={handleSubmit((data) => {
-          submitForm(data)
+          api
+            .auth(token)
+            .signIn(
+              new SignInRequest({
+                ...data
+              })
+            )
             .then((res) => {
               setToken(res.token);
               const tokenHelper = new AuthTokenHelper(res.token);
@@ -63,21 +56,19 @@ export default function SignInPage() {
             .catch(setError);
         })}
       >
-        <div className="my-2">
+        <div>
           <label htmlFor="username">User name:</label>
-          <input type="text" name="username" ref={register} />
+          <input type="text" name="username" required ref={register} />
         </div>
 
-        <div className="my-2">
+        <div>
           <label htmlFor="password">Password:</label>
-          <input type="password" name="password" ref={register} />
+          <input type="password" name="password" required ref={register} />
         </div>
 
         <ErrorHandler error={error} />
 
-        <button className="my-2" type="submit">
-          Sign in
-        </button>
+        <button type="submit">Sign in</button>
       </form>
     </div>
   );

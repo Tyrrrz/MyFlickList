@@ -22,7 +22,7 @@ function HeaderUserBox() {
   const tokenHelper = new AuthTokenHelper(token);
 
   // TODO: use actual avatar
-  const avatarUrl = `https://robohash.org/${tokenHelper.getProfileId()}_${tokenHelper.getUsername()}.png?set=any&bgset=any&size=200x200`;
+  const avatarUrl = `https://robohash.org/${tokenHelper.getProfileId()}_${tokenHelper.getUsername()}.png?size=300x300`;
 
   // Signed in
   return (
@@ -33,9 +33,15 @@ function HeaderUserBox() {
         profileName: tokenHelper.getUsername()
       })}
     >
-      <img className="mt-1 rounded-full" alt="Avatar" width={32} height={32} src={avatarUrl} />
+      <img
+        className="rounded-full shadow-outline"
+        alt="Avatar"
+        width={32}
+        height={32}
+        src={avatarUrl}
+      />
 
-      <span className="ml-3">{tokenHelper.getUsername()}</span>
+      <span className="ml-3 truncate">{tokenHelper.getUsername()}</span>
     </Link>
   );
 }
@@ -67,7 +73,7 @@ function Header() {
   return (
     <header className="flex flex-row items-center py-4">
       {/* Brand */}
-      <div className="flex-grow">
+      <div className="mr-3 flex-grow">
         <Link
           className="inline-flex items-center text-4xl text-black tracking-wide font-normal"
           href={routes.home.href()}
@@ -106,7 +112,7 @@ function Header() {
 
 function PageContainer() {
   return (
-    <main className="flex-grow py-5">
+    <main className="flex-grow py-8">
       <Routing />
     </main>
   );
@@ -115,7 +121,7 @@ function PageContainer() {
 function Footer() {
   return (
     <footer className="m-4 mx-auto uppercase text-sm">
-      <Link className="font-normal" href="https://twitter.com/Tyrrrz">
+      <Link className="font-normal" href="https://twitter.com/My_Flick_List">
         Twitter
       </Link>
       {' • '}

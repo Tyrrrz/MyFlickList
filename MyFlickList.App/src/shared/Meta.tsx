@@ -39,7 +39,7 @@ export default function Meta({ title, description, keywords, imageUrl, contentTy
       {actual.imageUrl && <meta property="og:image" content={actual.imageUrl} />}
 
       <meta name="twitter:title" content={actual.title} />
-      <meta name="twitter:site" content="@Tyrrrz" />
+      <meta name="twitter:site" content="@My_Flick_List" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:description" content={actual.description} />
       {actual.imageUrl && <meta name="twitter:image" content={actual.imageUrl} />}
