@@ -15,6 +15,7 @@ export default function Meta({ title, description, keywords, imageUrl, contentTy
   const defaults = {
     title: 'MyFlickList',
     description: 'Social cataloging app',
+    imageUrl: '/logo.png',
     contentType: 'website'
   };
 
@@ -22,7 +23,7 @@ export default function Meta({ title, description, keywords, imageUrl, contentTy
     title: title ? `${title} - ${defaults.title}` : defaults.title,
     description: description || defaults.description,
     keywords: keywords?.join(', '),
-    imageUrl: imageUrl && getAbsoluteUrl(config.appUrl, imageUrl),
+    imageUrl: (imageUrl && getAbsoluteUrl(config.appUrl, imageUrl)) || defaults.imageUrl,
     contentType: contentType || defaults.contentType
   };
 
@@ -31,18 +32,18 @@ export default function Meta({ title, description, keywords, imageUrl, contentTy
       <title>{actual.title}</title>
 
       <meta name="description" content={actual.description} />
-      {actual.keywords && <meta name="keywords" content={actual.keywords} />}
+      <meta name="keywords" content={actual.keywords} />
 
       <meta property="og:title" content={actual.title} />
       <meta property="og:description" content={actual.description} />
       <meta name="og:type" content={actual.contentType} />
-      {actual.imageUrl && <meta property="og:image" content={actual.imageUrl} />}
+      <meta property="og:image" content={actual.imageUrl} />
 
       <meta name="twitter:title" content={actual.title} />
       <meta name="twitter:site" content="@My_Flick_List" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:description" content={actual.description} />
-      {actual.imageUrl && <meta name="twitter:image" content={actual.imageUrl} />}
+      <meta name="twitter:image" content={actual.imageUrl} />
     </Helmet>
   );
 }
