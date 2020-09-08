@@ -27,14 +27,14 @@ function HeaderUserBox() {
   // Signed in
   return (
     <Link
-      className="inline-flex items-center text-xl font-semibold"
+      className="inline-flex items-center text-xl font-semibold group"
       href={routes.profile.href({
         profileId: tokenHelper.getProfileId(),
         profileName: tokenHelper.getUsername()
       })}
     >
       <img
-        className="rounded-full shadow-outline"
+        className="rounded-full shadow opacity-75 group-hover:opacity-100"
         alt="Avatar"
         width={32}
         height={32}

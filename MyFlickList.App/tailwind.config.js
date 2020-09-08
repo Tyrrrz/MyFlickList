@@ -9,7 +9,9 @@ module.exports = {
   theme: {
     extend: {}
   },
-  variants: {},
+  variants: {
+    opacity: ['responsive', 'hover', 'focus', 'group-hover']
+  },
   plugins: [],
   future: {
     purgeLayersByDefault: true,
