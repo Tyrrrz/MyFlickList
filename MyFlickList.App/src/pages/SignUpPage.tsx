@@ -62,6 +62,7 @@ export default function SignUpPage() {
               required
               minLength={3}
               maxLength={48}
+              placeholder="john.titor1"
               ref={register}
             />
           </div>
@@ -77,6 +78,7 @@ export default function SignUpPage() {
               required
               minLength={3}
               maxLength={256}
+              placeholder="sern@dmail.com"
               ref={register}
             />
           </div>
@@ -92,6 +94,7 @@ export default function SignUpPage() {
               required
               minLength={6}
               maxLength={1024}
+              placeholder="xxxxxx"
               ref={register}
             />
           </div>
@@ -107,6 +110,7 @@ export default function SignUpPage() {
               required
               minLength={6}
               maxLength={1024}
+              placeholder="xxxxxx"
               ref={register}
             />
           </div>
