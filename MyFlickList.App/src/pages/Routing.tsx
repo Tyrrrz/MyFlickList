@@ -6,6 +6,7 @@ import FlicksPage from './catalog/FlicksPage';
 import RequestFlickPage from './catalog/RequestFlickPage';
 import SearchFlicksPage from './catalog/SearchFlicksPage';
 import CreditsPage from './CreditsPage';
+import DonatePage from './DonatePage';
 import HomePage from './HomePage';
 import NotFoundPage from './NotFoundPage';
 import EditProfilePage from './profile/EditProfilePage';
@@ -103,6 +104,7 @@ export const routes = {
   signOut: new RouteDescriptor('/signout'),
   signUp: new RouteDescriptor('/signup'),
   credits: new RouteDescriptor('/credits'),
+  donate: new RouteDescriptor('/donate'),
   home: new RouteDescriptor('/')
 };
 
@@ -119,6 +121,7 @@ export default function Routing() {
       <Route exact path={routes.signOut.template} component={SignOutPage} />
       <Route exact path={routes.signUp.template} component={SignUpPage} />
       <Route exact path={routes.credits.template} component={CreditsPage} />
+      <Route exact path={routes.donate.template} component={DonatePage} />
       <Route exact path={routes.home.template} component={HomePage} />
       <Route path="*" component={NotFoundPage} />{' '}
     </Switch>

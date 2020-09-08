@@ -120,7 +120,7 @@ function PageContainer() {
 
 function Footer() {
   return (
-    <footer className="m-4 mx-auto uppercase text-sm">
+    <footer className="my-4 mx-auto py-1 border-t-2 uppercase text-sm">
       <Link className="font-normal" href="https://twitter.com/My_Flick_List">
         Twitter
       </Link>
@@ -137,7 +137,7 @@ function Footer() {
         Credits
       </Link>
       {' • '}
-      <Link className="font-normal" href="https://tyrrrz.me/donate">
+      <Link className="font-normal" href={routes.donate.href()}>
         Donate
       </Link>
     </footer>

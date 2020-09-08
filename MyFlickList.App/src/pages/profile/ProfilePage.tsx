@@ -59,7 +59,7 @@ function ProfileLoaded({ profile }: { profile: ProfileResponse }) {
 
         <div>
           {/* Name */}
-          <div className="text-4xl font-semibold truncate">{profile.name}</div>
+          <h1 className="font-semibold truncate">{profile.name}</h1>
 
           {/* Location */}
           {profile.location && (

@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
+import Link from '../shared/Link';
 import Meta from '../shared/Meta';
 import useAuthToken from '../shared/useAuthToken';
+import { routes } from './Routing';
 
 export default function SignOutPage() {
   const [, setToken] = useAuthToken();
@@ -16,9 +18,15 @@ export default function SignOutPage() {
     <div>
       <Meta title="Sign out" />
 
-      <h1>Sign out</h1>
+      <div className="w-3/4 mx-auto space-y-5">
+        <h1>Sign out</h1>
 
-      <div>You have been signed out. Come back soon :)</div>
+        <p className="text-lg">You have been signed out. Hope to see you again soon 🙂</p>
+
+        <div>
+          <Link href={routes.home.href()}>Return to home page</Link>
+        </div>
+      </div>
     </div>
   );
 }

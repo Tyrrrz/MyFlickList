@@ -16,33 +16,33 @@ interface FormData {
 }
 
 export default function SignInPage() {
-  const [token, setToken] = useAuthToken();
   const history = useHistory();
-  const { register, handleSubmit } = useForm<FormData>();
+  const [token, setToken] = useAuthToken();
+  const { register, handleSubmit, formState } = useForm<FormData>();
   const [error, setError] = useState<unknown>();
 
   return (
     <div>
       <Meta title="Sign in" />
 
-      <h1>Sign in</h1>
+      <div className="w-3/4 mx-auto space-y-5">
+        <h1>Sign in</h1>
 
-      <div>
-        Don&apos;t have a profile yet? <Link href={routes.signUp.href()}>Sign up</Link> to create
-        one!
-      </div>
+        <p className="text-lg">
+          Don&apos;t have a profile yet? <Link href={routes.signUp.href()}>Sign up</Link> to create
+          one!
+        </p>
 
-      <form
-        className="my-4 space-y-4"
-        onSubmit={handleSubmit((data) => {
-          api
-            .auth(token)
-            .signIn(
-              new SignInRequest({
-                ...data
-              })
-            )
-            .then((res) => {
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit(async (data) => {
+            try {
+              const res = await api.auth(token).signIn(
+                new SignInRequest({
+                  ...data
+                })
+              );
+
               setToken(res.token);
               const tokenHelper = new AuthTokenHelper(res.token);
 
@@ -52,24 +52,28 @@ export default function SignInPage() {
                   profileName: tokenHelper.getUsername()
                 })
               );
-            })
-            .catch(setError);
-        })}
-      >
-        <div>
-          <label htmlFor="username">User name:</label>
-          <input type="text" name="username" required ref={register} />
-        </div>
+            } catch (error) {
+              return setError(error);
+            }
+          })}
+        >
+          <div>
+            <label htmlFor="username">User name:</label>
+            <input className="w-1/3" type="text" name="username" required ref={register} />
+          </div>
 
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input type="password" name="password" required ref={register} />
-        </div>
+          <div>
+            <label htmlFor="password">Password:</label>
+            <input className="w-1/3" type="password" name="password" required ref={register} />
+          </div>
 
-        <ErrorHandler error={error} />
+          <ErrorHandler error={error} />
 
-        <button type="submit">Sign in</button>
-      </form>
+          <button type="submit" disabled={formState.isSubmitting}>
+            Sign in
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

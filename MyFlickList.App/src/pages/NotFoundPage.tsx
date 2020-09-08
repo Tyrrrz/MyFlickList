@@ -11,14 +11,16 @@ export default function NotFoundPage() {
     <div>
       <Meta title="Not Found" />
 
-      <h1>Not Found</h1>
+      <div className="w-3/4 mx-auto space-y-5">
+        <h1>Not Found</h1>
 
-      <div>
-        Page <code>{pathname}</code> does not exist.
-      </div>
+        <p className="text-lg">
+          Requested page (<code>{pathname}</code>) does not exist
+        </p>
 
-      <div className="mt-3">
-        <Link href={routes.home.href()}>Go to home page</Link>
+        <div>
+          <Link href={routes.home.href()}>Return to home page</Link>
+        </div>
       </div>
     </div>
   );
