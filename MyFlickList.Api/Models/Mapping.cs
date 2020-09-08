@@ -19,7 +19,8 @@ namespace MyFlickList.Api.Models
             CreateMap<FlickEntity, FlickResponse>()
                 .ForMember(o => o.Tags, x => x.MapFrom(o => o.Tags));
 
-            CreateMap<ProfileEntity, ProfileResponse>();
+            CreateMap<ProfileEntity, ProfileResponse>()
+                .ForMember(o => o.FavoriteFlicks, x => x.Ignore()); // temp
         }
     }
 }

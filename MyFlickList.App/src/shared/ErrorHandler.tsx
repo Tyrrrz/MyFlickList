@@ -2,7 +2,7 @@ import React from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function castToString(x: any) {
-  if (typeof x === 'string' || typeof x === 'undefined') {
+  if (typeof x === 'string') {
     return x;
   }
 
@@ -11,8 +11,17 @@ function castToString(x: any) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function castToNumber(x: any) {
-  if (typeof x === 'number' || typeof x === 'undefined') {
+  if (typeof x === 'number') {
     return x;
+  }
+
+  return undefined;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function castToObject(x: any) {
+  if (typeof x === 'object') {
+    return x as object;
   }
 
   return undefined;
@@ -21,6 +30,7 @@ function castToNumber(x: any) {
 interface ResolvedError {
   title: string;
   details?: string;
+  validationErrors?: Record<string, string[]>;
   code?: number;
 }
 
@@ -33,9 +43,10 @@ function resolveError(error: any): ResolvedError {
     'Unknown error has occurred';
 
   const details = castToString(error.detail) || castToString(error.message);
+  const validationErrors = castToObject(error.errors) as Record<string, string[]> | undefined;
   const code = castToNumber(error.status);
 
-  return { title, details, code };
+  return { title, details, validationErrors, code };
 }
 
 interface ErrorHandlerProps {
@@ -53,6 +64,14 @@ export default function ErrorHandler({ error }: ErrorHandlerProps) {
       <div className="font-bold">{resolvedError.title}</div>
 
       {resolvedError.details && <div>{resolvedError.details}</div>}
+
+      {resolvedError.validationErrors && (
+        <ul>
+          {Object.entries(resolvedError.validationErrors).map(([, values]) =>
+            values.map((value, i) => <li key={value + i}>{value}</li>)
+          )}
+        </ul>
+      )}
 
       {resolvedError.code && <div className="text-sm italic">Code: {resolvedError.code}</div>}
     </div>

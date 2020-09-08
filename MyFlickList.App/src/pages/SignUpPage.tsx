@@ -50,17 +50,42 @@ export default function SignUpPage() {
         >
           <div>
             <label htmlFor="username">User name:</label>
-            <input className="w-1/3" type="text" name="username" required ref={register} />
+            <input
+              className="w-1/3"
+              type="text"
+              name="username"
+              autoFocus
+              required
+              minLength={3}
+              maxLength={48}
+              ref={register}
+            />
           </div>
 
           <div>
             <label htmlFor="email">Email:</label>
-            <input className="w-1/3" type="email" name="email" required ref={register} />
+            <input
+              className="w-1/3"
+              type="email"
+              name="email"
+              required
+              minLength={3}
+              maxLength={256}
+              ref={register}
+            />
           </div>
 
           <div>
             <label htmlFor="password">Password:</label>
-            <input className="w-1/3" type="password" name="password" required ref={register} />
+            <input
+              className="w-1/3"
+              type="password"
+              name="password"
+              required
+              minLength={6}
+              maxLength={1024}
+              ref={register}
+            />
           </div>
 
           <div>
@@ -70,6 +95,8 @@ export default function SignUpPage() {
               type="password"
               name="passwordConfirm"
               required
+              minLength={6}
+              maxLength={1024}
               ref={register}
             />
           </div>

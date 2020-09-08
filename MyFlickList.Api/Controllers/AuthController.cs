@@ -27,7 +27,7 @@ namespace MyFlickList.Api.Controllers
 
         [HttpPost("signup")]
         [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
         public async Task<IActionResult> SignUp(SignUpRequest request)
         {
             var cancellation = HttpContext.RequestAborted;
@@ -63,7 +63,8 @@ namespace MyFlickList.Api.Controllers
 
         [HttpPost("signin")]
         [ProducesResponseType(typeof(SignInResponse), 200)]
-        [ProducesResponseType(401)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
+        [ProducesResponseType(typeof(ProblemDetails), 401)]
         public async Task<IActionResult> SignIn(SignInRequest request)
         {
             var cancellation = HttpContext.RequestAborted;

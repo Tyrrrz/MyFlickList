@@ -59,7 +59,14 @@ export default function SignInPage() {
         >
           <div>
             <label htmlFor="username">User name:</label>
-            <input className="w-1/3" type="text" name="username" required ref={register} />
+            <input
+              className="w-1/3"
+              type="text"
+              name="username"
+              autoFocus
+              required
+              ref={register}
+            />
           </div>
 
           <div>

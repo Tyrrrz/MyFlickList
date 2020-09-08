@@ -27,8 +27,8 @@ namespace MyFlickList.Api.Controllers
 
         [HttpGet("{profileId}")]
         [ProducesResponseType(typeof(ProfileResponse), 200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        [ProducesResponseType(typeof(ProblemDetails), 403)]
         public async Task<IActionResult> GetProfile(int profileId)
         {
             var cancellation = HttpContext.RequestAborted;
@@ -68,8 +68,9 @@ namespace MyFlickList.Api.Controllers
         [HttpPut("{profileId}")]
         [Authorize]
         [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(403)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        [ProducesResponseType(typeof(ProblemDetails), 403)]
         public async Task<IActionResult> UpdateProfile(int profileId, UpdateProfileRequest request)
         {
             var cancellation = HttpContext.RequestAborted;

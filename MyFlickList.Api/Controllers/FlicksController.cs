@@ -104,8 +104,8 @@ namespace MyFlickList.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(AddFlickResponse), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> AddFlick(AddFlickRequest request)
         {
             var cancellation = HttpContext.RequestAborted;
