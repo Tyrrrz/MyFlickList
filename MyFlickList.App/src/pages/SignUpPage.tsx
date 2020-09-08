@@ -35,7 +35,7 @@ export default function SignUpPage() {
           onSubmit={handleSubmit(async (data) => {
             try {
               if (data.password !== data.passwordConfirm) {
-                throw 'Passwords must match';
+                throw Error('Passwords must match');
               }
 
               await api.auth(token).signUp(
