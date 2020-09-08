@@ -21,7 +21,7 @@ export default function SignOutPage() {
       <div className="w-3/4 mx-auto space-y-5">
         <h1>Sign out</h1>
 
-        <p className="text-lg">You have been signed out. Hope to see you again soon 🙂</p>
+        <p className="text-lg">You have been signed out. Hope to see you again soon!</p>
 
         <div>
           <Link href={routes.home.href()}>Return to home page</Link>

@@ -1,14 +1,14 @@
 {
   "name": "myflicklist.app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@types/classnames": "^2.2.10",
     "@types/jwt-decode": "^2.2.1",
-    "@types/node": "^14.0.27",
-    "@types/react": "^16.9.43",
+    "@types/node": "^14.6.4",
+    "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
-    "@types/react-helmet": "^6.0.0",
+    "@types/react-helmet": "^6.1.0",
     "@types/react-router-dom": "^5.1.5",
     "classnames": "^2.2.6",
     "jwt-decode": "^2.2.0",
@@ -21,15 +21,15 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.3",
-    "tailwindcss": "^1.7.6",
+    "tailwindcss": "^1.8.5",
     "typescript": "^3.9.7"
   },
   "devDependencies": {
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react-hooks": "^4.0.8",
-    "nswag": "^13.6.2",
-    "prettier": "^2.0.5",
+    "eslint-plugin-react-hooks": "^4.1.0",
+    "nswag": "^13.7.0",
+    "prettier": "^2.1.1",
     "prettier-plugin-organize-imports": "^1.1.1"
   },
   "scripts": {
