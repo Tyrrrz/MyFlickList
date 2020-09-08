@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { CgAsterisk } from 'react-icons/cg';
+import { FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../infra/api';
 import { SignInRequest } from '../infra/api.generated';
@@ -58,7 +60,9 @@ export default function SignInPage() {
           })}
         >
           <div>
-            <label htmlFor="username">User name:</label>
+            <label className="flex flex-row items-center" htmlFor="username">
+              <FiUser /> <span className="ml-1">User name:</span>
+            </label>
             <input
               className="w-1/3"
               type="text"
@@ -70,7 +74,9 @@ export default function SignInPage() {
           </div>
 
           <div>
-            <label htmlFor="password">Password:</label>
+            <label className="flex flex-row items-center" htmlFor="password">
+              <CgAsterisk /> <span className="ml-1">Password:</span>
+            </label>
             <input className="w-1/3" type="password" name="password" required ref={register} />
           </div>
 

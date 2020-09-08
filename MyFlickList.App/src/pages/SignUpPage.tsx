@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { CgAsterisk } from 'react-icons/cg';
+import { FiAtSign, FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../infra/api';
 import { SignUpRequest } from '../infra/api.generated';
@@ -49,7 +51,9 @@ export default function SignUpPage() {
           })}
         >
           <div>
-            <label htmlFor="username">User name:</label>
+            <label className="flex flex-row items-center" htmlFor="username">
+              <FiUser /> <span className="ml-1">User name:</span>
+            </label>
             <input
               className="w-1/3"
               type="text"
@@ -63,7 +67,9 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label htmlFor="email">Email:</label>
+            <label className="flex flex-row items-center" htmlFor="email">
+              <FiAtSign /> <span className="ml-1">Email:</span>
+            </label>
             <input
               className="w-1/3"
               type="email"
@@ -76,7 +82,9 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label htmlFor="password">Password:</label>
+            <label className="flex flex-row items-center" htmlFor="password">
+              <CgAsterisk /> <span className="ml-1">Password:</span>
+            </label>
             <input
               className="w-1/3"
               type="password"
@@ -89,7 +97,9 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label htmlFor="passwordConfirm">Password (confirm):</label>
+            <label className="flex flex-row items-center" htmlFor="passwordConfirm">
+              <CgAsterisk /> <span className="ml-1">Password (confirm):</span>
+            </label>
             <input
               className="w-1/3"
               type="password"
