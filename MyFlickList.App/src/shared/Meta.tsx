@@ -23,7 +23,7 @@ export default function Meta({ title, description, keywords, imageUrl, contentTy
     title: title ? `${title} - ${defaults.title}` : defaults.title,
     description: description || defaults.description,
     keywords: keywords?.join(', '),
-    imageUrl: (imageUrl && getAbsoluteUrl(config.appUrl, imageUrl)) || defaults.imageUrl,
+    imageUrl: getAbsoluteUrl(config.appUrl, imageUrl || defaults.imageUrl),
     contentType: contentType || defaults.contentType
   };
 
