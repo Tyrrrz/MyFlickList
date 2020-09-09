@@ -7,7 +7,7 @@ import DataLoader from '../../shared/DataLoader';
 import ErrorHandler from '../../shared/ErrorHandler';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
-import useRouteParams from '../../shared/useRouteParams';
+import useParams from '../../shared/useParams';
 import { routes } from '../Routing';
 
 interface FormData {
@@ -95,7 +95,7 @@ function EditProfileLoaded({ profile }: { profile: ProfileResponse }) {
 
 export default function EditProfilePage() {
   const [token] = useAuthToken();
-  const { profileId } = useRouteParams();
+  const { profileId } = useParams();
 
   return (
     <DataLoader

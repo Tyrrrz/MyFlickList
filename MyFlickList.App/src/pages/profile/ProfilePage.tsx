@@ -8,7 +8,7 @@ import {
   FiStar,
   FiTwitter
 } from 'react-icons/fi';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import api from '../../infra/api';
 import { ProfileResponse } from '../../infra/api.generated';
 import { AuthTokenHelper, FlickHelper, ProfileHelper } from '../../infra/helpers';
@@ -17,7 +17,7 @@ import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
-import useRouteParams from '../../shared/useRouteParams';
+import useParams from '../../shared/useParams';
 import { routes } from '../Routing';
 
 function ProfileLoaded({ profile }: { profile: ProfileResponse }) {
@@ -210,7 +210,7 @@ function ProfileLoaded({ profile }: { profile: ProfileResponse }) {
 
 export default function ProfilePage() {
   const [token] = useAuthToken();
-  const { profileId } = useRouteParams();
+  const { profileId } = useParams();
 
   return (
     <DataLoader

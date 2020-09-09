@@ -5,13 +5,13 @@ import DataLoader from '../../shared/DataLoader';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
 import useAuthToken from '../../shared/useAuthToken';
-import useQueryParams from '../../shared/useQueryParams';
+import useParams from '../../shared/useParams';
 import { routes } from '../Routing';
 import FlickTable from './shared/FlickTable';
 
 export default function FlicksPage() {
   const [token] = useAuthToken();
-  const { order, filterTag, page } = useQueryParams();
+  const { order, filterTag, page } = useParams();
   const pageNumber = Number(page) || 1;
 
   return (

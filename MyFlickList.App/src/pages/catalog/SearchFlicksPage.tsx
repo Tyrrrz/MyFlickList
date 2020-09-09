@@ -6,7 +6,7 @@ import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
-import useQueryParams from '../../shared/useQueryParams';
+import useParams from '../../shared/useParams';
 import { routes } from '../Routing';
 import FlickTable from './shared/FlickTable';
 
@@ -32,7 +32,7 @@ function SearchResults({ results }: { results: SearchResponse }) {
 export default function SearchFlicksPage() {
   const [token] = useAuthToken();
   const history = useHistory();
-  const { query } = useQueryParams();
+  const { query } = useParams();
   const [stagingQuery, setStagingQuery] = useState(query ?? '');
 
   return (

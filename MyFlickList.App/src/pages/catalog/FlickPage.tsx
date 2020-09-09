@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { FiCalendar, FiClock, FiExternalLink, FiShare2, FiStar, FiTag, FiTv } from 'react-icons/fi';
-import { useHistory, useParams } from 'react-router';
+import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { FlickKind, FlickResponse } from '../../infra/api.generated';
 import config from '../../infra/config';
@@ -10,7 +10,7 @@ import DataLoader from '../../shared/DataLoader';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
-import useRouteParams from '../../shared/useRouteParams';
+import useParams from '../../shared/useParams';
 import { routes } from '../Routing';
 
 function getNetworkLinks(flick: FlickResponse) {
@@ -182,7 +182,7 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
 
 export default function FlickPage() {
   const [token] = useAuthToken();
-  const { flickId } = useRouteParams();
+  const { flickId } = useParams();
 
   return (
     <DataLoader
