@@ -3,14 +3,14 @@ import { useForm } from 'react-hook-form';
 import { CgAsterisk } from 'react-icons/cg';
 import { FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
-import api from '../infra/api';
-import { SignInRequest } from '../infra/api.generated';
-import { AuthTokenHelper } from '../infra/helpers';
-import ErrorHandler from '../shared/ErrorHandler';
-import Link from '../shared/Link';
-import Meta from '../shared/Meta';
-import useAuthToken from '../shared/useAuthToken';
-import { routes } from './Routing';
+import api from '../../infra/api';
+import { SignInRequest } from '../../infra/api.generated';
+import { AuthTokenHelper } from '../../infra/helpers';
+import { routes } from '../../Routing';
+import ErrorAlert from '../../shared/ErrorAlert';
+import Link from '../../shared/Link';
+import Meta from '../../shared/Meta';
+import useAuthToken from '../../shared/useAuthToken';
 
 interface FormData {
   username: string;
@@ -80,7 +80,7 @@ export default function SignInPage() {
             <input className="w-1/3" type="password" name="password" required ref={register} />
           </div>
 
-          <ErrorHandler error={error} />
+          <ErrorAlert error={error} />
 
           <button type="submit" disabled={formState.isSubmitting}>
             Sign in

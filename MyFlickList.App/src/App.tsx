@@ -6,10 +6,10 @@ import './tailwind.output.css';
 
 export default function App() {
   return (
-    <LocalStorageProvider>
-      <Router>
+    <Router>
+      <LocalStorageProvider>
         <Layout />
-      </Router>
-    </LocalStorageProvider>
+      </LocalStorageProvider>
+    </Router>
   );
 }

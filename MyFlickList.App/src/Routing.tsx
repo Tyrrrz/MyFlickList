@@ -1,19 +1,19 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { FlickOrder } from '../infra/api.generated';
-import FlickPage from './catalog/FlickPage';
-import FlicksPage from './catalog/FlicksPage';
-import RequestFlickPage from './catalog/RequestFlickPage';
-import SearchFlicksPage from './catalog/SearchFlicksPage';
-import CreditsPage from './CreditsPage';
-import DonatePage from './DonatePage';
-import HomePage from './HomePage';
-import NotFoundPage from './NotFoundPage';
-import EditProfilePage from './profile/EditProfilePage';
-import ProfilePage from './profile/ProfilePage';
-import SignInPage from './SignInPage';
-import SignOutPage from './SignOutPage';
-import SignUpPage from './SignUpPage';
+import { FlickOrder } from './infra/api.generated';
+import SignInPage from './pages/auth/SignInPage';
+import SignOutPage from './pages/auth/SignOutPage';
+import SignUpPage from './pages/auth/SignUpPage';
+import FlickPage from './pages/flicks/FlickPage';
+import FlicksPage from './pages/flicks/FlicksPage';
+import RequestFlickPage from './pages/flicks/RequestFlickPage';
+import HomePage from './pages/HomePage';
+import CreditsPage from './pages/misc/CreditsPage';
+import DonatePage from './pages/misc/DonatePage';
+import NotFoundPage from './pages/NotFoundPage';
+import EditProfilePage from './pages/profiles/EditProfilePage';
+import ProfilePage from './pages/profiles/ProfilePage';
+import SearchPage from './pages/search/SearchPage';
 
 type Params = Record<string, string | number | undefined>;
 
@@ -100,11 +100,11 @@ export const routes = {
   search: new RouteDescriptor<SearchParams>('/search'),
   profileEdit: new RouteDescriptor<ProfileParams>('/profiles/:profileId/:profileName?/edit'),
   profile: new RouteDescriptor<ProfileParams>('/profiles/:profileId/:profileName?'),
-  signIn: new RouteDescriptor('/signin'),
-  signOut: new RouteDescriptor('/signout'),
-  signUp: new RouteDescriptor('/signup'),
-  credits: new RouteDescriptor('/credits'),
-  donate: new RouteDescriptor('/donate'),
+  signIn: new RouteDescriptor('/auth/signin'),
+  signOut: new RouteDescriptor('/auth/signout'),
+  signUp: new RouteDescriptor('/auth/signup'),
+  credits: new RouteDescriptor('/misc/credits'),
+  donate: new RouteDescriptor('/misc/donate'),
   home: new RouteDescriptor('/')
 };
 
@@ -114,7 +114,7 @@ export default function Routing() {
       <Route exact path={routes.flickAdd.template} component={RequestFlickPage} />
       <Route exact path={routes.flick.template} component={FlickPage} />
       <Route exact path={routes.flicks.template} component={FlicksPage} />
-      <Route exact path={routes.search.template} component={SearchFlicksPage} />
+      <Route exact path={routes.search.template} component={SearchPage} />
       <Route exact path={routes.profileEdit.template} component={EditProfilePage} />
       <Route exact path={routes.profile.template} component={ProfilePage} />
       <Route exact path={routes.signIn.template} component={SignInPage} />

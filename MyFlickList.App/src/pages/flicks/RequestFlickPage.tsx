@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { AddFlickRequest } from '../../infra/api.generated';
-import ErrorHandler from '../../shared/ErrorHandler';
+import { routes } from '../../Routing';
+import ErrorAlert from '../../shared/ErrorAlert';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
-import { routes } from '../Routing';
 
 export default function RequestFlickPage() {
-  const [token] = useAuthToken();
   const history = useHistory();
+  const [token] = useAuthToken();
 
   const [isBusy, setIsBusy] = useState(false);
   const [sourceUrl, setSourceUrl] = useState('');
@@ -57,7 +57,7 @@ export default function RequestFlickPage() {
           />
         </div>
 
-        <ErrorHandler error={error} />
+        <ErrorAlert error={error} />
 
         <button className="my-2" type="submit">
           Submit

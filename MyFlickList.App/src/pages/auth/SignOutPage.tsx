@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
-import Link from '../shared/Link';
-import Meta from '../shared/Meta';
-import useAuthToken from '../shared/useAuthToken';
-import { routes } from './Routing';
+import { routes } from '../../Routing';
+import Link from '../../shared/Link';
+import Meta from '../../shared/Meta';
+import useAuthToken from '../../shared/useAuthToken';
 
 export default function SignOutPage() {
   const [, setToken] = useAuthToken();

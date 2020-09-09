@@ -3,8 +3,8 @@ import { FiStar } from 'react-icons/fi';
 import { FlickListingResponse } from '../../../infra/api.generated';
 import { FlickHelper } from '../../../infra/helpers';
 import { slugify } from '../../../infra/utils';
+import { routes } from '../../../Routing';
 import Link from '../../../shared/Link';
-import { routes } from '../../Routing';
 
 interface FlickRowProps {
   flick: FlickListingResponse;

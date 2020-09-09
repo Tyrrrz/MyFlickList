@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { ProfileResponse, UpdateProfileRequest } from '../../infra/api.generated';
-import DataLoader from '../../shared/DataLoader';
-import ErrorHandler from '../../shared/ErrorHandler';
+import { UpdateProfileRequest } from '../../infra/api.generated';
+import { routes } from '../../Routing';
+import ErrorAlert from '../../shared/ErrorAlert';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
 import useParams from '../../shared/useParams';
-import { routes } from '../Routing';
+import useQuery from '../../shared/useQuery';
 
 interface FormData {
   location?: string;
@@ -19,9 +19,13 @@ interface FormData {
   gitHubId?: string;
 }
 
-function EditProfileLoaded({ profile }: { profile: ProfileResponse }) {
+export default function EditProfilePage() {
   const history = useHistory();
+  const { profileId } = useParams();
   const [token] = useAuthToken();
+
+  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [profileId]);
+
   const { register, handleSubmit } = useForm<FormData>();
   const [error, setError] = useState<unknown>();
 
@@ -85,23 +89,10 @@ function EditProfileLoaded({ profile }: { profile: ProfileResponse }) {
           <input type="text" name="gitHubId" ref={register} defaultValue={profile.gitHubId} />
         </div>
 
-        <ErrorHandler error={error} />
+        <ErrorAlert error={error} />
 
         <button type="submit">Submit</button>
       </form>
     </div>
-  );
-}
-
-export default function EditProfilePage() {
-  const [token] = useAuthToken();
-  const { profileId } = useParams();
-
-  return (
-    <DataLoader
-      getData={() => api.profiles(token).getProfile(Number(profileId))}
-      deps={[profileId]}
-      render={(profile) => <EditProfileLoaded profile={profile} />}
-    />
   );
 }

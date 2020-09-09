@@ -6,12 +6,12 @@ import { FlickKind, FlickResponse } from '../../infra/api.generated';
 import config from '../../infra/config';
 import { FlickHelper } from '../../infra/helpers';
 import { getAbsoluteUrl, slugify } from '../../infra/utils';
-import DataLoader from '../../shared/DataLoader';
+import { routes } from '../../Routing';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
 import useParams from '../../shared/useParams';
-import { routes } from '../Routing';
+import useQuery from '../../shared/useQuery';
 
 function getNetworkLinks(flick: FlickResponse) {
   return [
@@ -66,9 +66,12 @@ function getShareLinks(flick: FlickResponse) {
   ];
 }
 
-function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
+export default function FlickPage() {
   const history = useHistory();
-  const { flickTitle } = useParams();
+  const { flickId, flickTitle } = useParams();
+  const [token] = useAuthToken();
+
+  const flick = useQuery(() => api.flicks(token).getFlick(Number(flickId)), [flickId]);
 
   // Normalize URL
   useEffect(() => {
@@ -177,18 +180,5 @@ function FlickPageLoaded({ flick }: { flick: FlickResponse }) {
         </div>
       </div>
     </div>
-  );
-}
-
-export default function FlickPage() {
-  const [token] = useAuthToken();
-  const { flickId } = useParams();
-
-  return (
-    <DataLoader
-      getData={() => api.flicks(token).getFlick(Number(flickId))}
-      deps={[flickId]}
-      render={(flick) => <FlickPageLoaded flick={flick} />}
-    />
   );
 }

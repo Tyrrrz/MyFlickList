@@ -3,11 +3,11 @@ import api from '../infra/api';
 import { FlickListingResponse, FlickOrder } from '../infra/api.generated';
 import { FlickHelper } from '../infra/helpers';
 import { slugify } from '../infra/utils';
-import DataLoader from '../shared/DataLoader';
+import { routes } from '../Routing';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
 import useAuthToken from '../shared/useAuthToken';
-import { routes } from './Routing';
+import useQuery from '../shared/useQuery';
 
 interface FlickSpotlightItemProps {
   flick: FlickListingResponse;
@@ -38,29 +38,19 @@ function FlickSpotlightItem({ flick, position }: FlickSpotlightItemProps) {
   );
 }
 
-function FlickSpotlight({ flicks }: { flicks: FlickListingResponse[] }) {
-  return (
-    <div className="my-4 flex flex-row justify-center">
-      {flicks.map((flick, i) => (
-        <FlickSpotlightItem key={flick.id} position={i} flick={flick} />
-      ))}
-    </div>
-  );
-}
-
 export default function HomePage() {
   const [token] = useAuthToken();
+  const flicks = useQuery(() => api.flicks(token).getFlicks(FlickOrder.Top), []);
 
   return (
-    <DataLoader
-      getData={() => api.flicks(token).getFlicks(FlickOrder.Top)}
-      render={(flicks) => (
-        <div>
-          <Meta />
+    <div>
+      <Meta />
 
-          <FlickSpotlight flicks={flicks.items} />
-        </div>
-      )}
-    />
+      <div className="my-4 flex flex-row justify-center">
+        {flicks.items.map((flick, i) => (
+          <FlickSpotlightItem key={flick.id} position={i} flick={flick} />
+        ))}
+      </div>
+    </div>
   );
 }

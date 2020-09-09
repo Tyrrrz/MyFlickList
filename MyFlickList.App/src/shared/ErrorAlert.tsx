@@ -53,7 +53,7 @@ interface ErrorHandlerProps {
   error?: unknown;
 }
 
-export default function ErrorHandler({ error }: ErrorHandlerProps) {
+export default function ErrorAlert({ error }: ErrorHandlerProps) {
   // Don't render anything if there's no error
   if (!error) return <></>;
 

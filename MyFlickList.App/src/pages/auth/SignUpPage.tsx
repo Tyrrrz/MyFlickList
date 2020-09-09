@@ -3,12 +3,12 @@ import { useForm } from 'react-hook-form';
 import { CgAsterisk } from 'react-icons/cg';
 import { FiAtSign, FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
-import api from '../infra/api';
-import { SignUpRequest } from '../infra/api.generated';
-import ErrorHandler from '../shared/ErrorHandler';
-import Meta from '../shared/Meta';
-import useAuthToken from '../shared/useAuthToken';
-import { routes } from './Routing';
+import api from '../../infra/api';
+import { SignUpRequest } from '../../infra/api.generated';
+import { routes } from '../../Routing';
+import ErrorAlert from '../../shared/ErrorAlert';
+import Meta from '../../shared/Meta';
+import useAuthToken from '../../shared/useAuthToken';
 
 interface FormData {
   username: string;
@@ -115,7 +115,7 @@ export default function SignUpPage() {
             />
           </div>
 
-          <ErrorHandler error={error} />
+          <ErrorAlert error={error} />
 
           <button type="submit" disabled={formState.isSubmitting}>
             Sign up

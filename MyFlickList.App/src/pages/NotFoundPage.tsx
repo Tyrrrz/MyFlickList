@@ -1,8 +1,8 @@
 import React from 'react';
 import { useLocation } from 'react-router';
+import { routes } from '../Routing';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
-import { routes } from './Routing';
 
 export default function NotFoundPage() {
   const { pathname } = useLocation();

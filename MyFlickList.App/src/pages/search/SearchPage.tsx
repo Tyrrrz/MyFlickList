@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { SearchResponse } from '../../infra/api.generated';
-import DataLoader from '../../shared/DataLoader';
+import { routes } from '../../Routing';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
 import useParams from '../../shared/useParams';
-import { routes } from '../Routing';
-import FlickTable from './shared/FlickTable';
+import useQuery from '../../shared/useQuery';
+import FlickTable from '../flicks/shared/FlickTable';
 
-function SearchResults({ results }: { results: SearchResponse }) {
+function SearchResultsSection({ query }: { query: string }) {
+  const results = useQuery(() => api.search().getResults(query), [query]);
+
   const isNothingFound = !results.flicks || results.flicks.length <= 0;
 
   return (
@@ -29,8 +29,7 @@ function SearchResults({ results }: { results: SearchResponse }) {
   );
 }
 
-export default function SearchFlicksPage() {
-  const [token] = useAuthToken();
+export default function SearchPage() {
   const history = useHistory();
   const { query } = useParams();
   const [stagingQuery, setStagingQuery] = useState(query ?? '');
@@ -61,13 +60,7 @@ export default function SearchFlicksPage() {
         </button>
       </form>
 
-      {query && (
-        <DataLoader
-          getData={() => api.search(token).getResults(query)}
-          deps={[query]}
-          render={(results) => <SearchResults results={results} />}
-        />
-      )}
+      {query && <SearchResultsSection query={query} />}
     </div>
   );
 }

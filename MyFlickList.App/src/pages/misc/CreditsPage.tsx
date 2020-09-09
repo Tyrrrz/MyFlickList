@@ -1,6 +1,6 @@
 import React from 'react';
-import Link from '../shared/Link';
-import Meta from '../shared/Meta';
+import Link from '../../shared/Link';
+import Meta from '../../shared/Meta';
 
 export default function CreditsPage() {
   return (

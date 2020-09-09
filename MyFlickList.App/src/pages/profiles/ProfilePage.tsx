@@ -10,20 +10,21 @@ import {
 } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import api from '../../infra/api';
-import { ProfileResponse } from '../../infra/api.generated';
 import { AuthTokenHelper, FlickHelper, ProfileHelper } from '../../infra/helpers';
 import { slugify } from '../../infra/utils';
-import DataLoader from '../../shared/DataLoader';
+import { routes } from '../../Routing';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
 import useParams from '../../shared/useParams';
-import { routes } from '../Routing';
+import useQuery from '../../shared/useQuery';
 
-function ProfileLoaded({ profile }: { profile: ProfileResponse }) {
+export default function ProfilePage() {
   const history = useHistory();
-  const { profileName } = useParams();
+  const { profileId, profileName } = useParams();
   const [token] = useAuthToken();
+
+  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [profileId]);
 
   // Normalize URL
   useEffect(() => {
@@ -205,18 +206,5 @@ function ProfileLoaded({ profile }: { profile: ProfileResponse }) {
         </tbody>
       </table>
     </div>
-  );
-}
-
-export default function ProfilePage() {
-  const [token] = useAuthToken();
-  const { profileId } = useParams();
-
-  return (
-    <DataLoader
-      getData={() => api.profiles(token).getProfile(Number(profileId))}
-      deps={[profileId]}
-      render={(profile) => <ProfileLoaded profile={profile} />}
-    />
   );
 }

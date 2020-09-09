@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { FiTv } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import { AuthTokenHelper } from './infra/helpers';
-import Routing, { routes } from './pages/Routing';
+import Routing, { routes } from './Routing';
+import ErrorAlert from './shared/ErrorAlert';
 import Link from './shared/Link';
 import useAuthToken from './shared/useAuthToken';
 import useTracking from './shared/useTracking';
@@ -110,10 +113,39 @@ function Header() {
   );
 }
 
-function PageContainer() {
+function PageBusyFallback() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Add a delay before showing the indicator to prevent flickering
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setIsVisible(true), 200);
+
+    return () => window.clearTimeout(timeout);
+  }, []);
+
+  if (!isVisible) {
+    return <></>;
+  }
+
+  return (
+    <div className="p-12 text-center">
+      <AiOutlineLoading3Quarters className="mx-auto animate-spin text-6xl text-blue-600" />
+    </div>
+  );
+}
+
+function PageErrorFallback({ error }: { error: unknown }) {
+  return <ErrorAlert error={error} />;
+}
+
+function Page() {
   return (
     <main className="flex-grow py-8">
-      <Routing />
+      <ErrorBoundary fallbackRender={({ error }) => <PageErrorFallback error={error} />}>
+        <Suspense fallback={<PageBusyFallback />}>
+          <Routing />
+        </Suspense>
+      </ErrorBoundary>
     </main>
   );
 }
@@ -150,7 +182,7 @@ export default function Layout() {
   return (
     <div className="flex flex-col container min-h-screen mx-auto">
       <Header />
-      <PageContainer />
+      <Page />
       <Footer />
     </div>
   );
