@@ -6,8 +6,8 @@ import App from './App';
 import config from './infra/config';
 
 // Init google analytics
-if (config.secrets.googleAnalyticsToken) {
-  initGoogleAnalytics(config.secrets.googleAnalyticsToken, {
+if (config.googleAnalyticsToken) {
+  initGoogleAnalytics(config.googleAnalyticsToken, {
     gaOptions: {
       sampleRate: 100
     }
@@ -15,9 +15,9 @@ if (config.secrets.googleAnalyticsToken) {
 }
 
 // Init Sentry
-if (config.secrets.sentryToken) {
+if (config.sentryToken) {
   initSentry({
-    dsn: config.secrets.sentryToken
+    dsn: config.sentryToken
   });
 }
 

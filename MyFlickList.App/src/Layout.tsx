@@ -1,14 +1,15 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { pageview as trackPageView } from 'react-ga';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { FiTv } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router';
+import config from './infra/config';
 import { AuthTokenHelper } from './infra/helpers';
 import Routing, { routes } from './Routing';
 import ErrorAlert from './shared/ErrorAlert';
 import Link from './shared/Link';
 import useAuthToken from './shared/useAuthToken';
-import useTracking from './shared/useTracking';
 
 function HeaderUserBox() {
   const [token] = useAuthToken();
@@ -177,7 +178,14 @@ function Footer() {
 }
 
 export default function Layout() {
-  useTracking();
+  const { pathname, search } = useLocation();
+
+  // Track navigation
+  useEffect(() => {
+    if (config.googleAnalyticsToken) {
+      trackPageView(pathname + search);
+    }
+  }, [pathname, search]);
 
   return (
     <div className="flex flex-col container min-h-screen mx-auto">
