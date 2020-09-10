@@ -170,6 +170,10 @@ function Footer() {
         Credits
       </Link>
       {' • '}
+      <Link className="font-normal" href={routes.feedback.href()}>
+        Feedback
+      </Link>
+      {' • '}
       <Link className="font-normal" href={routes.donate.href()}>
         Donate
       </Link>

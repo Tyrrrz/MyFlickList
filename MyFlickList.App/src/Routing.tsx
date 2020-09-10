@@ -10,6 +10,7 @@ import RequestFlickPage from './pages/flicks/RequestFlickPage';
 import HomePage from './pages/HomePage';
 import CreditsPage from './pages/misc/CreditsPage';
 import DonatePage from './pages/misc/DonatePage';
+import FeedbackPage from './pages/misc/FeedbackPage';
 import NotFoundPage from './pages/NotFoundPage';
 import EditProfilePage from './pages/profiles/EditProfilePage';
 import ProfilePage from './pages/profiles/ProfilePage';
@@ -104,6 +105,7 @@ export const routes = {
   signOut: new RouteDescriptor('/auth/signout'),
   signUp: new RouteDescriptor('/auth/signup'),
   credits: new RouteDescriptor('/misc/credits'),
+  feedback: new RouteDescriptor('/misc/feedback'),
   donate: new RouteDescriptor('/misc/donate'),
   home: new RouteDescriptor('/')
 };
@@ -121,6 +123,7 @@ export default function Routing() {
       <Route exact path={routes.signOut.template} component={SignOutPage} />
       <Route exact path={routes.signUp.template} component={SignUpPage} />
       <Route exact path={routes.credits.template} component={CreditsPage} />
+      <Route exact path={routes.feedback.template} component={FeedbackPage} />
       <Route exact path={routes.donate.template} component={DonatePage} />
       <Route exact path={routes.home.template} component={HomePage} />
       <Route path="*" component={NotFoundPage} />{' '}
