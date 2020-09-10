@@ -62,8 +62,8 @@ MyFlickList's API conforms with the OpenAPI standard, which is leveraged for aut
 
 Steps:
 
-- Make sure API is running on `localhost:5000`
+- Ensure API project has been built
 - Change directory to `/MyFlickList.App`
-- Execute `npm run update-client`
+- Execute `npm run generate-client`
 
 The generated client is placed in `src/infra/api.generated.ts`. Some editors may not load the type definitions immediately and you might need to open the file yourself to help.

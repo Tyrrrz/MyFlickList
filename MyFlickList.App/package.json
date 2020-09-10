@@ -36,8 +36,8 @@
     "prettier-plugin-organize-imports": "^1.1.1"
   },
   "scripts": {
-    "generate-client": "nswag openapi2tsclient /Input:http://localhost:5000/swagger/v1/swagger.json /Output:src/infra/api.generated.ts /GenerateOptionalParameters:true",
-    "generate-tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.output.css",
+    "generate-client": "nswag run /runtime:netcore31",
+    "generate-tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.generated.css",
     "prestart": "npm run generate-tailwind",
     "prebuild": "npm run generate-tailwind",
     "start": "react-scripts start",

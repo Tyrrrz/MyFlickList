@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { AddFlickRequest } from '../../infra/api.generated';
 import { routes } from '../../Routing';
 import ErrorAlert from '../../shared/ErrorAlert';
 import Link from '../../shared/Link';
@@ -40,7 +39,7 @@ export default function RequestFlickPage() {
 
           api
             .flicks(token)
-            .addFlick(new AddFlickRequest({ sourceUrl }))
+            .addFlick({ sourceUrl })
             .then((res) => history.push(routes.flick.href({ flickId: res.flickId })))
             .catch(setError)
             .finally(() => setIsBusy(false));

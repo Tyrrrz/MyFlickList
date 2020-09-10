@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import config from './infra/config';
 import Layout from './Layout';
 import LocalStorageProvider from './shared/LocalStorageProvider';
-import './tailwind.output.css';
+import './tailwind.generated.css';
 
 // Init google analytics
 if (config.googleAnalyticsToken) {

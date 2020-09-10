@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { UpdateProfileRequest } from '../../infra/api.generated';
 import { routes } from '../../Routing';
 import ErrorAlert from '../../shared/ErrorAlert';
 import Meta from '../../shared/Meta';
@@ -40,12 +39,9 @@ export default function EditProfilePage() {
         onSubmit={handleSubmit((data) => {
           api
             .profiles(token)
-            .updateProfile(
-              profile.id,
-              new UpdateProfileRequest({
-                ...data
-              })
-            )
+            .updateProfile(profile.id, {
+              ...data
+            })
             .then(() =>
               history.push(
                 routes.profile.href({ profileId: profile.id, profileName: profile.name })

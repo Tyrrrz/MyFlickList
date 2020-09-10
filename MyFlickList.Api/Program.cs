@@ -8,8 +8,8 @@ namespace MyFlickList.Api
 {
     public static class Program
     {
-        // This signature is required for EF design-time tools to work
-        private static IHostBuilder CreateHostBuilder(string[] args) =>
+        // This signature is required for EF and NSwag design-time tools to work
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(o =>
                 {

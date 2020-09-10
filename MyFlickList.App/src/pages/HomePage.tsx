@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import api from '../infra/api';
-import { FlickListingResponse, FlickOrder } from '../infra/api.generated';
+import { FlickListingResponse } from '../infra/api.generated';
 import { FlickHelper } from '../infra/helpers';
 import { slugify } from '../infra/utils';
 import { routes } from '../Routing';
@@ -40,7 +40,7 @@ function FlickSpotlightItem({ flick, position }: FlickSpotlightItemProps) {
 
 export default function HomePage() {
   const [token] = useAuthToken();
-  const flicks = useQuery(() => api.flicks(token).getFlicks(FlickOrder.Top), []);
+  const flicks = useQuery(() => api.flicks(token).getFlicks('Top'), []);
 
   return (
     <div>

@@ -1,5 +1,5 @@
 import decodeJwt from 'jwt-decode';
-import { FlickKind, IFlickListingResponse, IProfileResponse } from './api.generated';
+import { FlickListingResponse, ProfileResponse } from './api.generated';
 import config from './config';
 import { getAbsoluteUrl } from './utils';
 
@@ -51,9 +51,9 @@ export class AuthTokenHelper {
 }
 
 export class FlickHelper {
-  readonly flick: IFlickListingResponse;
+  readonly flick: FlickListingResponse;
 
-  constructor(flick: IFlickListingResponse) {
+  constructor(flick: FlickListingResponse) {
     this.flick = flick;
   }
 
@@ -66,11 +66,7 @@ export class FlickHelper {
   }
 
   formatKind() {
-    if (
-      this.flick.kind === FlickKind.Series &&
-      this.flick.episodeCount &&
-      this.flick.episodeCount > 0
-    ) {
+    if (this.flick.kind === 'Series' && this.flick.episodeCount && this.flick.episodeCount > 0) {
       return `${this.flick.kind} (${this.flick.episodeCount} episodes)`;
     }
 
@@ -97,7 +93,7 @@ export class FlickHelper {
       year: 'numeric'
     });
 
-    if (this.flick.kind === FlickKind.Movie) {
+    if (this.flick.kind === 'Movie') {
       return formatter.format(this.flick.premiereDate);
     }
 
@@ -127,7 +123,7 @@ export class FlickHelper {
 
     const formatted = [hoursPart, minutesPart].join(' ');
 
-    if (this.flick.kind === FlickKind.Series) {
+    if (this.flick.kind === 'Series') {
       return formatted + ' / episode';
     }
 
@@ -142,9 +138,9 @@ export class FlickHelper {
 }
 
 export class ProfileHelper {
-  readonly profile: IProfileResponse;
+  readonly profile: ProfileResponse;
 
-  constructor(profile: IProfileResponse) {
+  constructor(profile: ProfileResponse) {
     this.profile = profile;
   }
 

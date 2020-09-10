@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { FiLock, FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { SignInRequest } from '../../infra/api.generated';
 import { AuthTokenHelper } from '../../infra/helpers';
 import { routes } from '../../Routing';
 import ErrorAlert from '../../shared/ErrorAlert';
@@ -38,11 +37,9 @@ export default function SignInPage() {
           className="space-y-4"
           onSubmit={handleSubmit(async (data) => {
             try {
-              const res = await api.auth(token).signIn(
-                new SignInRequest({
-                  ...data
-                })
-              );
+              const res = await api.auth(token).signIn({
+                ...data
+              });
 
               setToken(res.token);
               const tokenHelper = new AuthTokenHelper(res.token);

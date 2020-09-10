@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { FiCalendar, FiClock, FiExternalLink, FiShare2, FiStar, FiTag, FiTv } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { FlickKind, FlickResponse } from '../../infra/api.generated';
+import { FlickResponse } from '../../infra/api.generated';
 import config from '../../infra/config';
 import { FlickHelper } from '../../infra/helpers';
 import { getAbsoluteUrl, slugify } from '../../infra/utils';
@@ -88,7 +88,7 @@ export default function FlickPage() {
         title={flick.title}
         description={flick.synopsis}
         imageUrl={flickHelper.getCoverImageUrl()}
-        contentType={flick.kind === FlickKind.Movie ? 'video.movie' : 'video.tv_show'}
+        contentType={flick.kind === 'Movie' ? 'video.movie' : 'video.tv_show'}
       />
 
       <h1>{flick.title}</h1>

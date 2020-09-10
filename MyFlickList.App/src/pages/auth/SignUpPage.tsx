@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { FiAtSign, FiLock, FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { SignUpRequest } from '../../infra/api.generated';
 import { routes } from '../../Routing';
 import ErrorAlert from '../../shared/ErrorAlert';
 import Meta from '../../shared/Meta';
@@ -39,11 +38,9 @@ export default function SignUpPage() {
                 throw Error('Passwords must match');
               }
 
-              await api.auth(token).signUp(
-                new SignUpRequest({
-                  ...data
-                })
-              );
+              await api.auth(token).signUp({
+                ...data
+              });
 
               return history.push(routes.signIn.href());
             } catch (error) {
