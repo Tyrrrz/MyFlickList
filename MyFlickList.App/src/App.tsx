@@ -1,15 +1,38 @@
+import { ErrorBoundary, init as initSentry } from '@sentry/react';
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { initialize as initGoogleAnalytics } from 'react-ga';
+import { BrowserRouter } from 'react-router-dom';
+import config from './infra/config';
 import Layout from './Layout';
 import LocalStorageProvider from './shared/LocalStorageProvider';
 import './tailwind.output.css';
 
+// Init google analytics
+if (config.googleAnalyticsToken) {
+  initGoogleAnalytics(config.googleAnalyticsToken, {
+    gaOptions: {
+      sampleRate: 100
+    }
+  });
+}
+
+// Init Sentry
+if (config.sentryToken) {
+  initSentry({
+    dsn: config.sentryToken
+  });
+}
+
 export default function App() {
   return (
-    <Router>
-      <LocalStorageProvider>
-        <Layout />
-      </LocalStorageProvider>
-    </Router>
+    <React.StrictMode>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <LocalStorageProvider>
+            <Layout />
+          </LocalStorageProvider>
+        </BrowserRouter>
+      </ErrorBoundary>
+    </React.StrictMode>
   );
 }
