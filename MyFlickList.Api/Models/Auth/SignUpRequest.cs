@@ -5,6 +5,7 @@ namespace MyFlickList.Api.Models.Auth
     public class SignUpRequest
     {
         [Required]
+        [RegularExpression("^[a-zA-Z0-9_\\-]+$")]
         [StringLength(48, MinimumLength = 3)]
         public string Username { get; set; } = default!;
 

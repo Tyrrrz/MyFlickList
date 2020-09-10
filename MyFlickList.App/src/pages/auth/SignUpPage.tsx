@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { CgAsterisk } from 'react-icons/cg';
-import { FiAtSign, FiUser } from 'react-icons/fi';
+import { FiAtSign, FiLock, FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { SignUpRequest } from '../../infra/api.generated';
@@ -29,6 +28,8 @@ export default function SignUpPage() {
 
       <div className="w-3/4 mx-auto space-y-5">
         <h1>Sign up</h1>
+
+        <p>Create a profile and start tracking your favorite movies and shows!</p>
 
         <form
           className="space-y-4"
@@ -62,9 +63,17 @@ export default function SignUpPage() {
               required
               minLength={3}
               maxLength={48}
-              placeholder="john.titor1"
+              pattern="^[a-zA-Z0-9_\-]+$"
+              placeholder="john_titor1"
               ref={register}
             />
+            <div className="mt-2">
+              <ul className="text-sm text-gray-600 italic">
+                <li>At least 3 characters</li>
+                <li>At most 48 characters</li>
+                <li>Only latin letters, digits, underscores, and dashes</li>
+              </ul>
+            </div>
           </div>
 
           <div>
@@ -85,7 +94,7 @@ export default function SignUpPage() {
 
           <div>
             <label className="flex flex-row items-center" htmlFor="password">
-              <CgAsterisk /> <span className="ml-1">Password:</span>
+              <FiLock /> <span className="ml-1">Password:</span>
             </label>
             <input
               className="w-1/3"
@@ -94,14 +103,19 @@ export default function SignUpPage() {
               required
               minLength={6}
               maxLength={1024}
-              placeholder="xxxxxx"
+              placeholder="••••••"
               ref={register}
             />
+            <div className="mt-2">
+              <ul className="text-sm text-gray-600 italic">
+                <li>At least 6 characters</li>
+              </ul>
+            </div>
           </div>
 
           <div>
             <label className="flex flex-row items-center" htmlFor="passwordConfirm">
-              <CgAsterisk /> <span className="ml-1">Password (confirm):</span>
+              <FiLock /> <span className="ml-1">Password (confirm):</span>
             </label>
             <input
               className="w-1/3"
@@ -110,7 +124,7 @@ export default function SignUpPage() {
               required
               minLength={6}
               maxLength={1024}
-              placeholder="xxxxxx"
+              placeholder="••••••"
               ref={register}
             />
           </div>
