@@ -67,21 +67,45 @@ export class FlickHelper {
 
   formatKind() {
     if (this.flick.kind === 'Series' && this.flick.episodeCount && this.flick.episodeCount > 0) {
-      return `${this.flick.kind} (${this.flick.episodeCount} episodes)`;
+      return `${this.flick.kind} (${this.flick.episodeCount} eps)`;
     }
 
-    return this.flick.kind.toString();
+    return `${this.flick.kind}`;
   }
 
   formatRating() {
     if (!this.flick.externalRating) return '--';
 
     const formatter = new Intl.NumberFormat('en-US', {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2
+      maximumFractionDigits: 1,
+      minimumFractionDigits: 1
     });
 
     return formatter.format(this.flick.externalRating);
+  }
+
+  formatPremiereDate() {
+    if (!this.flick.premiereDate) return '--';
+
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+
+    return formatter.format(new Date(this.flick.premiereDate));
+  }
+
+  formatFinaleDate() {
+    if (!this.flick.finaleDate) return '--';
+
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+
+    return formatter.format(new Date(this.flick.finaleDate));
   }
 
   formatDate() {
@@ -117,8 +141,8 @@ export class FlickHelper {
 
     if (hours + minutes <= 0) return '--';
 
-    const hoursSuffix = hours === 1 ? 'hour' : 'hours';
-    const minutesSuffix = minutes === 1 ? 'minute' : 'minutes';
+    const hoursSuffix = hours === 1 ? 'hr' : 'hrs';
+    const minutesSuffix = minutes === 1 ? 'min' : 'mins';
 
     const hoursPart = hours > 0 ? `${hours} ${hoursSuffix}` : '';
     const minutesPart = minutes > 0 ? `${minutes} ${minutesSuffix}` : '';
@@ -126,10 +150,32 @@ export class FlickHelper {
     const formatted = [hoursPart, minutesPart].join(' ');
 
     if (this.flick.kind === 'Series') {
-      return formatted + ' / episode';
+      return formatted + ' / ep';
     }
 
     return formatted;
+  }
+
+  formatYears() {
+    if (!this.flick.premiereDate) return '--';
+
+    const premiereYear = new Date(this.flick.premiereDate).getUTCFullYear();
+
+    if (!this.flick.finaleDate) {
+      if (this.flick.kind === 'Movie') {
+        return `${premiereYear}`;
+      } else {
+        return `${premiereYear} —`;
+      }
+    }
+
+    const finaleYear = new Date(this.flick.finaleDate).getUTCFullYear();
+
+    if (premiereYear === finaleYear) {
+      return `${premiereYear}`;
+    }
+
+    return `${premiereYear} — ${finaleYear}`;
   }
 
   formatTags() {

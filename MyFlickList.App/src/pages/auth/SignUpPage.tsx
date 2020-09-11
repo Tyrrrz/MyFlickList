@@ -49,8 +49,8 @@ export default function SignUpPage() {
           })}
         >
           <div>
-            <label className="flex flex-row items-center" htmlFor="username">
-              <FiUser /> <span className="ml-1">User name:</span>
+            <label className="flex flex-row items-center space-x-1" htmlFor="username">
+              <FiUser /> <div>Username:</div>
             </label>
             <input
               className="w-1/3"
@@ -74,8 +74,8 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label className="flex flex-row items-center" htmlFor="email">
-              <FiAtSign /> <span className="ml-1">Email:</span>
+            <label className="flex flex-row items-center space-x-1" htmlFor="email">
+              <FiAtSign /> <div>Email:</div>
             </label>
             <input
               className="w-1/3"
@@ -90,8 +90,8 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label className="flex flex-row items-center" htmlFor="password">
-              <FiLock /> <span className="ml-1">Password:</span>
+            <label className="flex flex-row items-center space-x-1" htmlFor="password">
+              <FiLock /> <div>Password:</div>
             </label>
             <input
               className="w-1/3"
@@ -111,8 +111,8 @@ export default function SignUpPage() {
           </div>
 
           <div>
-            <label className="flex flex-row items-center" htmlFor="passwordConfirm">
-              <FiLock /> <span className="ml-1">Password (confirm):</span>
+            <label className="flex flex-row items-center space-x-1" htmlFor="passwordConfirm">
+              <FiLock /> <div>Password (confirm):</div>
             </label>
             <input
               className="w-1/3"

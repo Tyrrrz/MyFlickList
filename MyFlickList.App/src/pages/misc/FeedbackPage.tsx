@@ -20,9 +20,11 @@ export default function DonatePage() {
           on the official Discord server. Please avoid creating new issues for questions.
         </p>
 
+        <hr className="w-3/4 mx-auto" />
+
         <div className="grid grid-cols-2 gap-4">
           {/* Bugs & features */}
-          <div className="text-xl font-semibold">Bugs &amp; features</div>
+          <div className="text-xl font-light">Bugs &amp; features</div>
 
           <div>
             <div>
@@ -35,7 +37,7 @@ export default function DonatePage() {
           </div>
 
           {/* Questions */}
-          <div className="text-xl font-semibold">Questions</div>
+          <div className="text-xl font-light">Questions</div>
 
           <div>
             <div>

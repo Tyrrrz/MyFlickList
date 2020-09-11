@@ -15,9 +15,11 @@ export default function CreditsPage() {
           along with their corresponding licenses.
         </p>
 
+        <hr className="w-3/4 mx-auto" />
+
         {/* Graphics */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="text-xl font-semibold">Graphics</div>
+          <div className="text-xl font-light">Graphics</div>
 
           <div>
             <ul>

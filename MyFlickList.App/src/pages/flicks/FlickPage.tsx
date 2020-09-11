@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FiCalendar, FiClock, FiExternalLink, FiShare2, FiStar, FiTag, FiTv } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiFilm, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { FlickResponse } from '../../infra/api.generated';
@@ -35,7 +35,7 @@ function getNetworkLinks(flick: FlickResponse) {
 }
 
 function getShareLinks(flick: FlickResponse) {
-  const absoluteUrl = getAbsoluteUrl(
+  const selfUrl = getAbsoluteUrl(
     config.appUrl,
     routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) })
   );
@@ -48,7 +48,7 @@ function getShareLinks(flick: FlickResponse) {
         new URLSearchParams({
           related: config.appUrl,
           via: 'myflicklist',
-          url: absoluteUrl,
+          url: selfUrl,
           text: flick.title,
           hashtags: 'myflicklist'
         }).toString()
@@ -57,11 +57,11 @@ function getShareLinks(flick: FlickResponse) {
       name: 'Reddit',
       url:
         'https://reddit.com/submit?' +
-        new URLSearchParams({ url: absoluteUrl, title: flick.title }).toString()
+        new URLSearchParams({ url: selfUrl, title: flick.title }).toString()
     },
     {
       name: 'Facebook',
-      url: 'https://facebook.com/share.php?' + new URLSearchParams({ u: absoluteUrl }).toString()
+      url: 'https://facebook.com/share.php?' + new URLSearchParams({ u: selfUrl }).toString()
     }
   ];
 }
@@ -91,93 +91,136 @@ export default function FlickPage() {
         contentType={flick.kind === 'Movie' ? 'video.movie' : 'video.tv_show'}
       />
 
-      <h1>{flick.title}</h1>
+      <div className="w-3/4 mx-auto flex flex-row space-x-10">
+        {/* Flick info */}
+        <div className="flex-grow space-y-3">
+          <div>
+            {/* Title */}
+            <h1 className="tracking-wide truncate">{flick.title}</h1>
 
-      {/* Main info */}
-      <div className="inline-block -mt-2 space-x-3">
-        <div className="inline-flex items-center">
-          <FiTv /> <span className="ml-1">{flickHelper.formatKind()}</span>
-        </div>
-
-        <div className="inline-flex items-center">
-          <FiClock /> <span className="ml-1">{flickHelper.formatRuntime()}</span>
-        </div>
-
-        <div className="inline-flex items-center">
-          <FiCalendar /> <span className="ml-1">{flickHelper.formatDate()}</span>
-        </div>
-
-        <div className="inline-flex items-center">
-          <FiStar /> <span className="ml-1">{flickHelper.formatRating()}</span>
-        </div>
-      </div>
-
-      <div className="mt-5 flex flex-row space-x-3">
-        {/* Cover image & additional info */}
-        <div className="w-auto">
-          <img
-            className="rounded-md"
-            alt={flick.title}
-            src={flickHelper.getCoverImageUrl()}
-            width={500}
-          />
-
-          <div className="mt-5">
-            <div className="inline-flex items-center font-semibold">
-              <FiTag /> <span className="ml-1">Tags</span>
-            </div>
-            {flick.tags && flick.tags.length > 0 ? (
-              <div className="space-x-1 space-y-1">
-                {flick.tags.map((tag) => (
-                  <Link
-                    key={tag}
-                    className="inline-block px-3 py-1 rounded-full bg-gray-200 text-sm"
-                    href={routes.flicks.href({ filterTag: tag })}
-                  >
-                    {tag}
-                  </Link>
-                ))}
+            {/* Metadata */}
+            <div className="-mt-1 flex flex-row text-lg font-light space-x-3">
+              {/* Kind */}
+              <div className="flex flex-row items-center space-x-2">
+                <FiFilm strokeWidth={1} />
+                <div>{flickHelper.formatKind()}</div>
               </div>
-            ) : (
-              '--'
+
+              {/* Separator */}
+              <div className="w-px h-6 mt-1 border border-gray-200" />
+
+              {/* Runtime */}
+              <div className="flex flex-row items-center space-x-2">
+                <FiClock strokeWidth={1} />
+                <div>{flickHelper.formatRuntime()}</div>
+              </div>
+
+              {/* Separator */}
+              <div className="w-px h-6 mt-1 border border-gray-200" />
+
+              {/* Years */}
+              <div className="flex flex-row items-center space-x-2">
+                <FiCalendar strokeWidth={1} />
+                <div>{flickHelper.formatYears()}</div>
+              </div>
+
+              {/* Separator */}
+              <div className="w-px h-6 mt-1 border border-gray-200" />
+
+              {/* Rating */}
+              <div className="flex flex-row items-center space-x-2 font-normal">
+                <FiStar strokeWidth={1} fill="#f6ad55" />
+                <div>{flickHelper.formatRating()}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Synopsis */}
+          <article className="text-gray-800">{flick.synopsis}</article>
+
+          {/* Tags */}
+          <div className="flex flex-row space-x-1">
+            {flick.tags?.map((tag) => (
+              <div key={tag} className="px-3 py-1 rounded-full bg-gray-200 text-sm">
+                <Link href={routes.flicks.href({ filterTag: tag })}>{tag}</Link>
+              </div>
+            ))}
+          </div>
+
+          {/* Additional info */}
+          <div className="text-sm">
+            {flick.originalTitle && (
+              <div className="space-x-1">
+                <span>Original title:</span>{' '}
+                <span className="font-semibold">{flick.originalTitle}</span>
+              </div>
+            )}
+
+            {flick.premiereDate && (
+              <div className="space-x-1">
+                <span>Premiere date:</span>{' '}
+                <span className="font-semibold">{flickHelper.formatPremiereDate()}</span>
+              </div>
+            )}
+
+            {flick.finaleDate && (
+              <div className="space-x-1">
+                <span>Finale date:</span>{' '}
+                <span className="font-semibold">{flickHelper.formatFinaleDate()}</span>
+              </div>
             )}
           </div>
 
-          <div className="mt-5">
-            <div className="inline-flex items-center font-semibold">
-              <FiExternalLink /> <span className="ml-1">External</span>
-            </div>
-            <ul>
-              {getNetworkLinks(flick).map((networkLink) => (
-                <li key={networkLink.name}>
-                  <Link className="text-sm" href={networkLink.url} target="_blank">
-                    Find on {networkLink.name}
+          {/* Other sites */}
+          <div className="text-sm">
+            <div>Find on:</div>
+
+            <div className="flex flex-row pl-1 space-x-2">
+              {getNetworkLinks(flick).map((link) => (
+                <div key={link.name} className="inline">
+                  <Link href={link.url} target="_blank">
+                    {link.name}
                   </Link>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
 
-          <div className="mt-5">
-            <div className="inline-flex items-center font-semibold">
-              <FiShare2 /> <span className="ml-1">Share</span>
-            </div>
-            <ul>
-              {getShareLinks(flick).map((shareLink) => (
-                <li key={shareLink.name}>
-                  <Link className="text-sm" href={shareLink.url} target="_blank">
-                    {shareLink.name}
+          {/* Share */}
+          <div className="text-sm">
+            <div>Share on:</div>
+
+            <div className="flex flex-row pl-1 space-x-2">
+              {getShareLinks(flick).map((link) => (
+                <div key={link.name} className="inline">
+                  <Link href={link.url} target="_blank">
+                    {link.name}
                   </Link>
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="w-full">
-          <article>{flick.synopsis}</article>
+        {/* Cover */}
+        <div style={{ minWidth: 'max-content' }}>
+          <img
+            className="rounded-md shadow"
+            alt={flick.title}
+            src={flickHelper.getCoverImageUrl()}
+            width={225}
+          />
         </div>
+      </div>
+
+      {/* Separator */}
+      <hr className="w-1/2 my-8 mx-auto" />
+
+      {/* User listing */}
+      <div className="text-lg text-center">
+        Have you watched this {flick.kind.toLowerCase()}?
+        <br />
+        <Link href={routes.signIn.href()}>Sign in</Link> to add it to your list!
       </div>
     </div>
   );

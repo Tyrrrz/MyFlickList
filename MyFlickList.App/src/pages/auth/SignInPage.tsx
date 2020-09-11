@@ -56,8 +56,8 @@ export default function SignInPage() {
           })}
         >
           <div>
-            <label className="flex flex-row items-center" htmlFor="username">
-              <FiUser /> <span className="ml-1">User name:</span>
+            <label className="flex flex-row items-center space-x-1" htmlFor="username">
+              <FiUser /> <div>Username:</div>
             </label>
             <input
               className="w-1/3"
@@ -70,8 +70,8 @@ export default function SignInPage() {
           </div>
 
           <div>
-            <label className="flex flex-row items-center" htmlFor="password">
-              <FiLock /> <span className="ml-1">Password:</span>
+            <label className="flex flex-row items-center space-x-1" htmlFor="password">
+              <FiLock /> <div>Password:</div>
             </label>
             <input className="w-1/3" type="password" name="password" required ref={register} />
           </div>

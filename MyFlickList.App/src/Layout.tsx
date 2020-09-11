@@ -114,6 +114,15 @@ function Header() {
   );
 }
 
+function PageErrorFallback({ error, reset }: { error: unknown; reset: () => void }) {
+  const history = useHistory();
+
+  // Reset error when navigating away
+  history.listen(() => reset());
+
+  return <ErrorAlert error={error} />;
+}
+
 function PageBusyFallback() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -133,15 +142,6 @@ function PageBusyFallback() {
       <AiOutlineLoading3Quarters className="mx-auto animate-spin text-6xl text-blue-600" />
     </div>
   );
-}
-
-function PageErrorFallback({ error, reset }: { error: unknown; reset: () => void }) {
-  const history = useHistory();
-
-  // Reset error when navigating away
-  history.listen(() => reset());
-
-  return <ErrorAlert error={error} />;
 }
 
 function Page() {

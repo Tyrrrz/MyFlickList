@@ -1,4 +1,5 @@
 import React from 'react';
+import { FiHeart } from 'react-icons/fi';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 
@@ -19,34 +20,42 @@ export default function DonatePage() {
           associated as well. These include hosting, domain, development tools, hardware, and more.
         </p>
 
-        <p>
-          If you enjoy using this site, please consider donating to make the project more
-          sustainable. Every little bit helps!
-        </p>
+        <div className="p-4 flex flex-row border rounded border-pink-200 bg-pink-100 space-x-10">
+          <div>
+            <p>
+              If you enjoy using this site, please consider donating to make the project more
+              sustainable. Every little bit helps!
+            </p>
 
-        <ul>
-          <li>
-            <Link href="https://patreon.com/Tyrrrz" target="_blank">
-              Patreon
-            </Link>{' '}
-            (recurring)
-          </li>
+            <ul className="mt-1">
+              <li>
+                <Link href="https://patreon.com/Tyrrrz" target="_blank">
+                  Patreon
+                </Link>{' '}
+                <span className="font-light">(recurring)</span>
+              </li>
 
-          <li>
-            <Link href="https://buymeacoffee.com/Tyrrrz" target="_blank">
-              BuyMeACoffee
-            </Link>{' '}
-            (one-time)
-          </li>
-        </ul>
+              <li>
+                <Link href="https://buymeacoffee.com/Tyrrrz" target="_blank">
+                  BuyMeACoffee
+                </Link>{' '}
+                <span className="font-light">(one-time)</span>
+              </li>
+            </ul>
 
-        <p>
-          In case neither of the donation options works for you, please{' '}
-          <Link href="https://twitter.com/Tyrrrz" target="_blank">
-            contact me on Twitter
-          </Link>{' '}
-          to figure out an alternative.
-        </p>
+            <p className="mt-4 text-sm text-gray-700 italic">
+              In case the above donation options don&apos;t work for you, please{' '}
+              <Link href="https://twitter.com/Tyrrrz" target="_blank">
+                contact me on Twitter
+              </Link>{' '}
+              to figure out an alternative.
+            </p>
+          </div>
+
+          <div className="self-center text-6xl text-pink-200">
+            <FiHeart strokeWidth={1} />
+          </div>
+        </div>
       </div>
     </div>
   );

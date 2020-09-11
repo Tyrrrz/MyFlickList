@@ -50,22 +50,23 @@ export default function ProfilePage() {
       {/* Avatar & main profile info */}
       <div className="flex flex-row justify-center items-center space-x-10">
         {/* Avatar */}
-        <img
-          className="rounded-full shadow"
-          alt={`${profile.name}'s avatar`}
-          src={profileHelper.getAvatarImageUrl()}
-          width={170}
-          height={170}
-        />
+        <div style={{ minWidth: 'max-content' }}>
+          <img
+            className="rounded-full shadow"
+            alt={`${profile.name}'s avatar`}
+            src={profileHelper.getAvatarImageUrl()}
+            width={170}
+          />
+        </div>
 
         <div>
           {/* Name */}
-          <h1 className="font-semibold truncate">{profile.name}</h1>
+          <h1 className="tracking-wide truncate">{profile.name}</h1>
 
           {/* Location */}
           {profile.location && (
-            <div className="flex flex-row items-center">
-              <FiMapPin /> <span className="ml-1 truncate">{profile.location}</span>
+            <div className="-mt-1 flex flex-row items-center font-light space-x-1">
+              <FiMapPin strokeWidth={1} /> <div>{profile.location}</div>
             </div>
           )}
         </div>
@@ -74,7 +75,7 @@ export default function ProfilePage() {
       {/* Profile info */}
       <div className="w-3/4 my-6 mx-auto space-y-4">
         {/* Bio */}
-        {profile.bio && <section className="text-center">{profile.bio}</section>}
+        {profile.bio && <article className="text-gray-800 text-center">{profile.bio}</article>}
 
         {/* Socials */}
         <div className="flex flex-row justify-center text-xl space-x-3">
@@ -120,40 +121,47 @@ export default function ProfilePage() {
       <div className="text-center">
         {isAuthenticatedUser && (
           <Link
-            className="btn inline-flex flex-row items-center"
+            className="btn inline-flex flex-row items-center space-x-1"
             href={routes.profileEdit.href({ profileId: profile.id, profileName: profile.name })}
           >
-            <FiEdit /> <span className="ml-1">Edit Profile</span>
+            <FiEdit /> <div>Edit Profile</div>
           </Link>
         )}
       </div>
 
       {/* Separator */}
-      <hr className="w-3/4 my-8 mx-auto" />
+      <hr className="w-1/2 my-8 mx-auto" />
 
       {/* Tabs & stats */}
       <div className="flex flex-row justify-center items-center">
+        {/* Watched */}
         <Link href="#">
           <div className="text-xl">123</div>
           <div className="text-sm font-normal tracking-wider">Watched</div>
         </Link>
 
+        {/* Separator */}
         <div className="w-px h-8 mt-1 mx-4 border border-gray-200" />
 
+        {/* Planned */}
         <Link href="#">
           <div className="text-xl">45</div>
           <div className="text-sm font-normal tracking-wider">Planned</div>
         </Link>
 
+        {/* Separator */}
         <div className="w-px h-8 mt-1 mx-4 border border-gray-200" />
 
+        {/* Reviews */}
         <Link href="#">
           <div className="text-xl">67</div>
           <div className="text-sm font-normal tracking-wider">Reviews</div>
         </Link>
 
+        {/* Separator */}
         <div className="w-px h-8 mt-1 mx-4 border border-gray-200" />
 
+        {/* Collections */}
         <Link href="#">
           <div className="text-xl">89</div>
           <div className="text-sm font-normal tracking-wider">Collections</div>
@@ -166,7 +174,6 @@ export default function ProfilePage() {
           {!profile.favoriteFlicks || (profile.favoriteFlicks.length <= 0 && <div>None :(</div>)}
 
           {profile.favoriteFlicks &&
-            profile.favoriteFlicks.length >= 0 &&
             profile.favoriteFlicks.map((flick) => (
               <tr key={flick.id}>
                 <td>
@@ -197,8 +204,8 @@ export default function ProfilePage() {
                 </td>
 
                 <td>
-                  <div className="flex flex-row items-center text-lg">
-                    <FiStar /> <span className="ml-1">{new FlickHelper(flick).formatRating()}</span>
+                  <div className="flex flex-row items-center text-lg space-x-1">
+                    <FiStar /> <div>{new FlickHelper(flick).formatRating()}</div>
                   </div>
                 </td>
               </tr>
