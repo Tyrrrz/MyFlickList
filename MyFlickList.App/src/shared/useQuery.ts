@@ -11,6 +11,7 @@ export default function useQuery<T>(resolve: () => Promise<T>, deps: DependencyL
   const { data } = useReactQuery(cacheKey, resolve, {
     suspense: true,
     useErrorBoundary: true,
+    retry: false,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false
   });

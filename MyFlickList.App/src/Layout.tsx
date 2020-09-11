@@ -135,14 +135,23 @@ function PageBusyFallback() {
   );
 }
 
-function PageErrorFallback({ error }: { error: unknown }) {
+function PageErrorFallback({ error, reset }: { error: unknown; reset: () => void }) {
+  const history = useHistory();
+
+  // Reset error when navigating away
+  history.listen(() => reset());
+
   return <ErrorAlert error={error} />;
 }
 
 function Page() {
   return (
     <main className="flex-grow py-8">
-      <ErrorBoundary fallbackRender={({ error }) => <PageErrorFallback error={error} />}>
+      <ErrorBoundary
+        fallbackRender={({ error, resetErrorBoundary }) => (
+          <PageErrorFallback error={error} reset={resetErrorBoundary} />
+        )}
+      >
         <Suspense fallback={<PageBusyFallback />}>
           <Routing />
         </Suspense>
