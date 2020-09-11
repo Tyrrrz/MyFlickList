@@ -496,8 +496,8 @@ export interface FlickListingResponse {
     id: number;
     kind: FlickKind;
     title: string;
-    premiereDate?: Date | undefined;
-    finaleDate?: Date | undefined;
+    premiereDate?: string | undefined;
+    finaleDate?: string | undefined;
     episodeCount?: number | undefined;
     runtime?: string | undefined;
     externalRating?: number | undefined;

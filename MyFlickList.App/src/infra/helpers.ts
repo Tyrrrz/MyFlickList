@@ -94,16 +94,18 @@ export class FlickHelper {
     });
 
     if (this.flick.kind === 'Movie') {
-      return formatter.format(this.flick.premiereDate);
+      return formatter.format(new Date(this.flick.premiereDate));
     }
 
     if (this.flick.finaleDate) {
       return (
-        formatter.format(this.flick.premiereDate) + ' - ' + formatter.format(this.flick.finaleDate)
+        formatter.format(new Date(this.flick.premiereDate)) +
+        ' - ' +
+        formatter.format(new Date(this.flick.finaleDate))
       );
     }
 
-    return formatter.format(this.flick.premiereDate) + ' - ...';
+    return formatter.format(new Date(this.flick.premiereDate)) + ' - ...';
   }
 
   formatRuntime() {
