@@ -35,7 +35,12 @@ namespace MyFlickList.Api.Controllers
 
             var flicks = await _dbContext.Flicks
                 // Match flick titles that contain the query (strip accents for "Pokemon" -> "Pokémon")
-                .Where(f => Postgres.Functions.Unaccent(f.Title.ToLower()).Contains(Postgres.Functions.Unaccent(queryNormalized)))
+                // TODO: replace with collations
+                .Where(f =>
+                    Postgres.Functions.Unaccent(f.Title.ToLower()).Contains(Postgres.Functions.Unaccent(queryNormalized)) ||
+                    f.OriginalTitle != null && Postgres.Functions.Unaccent(f.OriginalTitle.ToLower())
+                        .Contains(Postgres.Functions.Unaccent(queryNormalized))
+                )
                 // Order by how similar the strings are, in terms of length
                 .OrderBy(f => f.Title.Length - queryNormalized.Length)
                 .Include(f => f.Tags)
