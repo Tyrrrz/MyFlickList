@@ -60,8 +60,17 @@ export default function ProfilePage() {
         </div>
 
         <div>
-          {/* Name */}
-          <h1 className="tracking-wide truncate">{profile.name}</h1>
+          <div className="flex flex-row items-center">
+            {/* Name */}
+            <h1 className="tracking-wide">{profile.name}</h1>
+
+            {/* Role badge */}
+            {profile.role !== 'Normal' && (
+              <div className="ml-2 mt-2 p-1 border rounded border-red-200 bg-red-100 text-sm text-red-500">
+                {profile.role}
+              </div>
+            )}
+          </div>
 
           {/* Location */}
           {profile.location && (

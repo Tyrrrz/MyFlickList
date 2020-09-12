@@ -8,8 +8,6 @@ namespace MyFlickList.Api.Entities.Profiles
     {
         public int Id { get; set; }
 
-        public string Name { get; set; } = default!;
-
         public bool IsPublic { get; set; } = true;
 
         public string? Location { get; set; }
@@ -35,10 +33,6 @@ namespace MyFlickList.Api.Entities.Profiles
     {
         public void Configure(EntityTypeBuilder<ProfileEntity> builder)
         {
-            builder.Property(o => o.Name)
-                .IsRequired()
-                .HasMaxLength(48);
-
             builder.Property(o => o.WebsiteUrl)
                 .HasMaxLength(2048);
 

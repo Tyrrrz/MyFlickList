@@ -37,10 +37,7 @@ namespace MyFlickList.Api.Controllers
                 Username = request.Username,
                 Email = request.Email,
                 PasswordHash = PasswordHash.Generate(request.Password),
-                Profile = new ProfileEntity
-                {
-                    Name = request.Username
-                }
+                Profile = new ProfileEntity()
             };
 
             try

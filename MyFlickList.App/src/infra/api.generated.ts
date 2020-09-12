@@ -531,7 +531,9 @@ export interface AddFlickRequest {
 
 export interface ProfileResponse {
     id: number;
+    role: UserRole;
     name: string;
+    isPublic: boolean;
     location?: string | undefined;
     bio?: string | undefined;
     websiteUrl?: string | undefined;
@@ -542,7 +544,10 @@ export interface ProfileResponse {
     favoriteFlicks?: FlickListingResponse[] | undefined;
 }
 
+export type UserRole = "Normal" | "Admin";
+
 export interface UpdateProfileRequest {
+    isPublic?: boolean;
     location?: string | undefined;
     bio?: string | undefined;
     websiteUrl?: string | undefined;

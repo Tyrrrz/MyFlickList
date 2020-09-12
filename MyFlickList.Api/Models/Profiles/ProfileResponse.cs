@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using MyFlickList.Api.Entities.Auth;
 using MyFlickList.Api.Models.Flicks;
 
 namespace MyFlickList.Api.Models.Profiles
@@ -10,7 +11,13 @@ namespace MyFlickList.Api.Models.Profiles
         public int Id { get; set; }
 
         [Required]
+        public UserRole Role { get; set; }
+
+        [Required]
         public string Name { get; set; } = default!;
+
+        [Required]
+        public bool IsPublic { get; set; }
 
         public string? Location { get; set; }
 

@@ -19,7 +19,7 @@ namespace MyFlickList.Api.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        [ResponseCache(Duration = Durations.OneDay)]
+        [ResponseCache(Duration = Durations.SecondsIn.OneDay)]
         public async Task<IActionResult> GetFile(int id)
         {
             var cancellation = HttpContext.RequestAborted;

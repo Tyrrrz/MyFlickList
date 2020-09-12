@@ -20,6 +20,8 @@ namespace MyFlickList.Api.Models
                 .ForMember(o => o.Tags, x => x.MapFrom(o => o.Tags));
 
             CreateMap<ProfileEntity, ProfileResponse>()
+                .ForMember(o => o.Name, x => x.MapFrom(o => o.User!.Username))
+                .ForMember(o => o.Role, x => x.MapFrom(o => o.User!.Role))
                 .ForMember(o => o.FavoriteFlicks, x => x.Ignore()); // temp
         }
     }

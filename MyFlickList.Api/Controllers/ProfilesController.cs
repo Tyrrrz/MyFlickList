@@ -1,12 +1,11 @@
 ﻿using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MyFlickList.Api.Entities.Profiles;
+using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Api.Models.Flicks;
 using MyFlickList.Api.Models.Profiles;
 
@@ -34,6 +33,7 @@ namespace MyFlickList.Api.Controllers
             var cancellation = HttpContext.RequestAborted;
 
             var profile = await _dbContext.Profiles
+                .ProjectTo<ProfileResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(p => p.Id == profileId, cancellation);
 
             if (profile == null)
@@ -45,7 +45,7 @@ namespace MyFlickList.Api.Controllers
                 );
             }
 
-            if (!profile.IsPublic && User.FindFirstValue(ClaimTypes.NameIdentifier) != profile.UserId.ToString())
+            if (!profile.IsPublic && User.TryGetProfileId() != profileId)
             {
                 return Problem(
                     statusCode: 403,
@@ -54,15 +54,13 @@ namespace MyFlickList.Api.Controllers
                 );
             }
 
-            var response = _mapper.Map<ProfileResponse>(profile);
-
             // TODO: temp
-            response.FavoriteFlicks = await _dbContext.Flicks
+            profile.FavoriteFlicks = await _dbContext.Flicks
                 .OrderBy(f => f.ExternalRating)
                 .ProjectTo<FlickListingResponse>(_mapper.ConfigurationProvider)
                 .ToArrayAsync(cancellation);
 
-            return Ok(response);
+            return Ok(profile);
         }
 
         [HttpPut("{profileId}")]
@@ -88,7 +86,7 @@ namespace MyFlickList.Api.Controllers
                 );
             }
 
-            if (User.FindFirstValue(ClaimTypes.NameIdentifier) != profile.UserId.ToString())
+            if (User.TryGetProfileId() != profileId)
             {
                 return Problem(
                     statusCode: 403,
@@ -97,19 +95,7 @@ namespace MyFlickList.Api.Controllers
                 );
             }
 
-            _dbContext.Entry(profile).CurrentValues.SetValues(new ProfileEntity
-            {
-                Id = profile.Id,
-                Name = profile.Name,
-                Location = request.Location,
-                Bio = request.Bio,
-                WebsiteUrl = request.WebsiteUrl,
-                TwitterId = request.TwitterId,
-                InstagramId = request.InstagramId,
-                GitHubId = request.GitHubId,
-                UserId = profile.UserId
-            });
-
+            _dbContext.Entry(profile).CurrentValues.SetValues(request);
             await _dbContext.SaveChangesAsync(cancellation);
 
             return Ok();

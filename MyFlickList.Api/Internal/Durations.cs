@@ -2,12 +2,13 @@
 {
     internal static class Durations
     {
-        public const int OneSecond = 1;
+        public static class SecondsIn
+        {
+            public const int OneMinute = 60;
 
-        public const int OneMinute = 60 * OneSecond;
+            public const int OneHour = 60 * OneMinute;
 
-        public const int OneHour = 60 * OneMinute;
-
-        public const int OneDay = 24 * OneHour;
+            public const int OneDay = 24 * OneHour;
+        }
     }
 }

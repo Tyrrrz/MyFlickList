@@ -5,9 +5,13 @@ using MyFlickList.Api.Entities.Profiles;
 
 namespace MyFlickList.Api.Entities.Auth
 {
+    public enum UserRole : byte { Normal, Admin }
+
     public class UserEntity : IHasCreated
     {
         public int Id { get; set; }
+
+        public UserRole Role { get; set; } = UserRole.Normal;
 
         public string Username { get; set; } = default!;
 

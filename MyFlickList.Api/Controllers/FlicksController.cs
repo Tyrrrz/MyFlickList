@@ -38,8 +38,7 @@ namespace MyFlickList.Api.Controllers
             var cancellation = HttpContext.RequestAborted;
 
             var flick = await _dbContext.Flicks
-                .Include(f => f.ExternalLinks)
-                .Include(f => f.Tags)
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(f => f.Id == flickId, cancellation);
 
             if (flick == null)
@@ -51,9 +50,7 @@ namespace MyFlickList.Api.Controllers
                 );
             }
 
-            var response = _mapper.Map<FlickResponse>(flick);
-
-            return Ok(response);
+            return Ok(flick);
         }
 
         [HttpGet]
@@ -94,7 +91,6 @@ namespace MyFlickList.Api.Controllers
                 flicksFiltered = flicksFiltered.Where(f => f.Tags.Any(t => t.Name.ToLower() == filterTag.ToLower()));
 
             var flicks = flicksFiltered
-                .Include(f => f.Tags)
                 .ProjectTo<FlickListingResponse>(_mapper.ConfigurationProvider);
 
             var response = await PaginatedResponse.FromQueryAsync(flicks, page, 10, cancellation);
