@@ -49,9 +49,9 @@ export default function AddFlickPage() {
           onSubmit={handleSubmit(async (data) => {
             try {
               const { flickId } = await api.flicks(token).addFlick(data);
-              return history.push(routes.flick.href({ flickId }));
+              history.push(routes.flick.href({ flickId }));
             } catch (error) {
-              return setError(error);
+              setError(error);
             }
           })}
         >
@@ -60,9 +60,10 @@ export default function AddFlickPage() {
 
             <div className="flex flex-row items-center space-x-2">
               <input
-                className="w-full"
+                className="flex-grow"
                 type="url"
                 name="sourceUrl"
+                autoFocus
                 required
                 placeholder="https://imdb.com/title/tt0029583"
                 disabled={formState.isSubmitting || !token}

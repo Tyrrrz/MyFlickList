@@ -49,7 +49,7 @@ export default function SignInPage() {
                 })
               );
             } catch (error) {
-              return setError(error);
+              setError(error);
             }
           })}
         >

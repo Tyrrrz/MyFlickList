@@ -1,6 +1,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { pageview as trackPageView } from 'react-ga';
+import { useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { FiTv } from 'react-icons/fi';
 import { useHistory, useLocation } from 'react-router';
@@ -52,22 +53,22 @@ function HeaderUserBox() {
 
 function HeaderSearchBox() {
   const history = useHistory();
-  const [searchQuery, setSearchQuery] = useState('');
+  const { register, handleSubmit } = useForm({ defaultValues: { query: '' } });
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        history.push(routes.search.href({ query: searchQuery }));
-      }}
+      onSubmit={handleSubmit((data) => {
+        history.push(routes.search.href({ query: data.query }));
+      })}
     >
       <input
         className="mt-1 rounded-full"
         type="search"
+        name="query"
         placeholder="Search"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        ref={register}
       />
+
       <input type="submit" hidden />
     </form>
   );

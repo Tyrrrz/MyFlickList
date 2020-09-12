@@ -39,9 +39,9 @@ export default function SignUpPage() {
               }
 
               await api.auth(token).signUp(data);
-              return history.push(routes.signIn.href());
+              history.push(routes.signIn.href());
             } catch (error) {
-              return setError(error);
+              setError(error);
             }
           })}
         >

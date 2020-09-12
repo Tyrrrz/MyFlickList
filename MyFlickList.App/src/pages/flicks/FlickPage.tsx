@@ -141,7 +141,7 @@ export default function FlickPage() {
           {/* Tags */}
           <div className="flex flex-row space-x-1">
             {flick.tags?.map((tag) => (
-              <div key={tag} className="px-3 py-1 rounded-full bg-gray-200 text-sm">
+              <div key={tag} className="px-3 py-1 rounded bg-gray-200 text-sm">
                 <Link href={routes.flicks.href({ filterTag: tag })}>{tag}</Link>
               </div>
             ))}
