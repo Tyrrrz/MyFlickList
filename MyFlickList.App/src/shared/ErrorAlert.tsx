@@ -60,7 +60,7 @@ export default function ErrorAlert({ error }: ErrorHandlerProps) {
   const resolvedError = resolveError(error);
 
   return (
-    <div className="px-4 py-3 border rounded border-red-400 bg-red-100 text-red-700">
+    <div className="p-4 border rounded border-red-400 bg-red-100 text-red-700">
       <div className="font-bold">{resolvedError.title}</div>
 
       {resolvedError.details && <div>{resolvedError.details}</div>}

@@ -82,7 +82,7 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile info */}
-      <div className="w-3/4 my-6 mx-auto space-y-4">
+      <div className="w-3/4 my-6 mx-auto space-y-5">
         {/* Bio */}
         {profile.bio && <article className="text-gray-800 text-center">{profile.bio}</article>}
 

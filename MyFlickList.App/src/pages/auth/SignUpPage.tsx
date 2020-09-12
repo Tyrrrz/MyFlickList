@@ -31,17 +31,14 @@ export default function SignUpPage() {
         <p>Create a profile and start tracking your favorite movies and shows!</p>
 
         <form
-          className="space-y-4"
+          className="space-y-5"
           onSubmit={handleSubmit(async (data) => {
             try {
               if (data.password !== data.passwordConfirm) {
                 throw Error('Passwords must match');
               }
 
-              await api.auth(token).signUp({
-                ...data
-              });
-
+              await api.auth(token).signUp(data);
               return history.push(routes.signIn.href());
             } catch (error) {
               return setError(error);

@@ -4,9 +4,9 @@ import { FlickOrder } from './infra/api.generated';
 import SignInPage from './pages/auth/SignInPage';
 import SignOutPage from './pages/auth/SignOutPage';
 import SignUpPage from './pages/auth/SignUpPage';
+import AddFlickPage from './pages/flicks/AddFlickPage';
 import FlickPage from './pages/flicks/FlickPage';
 import FlicksPage from './pages/flicks/FlicksPage';
-import RequestFlickPage from './pages/flicks/RequestFlickPage';
 import HomePage from './pages/HomePage';
 import CreditsPage from './pages/misc/CreditsPage';
 import DonatePage from './pages/misc/DonatePage';
@@ -95,7 +95,7 @@ interface ProfileParams extends Params {
 }
 
 export const routes = {
-  flickAdd: new RouteDescriptor('/flicks/request'),
+  flickAdd: new RouteDescriptor('/flicks/add'),
   flick: new RouteDescriptor<FlickParams>('/flicks/:flickId/:flickTitle?'),
   flicks: new RouteDescriptor<FlicksParams>('/flicks'),
   search: new RouteDescriptor<SearchParams>('/search'),
@@ -113,7 +113,7 @@ export const routes = {
 export default function Routing() {
   return (
     <Switch>
-      <Route exact path={routes.flickAdd.template} component={RequestFlickPage} />
+      <Route exact path={routes.flickAdd.template} component={AddFlickPage} />
       <Route exact path={routes.flick.template} component={FlickPage} />
       <Route exact path={routes.flicks.template} component={FlicksPage} />
       <Route exact path={routes.search.template} component={SearchPage} />

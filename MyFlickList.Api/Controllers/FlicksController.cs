@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Entities.Flicks;
@@ -99,6 +100,7 @@ namespace MyFlickList.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(AddFlickResponse), 200)]
         [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

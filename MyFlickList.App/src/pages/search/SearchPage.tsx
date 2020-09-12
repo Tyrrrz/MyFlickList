@@ -41,7 +41,7 @@ export default function SearchPage() {
       <h1>Search</h1>
 
       <form
-        className="w-9/12 mx-auto my-5 flex flex-row"
+        className="w-9/12 mx-auto my-5 flex flex-row space-x-2"
         onSubmit={(e) => {
           e.preventDefault();
           history.push(routes.search.href({ query: stagingQuery }));
@@ -55,9 +55,7 @@ export default function SearchPage() {
           onChange={(e) => setStagingQuery(e.target.value)}
         />
 
-        <button className="ml-2" type="submit">
-          Search
-        </button>
+        <button type="submit">Search</button>
       </form>
 
       {query && <SearchResultsSection query={query} />}

@@ -34,12 +34,10 @@ export default function SignInPage() {
         </p>
 
         <form
-          className="space-y-4"
+          className="space-y-5"
           onSubmit={handleSubmit(async (data) => {
             try {
-              const res = await api.auth(token).signIn({
-                ...data
-              });
+              const res = await api.auth(token).signIn(data);
 
               setToken(res.token);
               const tokenHelper = new AuthTokenHelper(res.token);
