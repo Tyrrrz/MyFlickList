@@ -13,7 +13,9 @@ export default function useQuery<T>(resolve: () => Promise<T>, deps: DependencyL
     useErrorBoundary: true,
     retry: false,
     refetchIntervalInBackground: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    staleTime: 2000,
+    cacheTime: 2000
   });
 
   // When using suspense, react-query never returns undefined data

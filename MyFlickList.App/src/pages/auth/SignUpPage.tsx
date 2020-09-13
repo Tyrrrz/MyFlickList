@@ -61,8 +61,8 @@ export default function SignUpPage() {
               placeholder="john_titor1"
               ref={register}
             />
-            <div className="mt-2">
-              <ul className="text-sm text-gray-600 italic">
+            <div className="mt-2 text-sm text-gray-600 italic">
+              <ul>
                 <li>At least 3 characters</li>
                 <li>At most 48 characters</li>
                 <li>Only latin letters, digits, underscores, and dashes</li>
@@ -100,8 +100,8 @@ export default function SignUpPage() {
               placeholder="••••••"
               ref={register}
             />
-            <div className="mt-2">
-              <ul className="text-sm text-gray-600 italic">
+            <div className="mt-2 text-sm text-gray-600 italic">
+              <ul>
                 <li>At least 6 characters</li>
               </ul>
             </div>
