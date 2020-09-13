@@ -1,9 +1,9 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { FiCalendar, FiFilm, FiStar } from 'react-icons/fi';
+import { FiCalendar, FiFilm, FiMapPin, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { FlickHelper } from '../../infra/helpers';
+import { FlickHelper, ProfileHelper } from '../../infra/helpers';
 import { slugify } from '../../infra/utils';
 import { routes } from '../../Routing';
 import Link from '../../shared/Link';
@@ -14,28 +14,37 @@ import useQuery from '../../shared/useQuery';
 function SearchResultsSection({ query }: { query: string }) {
   const results = useQuery(() => api.search().getResults(query), [query]);
 
-  const isNothingFound = !results.flicks || results.flicks.length <= 0;
+  const isNothingFound =
+    (!results.flicks || results.flicks.length <= 0) &&
+    (!results.profiles || results.profiles.length <= 0);
 
   return (
     <div className="space-y-5">
       {/* Flicks */}
-      {results.flicks && (
-        <div>
+      {results.flicks && results.flicks.length > 0 && (
+        <div className="space-y-3">
+          {/* Count */}
+          <div className="flex flex-row items-center space-x-5">
+            <div className="text-2xl font-thin tracking-wide">Flicks ({results.flicks.length})</div>{' '}
+            <hr className="flex-grow" />
+          </div>
+
           {results.flicks.map((flick) => (
             <div key={flick.id} className="flex flex-row space-x-3">
               <div>
                 <img
-                  className="rounded"
+                  className="rounded shadow"
                   alt={flick.title}
                   src={new FlickHelper(flick).getCoverImageUrl()}
                   width={100}
+                  height={150}
                 />
               </div>
 
               <div>
                 <div>
                   <Link
-                    className="text-lg truncate"
+                    className="text-lg tracking-wide truncate"
                     href={routes.flick.href({
                       flickId: flick.id,
                       flickTitle: slugify(flick.title)
@@ -70,6 +79,59 @@ function SearchResultsSection({ query }: { query: string }) {
                       <Link href={routes.flicks.href({ filterTag: tag })}>{tag}</Link>
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Profiles */}
+      {results.profiles && results.profiles.length > 0 && (
+        <div className="space-y-3">
+          {/* Count */}
+          <div className="flex flex-row items-center space-x-5">
+            <div className="text-2xl font-thin tracking-wide">
+              Profiles ({results.profiles.length})
+            </div>{' '}
+            <hr className="flex-grow" />
+          </div>
+
+          {results.profiles.map((profile) => (
+            <div key={profile.id} className="flex flex-row space-x-3">
+              <div>
+                <img
+                  className="rounded-full shadow"
+                  alt={profile.name}
+                  src={new ProfileHelper(profile).getAvatarImageUrl()}
+                  width={100}
+                  height={100}
+                />
+              </div>
+
+              <div>
+                <div>
+                  <Link
+                    className="text-lg tracking-wide truncate"
+                    href={routes.profile.href({
+                      profileId: profile.id,
+                      profileName: profile.name
+                    })}
+                  >
+                    {profile.name}
+                  </Link>
+                </div>
+
+                {/* Location */}
+                <div className="flex flex-row items-center space-x-1">
+                  <FiMapPin strokeWidth={1} />
+                  <div>{profile.location || '--'}</div>
+                </div>
+
+                {/* Watched */}
+                <div className="flex flex-row items-center space-x-1">
+                  <FiFilm strokeWidth={1} />
+                  <div>123 watched</div>
                 </div>
               </div>
             </div>

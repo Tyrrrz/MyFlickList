@@ -1,5 +1,5 @@
 import decodeJwt from 'jwt-decode';
-import { FlickListingResponse, ProfileResponse } from './api.generated';
+import { FlickListingResponse, ProfileListingResponse } from './api.generated';
 import config from './config';
 import { getAbsoluteUrl } from './utils';
 
@@ -186,9 +186,9 @@ export class FlickHelper {
 }
 
 export class ProfileHelper {
-  readonly profile: ProfileResponse;
+  readonly profile: ProfileListingResponse;
 
-  constructor(profile: ProfileResponse) {
+  constructor(profile: ProfileListingResponse) {
     this.profile = profile;
   }
 

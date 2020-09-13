@@ -529,18 +529,21 @@ export interface AddFlickRequest {
     sourceUrl: string;
 }
 
-export interface ProfileResponse {
+export interface ProfileListingResponse {
     id: number;
-    role: UserRole;
     name: string;
-    isPublic: boolean;
     location?: string | undefined;
+    avatarImageId?: number | undefined;
+}
+
+export interface ProfileResponse extends ProfileListingResponse {
+    role: UserRole;
+    isPublic: boolean;
     bio?: string | undefined;
     websiteUrl?: string | undefined;
     twitterId?: string | undefined;
     instagramId?: string | undefined;
     gitHubId?: string | undefined;
-    avatarImageId?: number | undefined;
     favoriteFlicks?: FlickListingResponse[] | undefined;
 }
 
@@ -558,6 +561,7 @@ export interface UpdateProfileRequest {
 
 export interface SearchResponse {
     flicks?: FlickListingResponse[] | undefined;
+    profiles?: ProfileListingResponse[] | undefined;
 }
 
 export class ApiException extends Error {

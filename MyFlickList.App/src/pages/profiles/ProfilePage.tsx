@@ -56,6 +56,7 @@ export default function ProfilePage() {
             alt={`${profile.name}'s avatar`}
             src={profileHelper.getAvatarImageUrl()}
             width={170}
+            height={170}
           />
         </div>
 
@@ -141,7 +142,7 @@ export default function ProfilePage() {
       {/* Separator */}
       <hr className="w-1/2 my-8 mx-auto" />
 
-      {/* Tabs & stats */}
+      {/* Stats & tabs */}
       <div className="flex flex-row justify-center items-center">
         {/* Watched */}
         <Link href="#">

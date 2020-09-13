@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyFlickList.Api.Internal;
 using MyFlickList.Api.Models.Flicks;
+using MyFlickList.Api.Models.Profiles;
 using MyFlickList.Api.Models.Search;
 
 namespace MyFlickList.Api.Controllers
@@ -24,7 +24,6 @@ namespace MyFlickList.Api.Controllers
             _mapper = mapper;
         }
 
-        // TODO: in the future this should search for everything, not just flicks
         [HttpGet]
         [ProducesResponseType(typeof(SearchResponse), 200)]
         public async Task<IActionResult> GetResults(string query)
@@ -43,14 +42,24 @@ namespace MyFlickList.Api.Controllers
                 )
                 // Order by how similar the strings are, in terms of length
                 .OrderBy(f => f.Title.Length - queryNormalized.Length)
-                .Include(f => f.Tags)
                 .Take(10)
                 .ProjectTo<FlickListingResponse>(_mapper.ConfigurationProvider)
                 .ToArrayAsync(cancellation);
 
+            var profiles = await _dbContext.Profiles
+                .Where(p => p.IsPublic)
+                // TODO: replace with collations
+                .Where(p => p.User!.Username.ToLower().Contains(queryNormalized))
+                // Order by how similar the strings are, in terms of length
+                .OrderBy(p => p.User!.Username.Length - queryNormalized.Length)
+                .Take(10)
+                .ProjectTo<ProfileListingResponse>(_mapper.ConfigurationProvider)
+                .ToArrayAsync(cancellation);
+
             return Ok(new SearchResponse
             {
-                Flicks = flicks
+                Flicks = flicks,
+                Profiles = profiles
             });
         }
     }

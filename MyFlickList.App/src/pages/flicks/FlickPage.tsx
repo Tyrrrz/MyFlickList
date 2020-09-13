@@ -208,7 +208,8 @@ export default function FlickPage() {
             className="rounded-md shadow"
             alt={flick.title}
             src={flickHelper.getCoverImageUrl()}
-            width={225}
+            width={230}
+            height={345}
           />
         </div>
       </div>
