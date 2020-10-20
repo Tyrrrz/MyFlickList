@@ -37,17 +37,14 @@
   },
   "scripts": {
     "generate-client": "nswag run /runtime:netcore31",
-    "generate-tailwind": "tailwindcss build src/tailwind.css -o src/tailwind.generated.css",
+    "generate-tailwind": "tailwindcss build ./src/tailwind.css -o ./src/tailwind.generated.css",
     "prestart": "npm run generate-tailwind",
     "prebuild": "npm run generate-tailwind",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint */**/*.{js,jsx,ts,tsx} --fix"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "lint": "eslint **/*.{js,jsx,ts,tsx} --fix"
   },
   "browserslist": {
     "production": [
