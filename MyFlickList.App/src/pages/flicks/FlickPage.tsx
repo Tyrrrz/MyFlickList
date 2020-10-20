@@ -37,7 +37,7 @@ function getNetworkLinks(flick: FlickResponse) {
 function getShareLinks(flick: FlickResponse) {
   const selfUrl = getAbsoluteUrl(
     config.appUrl,
-    routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) })
+    routes.flick({ flickId: flick.id, flickTitle: slugify(flick.title) })
   );
 
   return [
@@ -76,7 +76,7 @@ export default function FlickPage() {
   // Normalize URL
   useEffect(() => {
     if (flickTitle !== slugify(flick.title)) {
-      history.replace(routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) }));
+      history.replace(routes.flick({ flickId: flick.id, flickTitle: slugify(flick.title) }));
     }
   }, [flick.id, flick.title, history, flickTitle]);
 
@@ -142,7 +142,7 @@ export default function FlickPage() {
           <div className="flex flex-row space-x-1">
             {flick.tags?.map((tag) => (
               <div key={tag} className="px-3 py-1 rounded bg-gray-200 text-sm">
-                <Link href={routes.flicks.href({ filterTag: tag })}>{tag}</Link>
+                <Link href={routes.flicks({ filterTag: tag })}>{tag}</Link>
               </div>
             ))}
           </div>
@@ -221,7 +221,7 @@ export default function FlickPage() {
       <div className="text-lg text-center">
         Have you watched this {flick.kind.toLowerCase()}?
         <br />
-        <Link href={routes.signIn.href()}>Sign in</Link> to add it to your list!
+        <Link href={routes.signIn()}>Sign in</Link> to add it to your list!
       </div>
     </div>
   );

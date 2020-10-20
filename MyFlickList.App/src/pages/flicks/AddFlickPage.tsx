@@ -38,8 +38,8 @@ export default function AddFlickPage() {
         {!token && (
           <div className="p-4 border rounded border-red-400 bg-red-100 text-red-700">
             <p>
-              You need to be <Link href={routes.signIn.href()}>signed in</Link> in order to request
-              a new flick
+              You need to be <Link href={routes.signIn()}>signed in</Link> in order to request a new
+              flick
             </p>
           </div>
         )}
@@ -49,7 +49,7 @@ export default function AddFlickPage() {
           onSubmit={handleSubmit(async (data) => {
             try {
               const { flickId } = await api.flicks(token).addFlick(data);
-              history.push(routes.flick.href({ flickId }));
+              history.push(routes.flick({ flickId }));
             } catch (error) {
               setError(error);
             }

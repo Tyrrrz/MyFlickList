@@ -29,7 +29,7 @@ export default function ProfilePage() {
   // Normalize URL
   useEffect(() => {
     if (profileName !== profile.name) {
-      history.replace(routes.profile.href({ profileId: profile.id, profileName: profile.name }));
+      history.replace(routes.profile({ profileId: profile.id, profileName: profile.name }));
     }
   }, [profile.id, profile.name, history, profileName]);
 
@@ -132,7 +132,7 @@ export default function ProfilePage() {
         {isAuthenticatedUser && (
           <Link
             className="btn inline-flex flex-row items-center space-x-1"
-            href={routes.profileEdit.href({ profileId: profile.id, profileName: profile.name })}
+            href={routes.profileEdit({ profileId: profile.id, profileName: profile.name })}
           >
             <FiEdit /> <div>Edit Profile</div>
           </Link>
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                       <div>
                         <Link
                           className="text-xl"
-                          href={routes.flick.href({
+                          href={routes.flick({
                             flickId: flick.id,
                             flickTitle: slugify(flick.title)
                           })}

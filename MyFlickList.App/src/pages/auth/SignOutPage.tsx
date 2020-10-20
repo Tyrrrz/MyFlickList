@@ -24,7 +24,7 @@ export default function SignOutPage() {
         <p>You have been signed out. Hope to see you again soon!</p>
 
         <div>
-          <Link href={routes.home.href()}>Return to home page</Link>
+          <Link href={routes.home()}>Return to home page</Link>
         </div>
       </div>
     </div>

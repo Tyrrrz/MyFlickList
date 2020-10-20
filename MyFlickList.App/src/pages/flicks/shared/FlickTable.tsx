@@ -25,7 +25,7 @@ function FlickRow({ flick, position }: FlickRowProps) {
             <div>
               <Link
                 className="font-bold text-truncate"
-                href={routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) })}
+                href={routes.flick({ flickId: flick.id, flickTitle: slugify(flick.title) })}
               >
                 {flick.title}
               </Link>
@@ -39,7 +39,7 @@ function FlickRow({ flick, position }: FlickRowProps) {
                 <Link
                   key={t}
                   className="inline-block px-3 py-1 rounded-full bg-gray-200 text-sm"
-                  href={routes.flicks.href({ filterTag: t })}
+                  href={routes.flicks({ filterTag: t })}
                 >
                   {t}
                 </Link>

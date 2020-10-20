@@ -31,7 +31,7 @@ export default function FlicksPage() {
       <Paginator
         currentPage={pageNumber}
         lastPage={flicks.totalPages}
-        getPageHref={(p) => routes.flicks.href({ order: order as FlickOrder, filterTag, page: p })}
+        getPageHref={(p) => routes.flicks({ order: order as FlickOrder, filterTag, page: p })}
       />
     </div>
   );

@@ -22,7 +22,7 @@ function FlickSpotlightItem({ flick, position }: FlickSpotlightItemProps) {
   return (
     <Link
       className="block"
-      href={routes.flick.href({ flickId: flick.id, flickTitle: slugify(flick.title) })}
+      href={routes.flick({ flickId: flick.id, flickTitle: slugify(flick.title) })}
       style={{
         marginLeft: -15 * position,
         transform: !isHover ? `scale(${1 - 0.05 * position})` : 'scale(1.1)',

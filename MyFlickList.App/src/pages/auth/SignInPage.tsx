@@ -29,8 +29,7 @@ export default function SignInPage() {
         <h1>Sign in</h1>
 
         <p className="text-lg">
-          Don&apos;t have a profile yet? <Link href={routes.signUp.href()}>Sign up</Link> to create
-          one!
+          Don&apos;t have a profile yet? <Link href={routes.signUp()}>Sign up</Link> to create one!
         </p>
 
         <form
@@ -43,7 +42,7 @@ export default function SignInPage() {
               const tokenHelper = new AuthTokenHelper(res.token);
 
               history.push(
-                routes.profile.href({
+                routes.profile({
                   profileId: tokenHelper.getProfileId(),
                   profileName: tokenHelper.getUsername()
                 })

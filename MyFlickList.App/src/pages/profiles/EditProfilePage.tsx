@@ -86,7 +86,7 @@ export default function EditProfilePage() {
             try {
               await api.profiles(token).updateProfile(profile.id, data);
               return history.push(
-                routes.profile.href({ profileId: profile.id, profileName: profile.name })
+                routes.profile({ profileId: profile.id, profileName: profile.name })
               );
             } catch (error) {
               return setError(error);

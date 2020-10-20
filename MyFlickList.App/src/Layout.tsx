@@ -18,7 +18,7 @@ function HeaderUserBox() {
   // Not signed in
   if (!token) {
     return (
-      <Link className="text-xl font-semibold" href={routes.signIn.href()}>
+      <Link className="text-xl font-semibold" href={routes.signIn()}>
         Sign in
       </Link>
     );
@@ -33,7 +33,7 @@ function HeaderUserBox() {
   return (
     <Link
       className="inline-flex items-center text-xl font-semibold group"
-      href={routes.profile.href({
+      href={routes.profile({
         profileId: tokenHelper.getProfileId(),
         profileName: tokenHelper.getUsername()
       })}
@@ -58,7 +58,7 @@ function HeaderSearchBox() {
   return (
     <form
       onSubmit={handleSubmit((data) => {
-        history.push(routes.search.href({ query: data.query }));
+        history.push(routes.search({ query: data.query }));
       })}
     >
       <input
@@ -81,7 +81,7 @@ function Header() {
       <div className="mr-3 flex-grow">
         <Link
           className="inline-flex items-center text-4xl text-black tracking-wide font-normal"
-          href={routes.home.href()}
+          href={routes.home()}
         >
           <FiTv /> <span className="ml-2">MyFlickList</span>
         </Link>
@@ -95,16 +95,16 @@ function Header() {
 
       {/* Navigation */}
       <nav className="mr-6 text-xl space-x-4">
-        <Link className="font-normal" href={routes.flicks.href()}>
+        <Link className="font-normal" href={routes.flicks({})}>
           Flicks
         </Link>
-        <Link className="font-normal" href={routes.flicks.href()}>
+        <Link className="font-normal" href={routes.flicks({})}>
           Characters
         </Link>
-        <Link className="font-normal" href={routes.flicks.href()}>
+        <Link className="font-normal" href={routes.flicks({})}>
           Actors
         </Link>
-        <Link className="font-normal" href={routes.flicks.href()}>
+        <Link className="font-normal" href={routes.flicks({})}>
           Network
         </Link>
       </nav>
@@ -176,15 +176,15 @@ function Footer() {
         Source
       </Link>
       {' • '}
-      <Link className="font-normal" href={routes.credits.href()}>
+      <Link className="font-normal" href={routes.credits()}>
         Credits
       </Link>
       {' • '}
-      <Link className="font-normal" href={routes.feedback.href()}>
+      <Link className="font-normal" href={routes.feedback()}>
         Feedback
       </Link>
       {' • '}
-      <Link className="font-normal" href={routes.donate.href()}>
+      <Link className="font-normal" href={routes.donate()}>
         Donate
       </Link>
     </footer>

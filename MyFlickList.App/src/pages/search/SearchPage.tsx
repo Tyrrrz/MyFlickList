@@ -45,7 +45,7 @@ function SearchResultsSection({ query }: { query: string }) {
                 <div>
                   <Link
                     className="text-lg tracking-wide truncate"
-                    href={routes.flick.href({
+                    href={routes.flick({
                       flickId: flick.id,
                       flickTitle: slugify(flick.title)
                     })}
@@ -76,7 +76,7 @@ function SearchResultsSection({ query }: { query: string }) {
                 <div className="mt-1 flex flex-row space-x-1">
                   {flick.tags?.map((tag) => (
                     <div key={tag} className="px-3 py-1 rounded bg-gray-200 text-sm">
-                      <Link href={routes.flicks.href({ filterTag: tag })}>{tag}</Link>
+                      <Link href={routes.flicks({ filterTag: tag })}>{tag}</Link>
                     </div>
                   ))}
                 </div>
@@ -113,7 +113,7 @@ function SearchResultsSection({ query }: { query: string }) {
                 <div>
                   <Link
                     className="text-lg tracking-wide truncate"
-                    href={routes.profile.href({
+                    href={routes.profile({
                       profileId: profile.id,
                       profileName: profile.name
                     })}
@@ -145,7 +145,7 @@ function SearchResultsSection({ query }: { query: string }) {
 
         <p className="text-lg text-center font-thin">
           Didn&apos;t find what you were looking for? You can{' '}
-          <Link href={routes.flickAdd.href()}>request</Link> a new flick to be added.
+          <Link href={routes.flickAdd()}>request</Link> a new flick to be added.
         </p>
       </div>
     </div>
@@ -167,7 +167,7 @@ export default function SearchPage() {
         <form
           className="w-full flex flex-row text-xl space-x-2"
           onSubmit={handleSubmit((data) => {
-            history.push(routes.search.href({ query: data.query }));
+            history.push(routes.search({ query: data.query }));
           })}
         >
           <input

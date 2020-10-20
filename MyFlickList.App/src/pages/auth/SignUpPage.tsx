@@ -39,7 +39,7 @@ export default function SignUpPage() {
               }
 
               await api.auth(token).signUp(data);
-              history.push(routes.signIn.href());
+              history.push(routes.signIn());
             } catch (error) {
               setError(error);
             }

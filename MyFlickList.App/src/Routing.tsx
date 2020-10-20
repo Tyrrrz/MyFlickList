@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router';
+import { route } from 'route-descriptor';
 import { FlickOrder } from './infra/api.generated';
 import SignInPage from './pages/auth/SignInPage';
 import SignOutPage from './pages/auth/SignOutPage';
@@ -16,62 +17,7 @@ import EditProfilePage from './pages/profiles/EditProfilePage';
 import ProfilePage from './pages/profiles/ProfilePage';
 import SearchPage from './pages/search/SearchPage';
 
-type Params = Record<string, string | number | undefined>;
-
-class RouteDescriptor<TParams extends Params> {
-  readonly template: string;
-
-  constructor(template: string) {
-    this.template = template;
-  }
-
-  private formatRouteParams(routeParams: Params) {
-    let pathname = this.template;
-
-    Object.entries(routeParams).forEach(([key, value]) => {
-      if (value) {
-        pathname = pathname.replaceAll(RegExp(`:${key}\\??`, 'g'), encodeURIComponent(value));
-      }
-    });
-
-    // Remove any unset params
-    pathname = pathname.replaceAll(/\/:\w+/g, '');
-
-    return pathname;
-  }
-
-  private formatQueryParams(queryParams: Params) {
-    const searchBuilder = new URLSearchParams();
-
-    Object.entries(queryParams).forEach(([key, value]) => {
-      if (value) {
-        searchBuilder.append(key, value.toString());
-      }
-    });
-
-    const search = searchBuilder.toString();
-
-    return search && '?' + search;
-  }
-
-  href(params?: TParams) {
-    if (!params) {
-      return this.template;
-    }
-
-    const routeParams = Object.fromEntries(
-      Object.entries(params).filter(([key]) => RegExp(`:${key}\\??`, 'g').test(this.template))
-    );
-
-    const queryParams = Object.fromEntries(
-      Object.entries(params).filter(([key]) => !RegExp(`:${key}\\??`, 'g').test(this.template))
-    );
-
-    return this.formatRouteParams(routeParams) + this.formatQueryParams(queryParams);
-  }
-}
-
-interface PaginationParams extends Params {
+interface PaginationParams {
   page?: number;
 }
 
@@ -80,34 +26,34 @@ interface FlicksParams extends PaginationParams {
   filterTag?: string;
 }
 
-interface FlickParams extends Params {
+interface FlickParams {
   flickId: number;
   flickTitle?: string; // only used for human-friendly URLs
 }
 
-interface SearchParams extends Params {
+interface SearchParams {
   query?: string;
 }
 
-interface ProfileParams extends Params {
+interface ProfileParams {
   profileId: number;
   profileName?: string; // only used for human-friendly URLs
 }
 
 export const routes = {
-  flickAdd: new RouteDescriptor('/flicks/add'),
-  flick: new RouteDescriptor<FlickParams>('/flicks/:flickId/:flickTitle?'),
-  flicks: new RouteDescriptor<FlicksParams>('/flicks'),
-  search: new RouteDescriptor<SearchParams>('/search'),
-  profileEdit: new RouteDescriptor<ProfileParams>('/profiles/:profileId/:profileName?/edit'),
-  profile: new RouteDescriptor<ProfileParams>('/profiles/:profileId/:profileName?'),
-  signIn: new RouteDescriptor('/auth/signin'),
-  signOut: new RouteDescriptor('/auth/signout'),
-  signUp: new RouteDescriptor('/auth/signup'),
-  credits: new RouteDescriptor('/misc/credits'),
-  feedback: new RouteDescriptor('/misc/feedback'),
-  donate: new RouteDescriptor('/misc/donate'),
-  home: new RouteDescriptor('/')
+  flickAdd: route('/flicks/add'),
+  flick: route<FlickParams>('/flicks/:flickId/:flickTitle?'),
+  flicks: route<FlicksParams>('/flicks'),
+  search: route<SearchParams>('/search'),
+  profileEdit: route<ProfileParams>('/profiles/:profileId/:profileName?/edit'),
+  profile: route<ProfileParams>('/profiles/:profileId/:profileName?'),
+  signIn: route('/auth/signin'),
+  signOut: route('/auth/signout'),
+  signUp: route('/auth/signup'),
+  credits: route('/misc/credits'),
+  feedback: route('/misc/feedback'),
+  donate: route('/misc/donate'),
+  home: route('/')
 };
 
 export default function Routing() {

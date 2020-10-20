@@ -19,7 +19,7 @@ export default function NotFoundPage() {
         </p>
 
         <div>
-          <Link href={routes.home.href()}>Return to home page</Link>
+          <Link href={routes.home()}>Return to home page</Link>
         </div>
       </div>
     </div>
