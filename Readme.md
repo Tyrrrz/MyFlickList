@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/Tyrrrz/MyFlickList/workflows/CI/badge.svg?branch=master)](https://github.com/Tyrrrz/MyFlickList/actions)
 [![Coverage](https://codecov.io/gh/Tyrrrz/MyFlickList/branch/master/graph/badge.svg)](https://codecov.io/gh/Tyrrrz/MyFlickList)
-[![Discord](https://img.shields.io/discord/740263153031446568)](https://discord.gg/hgVa7qS)
+[![Discord](https://img.shields.io/discord/740263153031446568?label=discord)](https://discord.gg/hgVa7qS)
 [![Donate](https://img.shields.io/badge/donate-$$$-purple.svg)](https://tyrrrz.me/donate)
 
 **Under development!**
