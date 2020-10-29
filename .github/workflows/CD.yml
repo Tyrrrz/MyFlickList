@@ -21,8 +21,8 @@ jobs:
     - name: Deploy
       run: |
         heroku container:login
-        heroku container:push web -a ${{ secrets.HEROKU_APP }} --context-path .
-        heroku container:release web -a ${{ secrets.HEROKU_APP }}
+        heroku stack:set container -a ${{ secrets.HEROKU_APP }}
+        git push heroku main
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
 
