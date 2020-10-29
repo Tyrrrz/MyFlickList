@@ -49,7 +49,7 @@ namespace MyFlickList.Api.Entities.Flicks
 
             builder.Property(o => o.ImdbId)
                 .IsRequired()
-                .HasMaxLength(9);
+                .HasMaxLength(12);
 
             builder.Property(o => o.Title)
                 .IsRequired();
