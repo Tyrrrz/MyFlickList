@@ -28,6 +28,9 @@ jobs:
       with:
         node-version: 12
 
+    - name: Install Netlify CLI
+      run: npm i netlify-cli -g
+
     - name: Pull dependencies
       run: npm ci --no-audit
       working-directory: ./MyFlickList.App
@@ -37,9 +40,8 @@ jobs:
       working-directory: ./MyFlickList.App
 
     - name: Deploy
-      uses: netlify/actions/cli@master
-      with:
-        args: deploy --dir=MyFlickList.App/build --prod
+      run: netlify deploy --dir=build --prod
+      working-directory: ./MyFlickList.App
       env:
         NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE }}
         NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
