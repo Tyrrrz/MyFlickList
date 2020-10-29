@@ -49,6 +49,12 @@ jobs:
     - name: Build
       run: npm run build
       working-directory: ./MyFlickList.App
+      env:
+        NODE_ENV: production
+        PUBLIC_URL: https://myflicklist.netlify.app/
+        REACT_APP_API_URL: https://myflicklist.herokuapp.com/
+        REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.GOOGLE_ANALYTICS_TOKEN }}
+        REACT_APP_SENTRY: ${{ secrets.SENTRY_TOKEN }}
 
     - name: Deploy
       run: netlify deploy --dir=build --prod
