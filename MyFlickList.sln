@@ -15,6 +15,7 @@ ProjectSection(SolutionItems) = preProject
 	Docker-compose.yml = Docker-compose.yml
 	MyFlickList.Api.dockerfile = MyFlickList.Api.dockerfile
 	MyFlickList.App.dockerfile = MyFlickList.App.dockerfile
+	.editorconfig = .editorconfig
 EndProjectSection
 EndProject
 Global
