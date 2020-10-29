@@ -17,37 +17,28 @@ function HeaderUserBox() {
 
   // Not signed in
   if (!token) {
-    return (
-      <Link className="text-xl font-semibold" href={routes.signIn()}>
-        Sign in
-      </Link>
-    );
+    return <Link href={routes.signIn()}>Sign in</Link>;
   }
 
   const tokenHelper = new AuthTokenHelper(token);
 
-  // TODO: use actual avatar
-  const avatarUrl = `https://robohash.org/${tokenHelper.getProfileId()}_${tokenHelper.getUsername()}.png?size=300x300`;
-
   // Signed in
   return (
-    <Link
-      className="inline-flex items-center text-xl font-semibold group"
-      href={routes.profile({
-        profileId: tokenHelper.getProfileId(),
-        profileName: tokenHelper.getUsername()
-      })}
-    >
-      <img
-        className="rounded-full shadow opacity-75 group-hover:opacity-100"
-        alt="Avatar"
-        width={32}
-        height={32}
-        src={avatarUrl}
-      />
+    <div className="flex items-center space-x-4">
+      <Link
+        className="flex items-center group"
+        href={routes.profile({
+          profileId: tokenHelper.getProfileId(),
+          profileName: tokenHelper.getUsername()
+        })}
+      >
+        Profile
+      </Link>
 
-      <span className="ml-3 truncate">{tokenHelper.getUsername()}</span>
-    </Link>
+      <Link className="font-normal" href={routes.signOut()}>
+        Sign out
+      </Link>
+    </div>
   );
 }
 
@@ -78,23 +69,20 @@ function Header() {
   return (
     <header className="flex flex-row items-center py-4">
       {/* Brand */}
-      <div className="mr-3 flex-grow">
+      <div>
         <Link
-          className="inline-flex items-center text-4xl text-black tracking-wide font-normal"
+          className="inline-flex items-center text-2xl text-black tracking-wide font-normal"
           href={routes.home()}
         >
           <FiTv /> <span className="ml-2">MyFlickList</span>
         </Link>
       </div>
 
-      {/* Profile */}
-      <HeaderUserBox />
-
       {/* Separator */}
       <div className="w-px h-8 mt-1 mx-4 border border-gray-200" />
 
       {/* Navigation */}
-      <nav className="mr-6 text-xl space-x-4">
+      <nav className="text-xl space-x-4">
         <Link className="font-normal" href={routes.flicks({})}>
           Flicks
         </Link>
@@ -109,8 +97,17 @@ function Header() {
         </Link>
       </nav>
 
+      <div className="flex-grow" />
+
+      {/* Profile */}
+      <nav className="mx-4 text-xl">
+        <HeaderUserBox />
+      </nav>
+
       {/* Search */}
-      <HeaderSearchBox />
+      <div>
+        <HeaderSearchBox />
+      </div>
     </header>
   );
 }
