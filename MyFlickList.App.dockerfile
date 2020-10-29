@@ -17,6 +17,9 @@ COPY MyFlickList.App/package-lock.json .
 RUN npm install --silent
 
 COPY MyFlickList.App/tsconfig.json .
+COPY MyFlickList.App/tailwind.config.js .
+COPY MyFlickList.App/.eslintrc.json .
+COPY MyFlickList.App/.prettierrc.json .
 COPY MyFlickList.App/public/ public/
 COPY MyFlickList.App/src/ src/
 
