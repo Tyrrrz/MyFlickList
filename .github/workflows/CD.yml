@@ -21,8 +21,10 @@ jobs:
     - name: Deploy
       run: |
         heroku container:login
-        heroku stack:set container -a ${{ secrets.HEROKU_APP }}
-        git push heroku main
+        docker build . -f MyFlickList.Api.dockerfile -t myflicklist.api
+        docker tag myflicklist.api registry.heroku.com/${{ secrets.HEROKU_APP }}/web
+        docker push registry.heroku.com/${{ secrets.HEROKU_APP }}/web
+        heroku container:release web -a ${{ secrets.HEROKU_APP }}
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
 
