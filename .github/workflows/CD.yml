@@ -1,9 +1,7 @@
 name: CD
 
-on:
-  push:
-    tags:
-    - '*'
+# Change to only run on tags in the future
+on: [push]
 
 jobs:
   deploy-api:
@@ -34,4 +32,14 @@ jobs:
       run: npm ci --no-audit
       working-directory: ./MyFlickList.App
 
-    - run: echo TODO
+    - name: Build
+      run: npm run build
+      working-directory: ./MyFlickList.App
+
+    - name: Deploy
+      uses: netlify/actions/cli@master
+      with:
+        args: deploy --dir=MyFlickList.App/build --prod
+      env:
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE }}
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
