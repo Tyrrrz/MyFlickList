@@ -12,10 +12,14 @@ ProjectSection(SolutionItems) = preProject
 	Changelog.md = Changelog.md
 	License.txt = License.txt
 	Readme.md = Readme.md
-	Docker-compose.yml = Docker-compose.yml
+	.editorconfig = .editorconfig
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{BE21B713-8609-422D-B379-19ADE508F01F}"
+ProjectSection(SolutionItems) = preProject
 	MyFlickList.Api.dockerfile = MyFlickList.Api.dockerfile
 	MyFlickList.App.dockerfile = MyFlickList.App.dockerfile
-	.editorconfig = .editorconfig
+	Docker-compose.yml = Docker-compose.yml
 EndProjectSection
 EndProject
 Global
