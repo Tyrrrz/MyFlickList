@@ -15,7 +15,16 @@ jobs:
       with:
         dotnet-version: 3.1.100
 
-    - run: echo TODO
+    - name: Install Heroku CLI
+      run: curl https://cli-assets.heroku.com/install.sh | sh
+
+    - name: Deploy
+      run: |
+        heroku container:login
+        heroku container:push web -a ${{ secrets.HEROKU_APP }} --context-path .
+        heroku container:release web -a ${{ secrets.HEROKU_APP }}
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
 
   deploy-app:
     runs-on: ubuntu-latest

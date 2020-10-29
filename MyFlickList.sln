@@ -22,6 +22,11 @@ ProjectSection(SolutionItems) = preProject
 	Docker-compose.yml = Docker-compose.yml
 EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deploy", "Deploy", "{4493A8E9-F592-40C4-9066-5526F1638843}"
+ProjectSection(SolutionItems) = preProject
+	heroku.yml = heroku.yml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
