@@ -1,5 +1,5 @@
 import { ErrorBoundary, init as initSentry } from '@sentry/react';
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { initialize as initGoogleAnalytics } from 'react-ga';
 import { BrowserRouter } from 'react-router-dom';
 import config from './infra/config';
@@ -25,7 +25,7 @@ if (config.sentryToken) {
 
 export default function App() {
   return (
-    <React.StrictMode>
+    <StrictMode>
       <ErrorBoundary>
         <BrowserRouter>
           <LocalStorageProvider>
@@ -33,6 +33,6 @@ export default function App() {
           </LocalStorageProvider>
         </BrowserRouter>
       </ErrorBoundary>
-    </React.StrictMode>
+    </StrictMode>
   );
 }

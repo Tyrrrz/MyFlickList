@@ -21,7 +21,7 @@ function castToNumber(x: any) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function castToObject(x: any) {
   if (typeof x === 'object') {
-    return x as object;
+    return x as Record<string, unknown>;
   }
 
   return undefined;

@@ -167,7 +167,7 @@ export default function SearchPage() {
         <form
           className="w-full flex flex-row text-xl space-x-2"
           onSubmit={handleSubmit((data) => {
-            history.push(routes.search({ query: data.query }));
+            history.push(routes.search({ query: data.query as string }));
           })}
         >
           <input

@@ -58,7 +58,7 @@ function HeaderSearchBox() {
   return (
     <form
       onSubmit={handleSubmit((data) => {
-        history.push(routes.search({ query: data.query }));
+        history.push(routes.search({ query: data.query as string }));
       })}
     >
       <input
