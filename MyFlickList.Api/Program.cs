@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyFlickList.Api.Internal;
 
 namespace MyFlickList.Api
 {
@@ -15,6 +16,11 @@ namespace MyFlickList.Api
                 {
                     o.UseStartup<Startup>();
                     o.UseSentry();
+
+                    if (Heroku.GetPort() is {} port)
+                    {
+                        o.UseUrls("http://*:" + port);
+                    }
                 });
 
         private static async Task ApplyMigrationsAsync(IHost host)

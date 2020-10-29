@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using MyFlickList.Api.Internal;
 using MyFlickList.Api.Internal.Extensions;
 using MyFlickList.Api.Internal.Infrastructure;
 using MyFlickList.Api.Models;
@@ -33,7 +34,11 @@ namespace MyFlickList.Api
             // Database
             services.AddDbContextPool<AppDbContext>(o =>
             {
-                o.UseNpgsql(Configuration.GetDatabaseConnectionString());
+                var connectionString =
+                    Heroku.GetDatabaseConnectionString() ??
+                    Configuration.GetDatabaseConnectionString();
+
+                o.UseNpgsql(connectionString);
                 o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }, 20);
 

@@ -13,8 +13,6 @@ namespace MyFlickList.Api.Internal.Extensions
 
         public static string GetDatabaseConnectionString(this IConfiguration configuration) =>
             configuration.GetConnectionString("Database") ??
-            // The following is set by Heroku directly
-            Environment.GetEnvironmentVariable("DATABASE_URL")?.Pipe(Postgres.UrlToConnectionString!) ??
             throw new ConfigurationException("Missing configuration for database connection string.");
 
         private static IConfigurationSection? GetApiKeysSection(this IConfiguration configuration) =>
