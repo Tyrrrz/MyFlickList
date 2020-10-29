@@ -108,7 +108,7 @@ namespace MyFlickList.Api.Controllers
         {
             var cancellation = HttpContext.RequestAborted;
 
-            var imdbId = ImdbId.TryFromUrl(request.SourceUrl);
+            var imdbId = ImdbId.TryParseFromUrl(request.SourceUrl);
             if (string.IsNullOrWhiteSpace(imdbId))
             {
                 return Problem(

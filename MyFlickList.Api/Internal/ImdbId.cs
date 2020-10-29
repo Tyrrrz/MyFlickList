@@ -5,7 +5,7 @@ namespace MyFlickList.Api.Internal
 {
     internal static class ImdbId
     {
-        public static string? TryFromUrl(string url)
+        public static string? TryParseFromUrl(string url)
         {
             // https://imdb.com/title/tt0168366
 

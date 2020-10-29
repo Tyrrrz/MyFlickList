@@ -10,10 +10,10 @@ namespace MyFlickList.Api.Internal
         private static readonly RandomNumberGenerator Rng = RandomNumberGenerator.Create();
 
         private static uint ReadNetworkByteOrder(byte[] buffer, int offset) =>
-            ((uint) (buffer[offset + 0]) << 24)
-            | ((uint) (buffer[offset + 1]) << 16)
-            | ((uint) (buffer[offset + 2]) << 8)
-            | ((uint) (buffer[offset + 3]));
+            ((uint) buffer[offset + 0] << 24) |
+            ((uint) buffer[offset + 1] << 16) |
+            ((uint) buffer[offset + 2] << 8) |
+            buffer[offset + 3];
 
         private static void WriteNetworkByteOrder(byte[] buffer, int offset, uint value)
         {
