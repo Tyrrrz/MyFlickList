@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  FiEdit,
-  FiGithub,
-  FiGlobe,
-  FiInstagram,
-  FiMapPin,
-  FiStar,
-  FiTwitter
-} from 'react-icons/fi';
+import { FiEdit, FiGlobe, FiMapPin, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import api from '../../infra/api';
 import { AuthTokenHelper, FlickHelper, ProfileHelper } from '../../infra/helpers';
@@ -76,7 +68,8 @@ export default function ProfilePage() {
           {/* Location */}
           {profile.location && (
             <div className="-mt-1 flex flex-row items-center font-light space-x-1">
-              <FiMapPin strokeWidth={1} /> <div>{profile.location}</div>
+              <FiMapPin strokeWidth={1} />
+              <div>{profile.location}</div>
             </div>
           )}
         </div>
@@ -87,43 +80,20 @@ export default function ProfilePage() {
         {/* Bio */}
         {profile.bio && <article className="text-gray-800 text-center">{profile.bio}</article>}
 
-        {/* Socials */}
-        <div className="flex flex-row justify-center text-xl space-x-3">
-          {profile.websiteUrl && (
-            <Link href={profile.websiteUrl} target="_blank" title={`${profile.name}'s website`}>
-              <FiGlobe />
-            </Link>
-          )}
-
-          {profile.twitterId && (
-            <Link
-              href={`https://twitter.com/${profile.twitterId}`}
-              target="_blank"
-              title={`${profile.name}'s Twitter`}
-            >
-              <FiTwitter />
-            </Link>
-          )}
-
-          {profile.instagramId && (
-            <Link
-              href={`https://instagr.am/${profile.instagramId}`}
-              target="_blank"
-              title={`${profile.name}'s Instagram`}
-            >
-              <FiInstagram />
-            </Link>
-          )}
-
-          {profile.gitHubId && (
-            <Link
-              href={`https://github.com/${profile.instagramId}`}
-              target="_blank"
-              title={`${profile.name}'s GitHub`}
-            >
-              <FiGithub />
-            </Link>
-          )}
+        {/* External links */}
+        <div className="flex flex-row justify-center text-lg space-x-3">
+          {profile.externalLinks &&
+            profile.externalLinks.map((link) => (
+              <Link
+                key={link}
+                className="inline-flex flex-row items-center font-normal space-x-1"
+                href={link}
+                target="_blank"
+              >
+                <FiGlobe />
+                <div>{new URL(link).hostname}</div>
+              </Link>
+            ))}
         </div>
       </div>
 
@@ -134,7 +104,8 @@ export default function ProfilePage() {
             className="btn inline-flex flex-row items-center space-x-1"
             href={routes.profileEdit({ profileId: profile.id, profileName: profile.name })}
           >
-            <FiEdit /> <div>Edit Profile</div>
+            <FiEdit />
+            <div>Edit Profile</div>
           </Link>
         )}
       </div>

@@ -10,9 +10,6 @@ namespace MyFlickList.Api.Models
     {
         public Mapping()
         {
-            CreateMap<FlickTagEntity, string>()
-                .ConvertUsing(o => o.Name);
-
             CreateMap<FlickEntity, FlickListingResponse>()
                 .ForMember(o => o.Tags, x => x.MapFrom(o => o.Tags));
 

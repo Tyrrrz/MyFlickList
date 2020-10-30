@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -95,7 +96,11 @@ namespace MyFlickList.Api.Controllers
                 );
             }
 
-            _dbContext.Entry(profile).CurrentValues.SetValues(request);
+            profile.IsPublic = request.IsPublic;
+            profile.Location = request.Location;
+            profile.Bio = request.Bio;
+            profile.ExternalLinks = request.ExternalLinks?.ToArray() ?? Array.Empty<string>();
+
             await _dbContext.SaveChangesAsync(cancellation);
 
             return Ok();

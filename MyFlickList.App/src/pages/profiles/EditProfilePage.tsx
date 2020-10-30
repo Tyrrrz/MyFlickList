@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FiExternalLink, FiUser } from 'react-icons/fi';
+import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { routes } from '../../Routing';
@@ -14,13 +13,8 @@ interface FormData {
   isPublic?: boolean;
   location?: string;
   bio?: string;
-  websiteUrl?: string;
-  twitterId?: string;
-  instagramId?: string;
-  gitHubId?: string;
+  externalLinks?: string[];
 }
-
-type Tab = 'General' | 'Social';
 
 export default function EditProfilePage() {
   const history = useHistory();
@@ -30,10 +24,8 @@ export default function EditProfilePage() {
   // TODO: no cache
   const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [profileId]);
 
-  const { register, handleSubmit } = useForm<FormData>({ defaultValues: profile });
+  const { register, control, handleSubmit } = useForm<FormData>({ defaultValues: profile });
   const [error, setError] = useState<unknown>();
-
-  const [activeTab, setActiveTab] = useState<Tab>('General');
 
   return (
     <div>
@@ -41,44 +33,6 @@ export default function EditProfilePage() {
 
       <div className="w-3/4 mx-auto space-y-5">
         <h1>Edit Profile</h1>
-
-        {/* Tabs */}
-        <div className="flex flex-row items-center text-xl font-thin">
-          {/* General */}
-          <div
-            className="py-1 flex flex-row items-center space-x-2 cursor-pointer"
-            style={{
-              borderBottomWidth: 2,
-              borderBottomColor: activeTab === 'General' ? '#38b2ac' : 'transparent'
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              setActiveTab('General');
-            }}
-          >
-            <FiUser strokeWidth={1} />
-            <div>General</div>
-          </div>
-
-          {/* Separator */}
-          <div className="w-px h-8 mt-1 mx-4 border border-gray-200" />
-
-          {/* Social */}
-          <div
-            className="py-1 flex flex-row items-center space-x-2 cursor-pointer"
-            style={{
-              borderBottomWidth: 2,
-              borderBottomColor: activeTab === 'Social' ? '#38b2ac' : 'transparent'
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              setActiveTab('Social');
-            }}
-          >
-            <FiExternalLink strokeWidth={1} />
-            <div>Social</div>
-          </div>
-        </div>
 
         <form
           className="space-y-5"
@@ -93,8 +47,7 @@ export default function EditProfilePage() {
             }
           })}
         >
-          {/* General */}
-          <div style={{ display: activeTab === 'General' ? 'block' : 'none' }}>
+          <div>
             <label htmlFor="name">Name:</label>
             <input className="w-1/3" type="text" name="name" value={profile.name} disabled />
             <div className="mt-2 text-sm text-gray-600 italic">
@@ -102,7 +55,7 @@ export default function EditProfilePage() {
             </div>
           </div>
 
-          <div style={{ display: activeTab === 'General' ? 'block' : 'none' }}>
+          <div>
             <label htmlFor="location">Profile privacy:</label>
             <select className="w-1/3" name="isPublic" placeholder="Bag End, Shire" ref={register}>
               <option value="true">Public</option>
@@ -113,7 +66,7 @@ export default function EditProfilePage() {
             </div>
           </div>
 
-          <div style={{ display: activeTab === 'General' ? undefined : 'none' }}>
+          <div>
             <label htmlFor="location">Location:</label>
             <input
               className="w-1/3"
@@ -124,7 +77,7 @@ export default function EditProfilePage() {
             />
           </div>
 
-          <div style={{ display: activeTab === 'General' ? undefined : 'none' }}>
+          <div>
             <label htmlFor="bio">Bio:</label>
             <textarea
               name="bio"
@@ -135,53 +88,27 @@ export default function EditProfilePage() {
             />
           </div>
 
-          {/* Social */}
-          <div style={{ display: activeTab === 'Social' ? undefined : 'none' }}>
-            <label htmlFor="websiteUrl">Website:</label>
-            <input
-              className="w-1/3"
-              type="url"
-              name="websiteUrl"
-              maxLength={2048}
-              placeholder="https://myspace.com/211092669"
-              ref={register}
+          <div>
+            <label htmlFor="websiteUrl">External links:</label>
+            <Controller
+              name="externalLinks"
+              control={control}
+              render={({ onChange, value, name }) => (
+                <textarea
+                  name={name}
+                  defaultValue={(value as string[])?.join('\n')}
+                  onChange={(e) => onChange(e.target.value.split('\n'))}
+                  cols={50}
+                  rows={3}
+                  placeholder="Lorem ipsum dolor sit amet..."
+                  ref={register}
+                />
+              )}
             />
-          </div>
-
-          <div style={{ display: activeTab === 'Social' ? undefined : 'none' }}>
-            <label htmlFor="twitterId">Twitter ID:</label>
-            <input
-              className="w-1/3"
-              type="text"
-              name="twitterId"
-              minLength={3}
-              maxLength={15}
-              ref={register}
-            />
-          </div>
-
-          <div style={{ display: activeTab === 'Social' ? undefined : 'none' }}>
-            <label htmlFor="instagramId">Instagram ID:</label>
-            <input
-              className="w-1/3"
-              type="text"
-              name="instagramId"
-              minLength={3}
-              maxLength={30}
-              ref={register}
-            />
-          </div>
-
-          <div style={{ display: activeTab === 'Social' ? undefined : 'none' }}>
-            <label htmlFor="gitHubId">GitHub ID:</label>
-            <input
-              className="w-1/3"
-              type="text"
-              name="gitHubId"
-              minLength={3}
-              maxLength={39}
-              ref={register}
-            />
+            <div className="mt-2 text-sm text-gray-600 italic">
+              You can display external links on your profile, such as your accounts in other social
+              networks
+            </div>
           </div>
 
           <hr />

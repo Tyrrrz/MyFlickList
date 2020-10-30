@@ -59,16 +59,12 @@ namespace MyFlickList.Api.Services
         private async Task AddOrUpdateFlickAsync(FlickEntity flickEntity, CancellationToken cancellationToken = default)
         {
             var existing = await _dbContext.Flicks
-                .Include(f => f.Tags)
                 .FirstOrDefaultAsync(f => f.ImdbId == flickEntity.ImdbId, cancellationToken);
 
             if (existing != null)
             {
                 if (existing.CoverImageId != null)
                     _dbContext.Files.RemoveRange(_dbContext.Files.Where(f => f.Id == existing.CoverImageId));
-
-                _dbContext.FlickExternalLinks.RemoveRange(existing.ExternalLinks);
-                _dbContext.FlickTags.RemoveRange(existing.Tags);
 
                 flickEntity.Id = existing.Id;
                 _dbContext.Entry(existing).CurrentValues.SetValues(flickEntity);
@@ -93,15 +89,12 @@ namespace MyFlickList.Api.Services
                 ImdbId = movie.ImdbId,
                 Title = movie.Title,
                 OriginalTitle = movie.OriginalTitle?.Pipe(t => string.Equals(t, movie.Title, StringComparison.OrdinalIgnoreCase) ? t : null),
-                PremiereDate = movie.ReleaseDate,
+                FirstAired = movie.ReleaseDate,
                 Runtime = movie.Runtime?.Pipe(m => TimeSpan.FromMinutes(m)).NullIf(t => t.TotalSeconds <= 0),
                 ExternalRating = movie.VoteAverage,
                 Synopsis = movie.Overview,
                 CoverImageId = image?.Id,
-                Tags = movie.Genres.Select(g => new FlickTagEntity
-                {
-                    Name = g.Name
-                }).ToList()
+                Tags = movie.Genres.Select(g => g.Name).ToArray()
             };
 
             await AddOrUpdateFlickAsync(flickEntity, cancellationToken);
@@ -126,17 +119,14 @@ namespace MyFlickList.Api.Services
                 ImdbId = externalIds.ImdbId,
                 Title = series.Name,
                 OriginalTitle = series.OriginalName?.Pipe(t => string.Equals(t, series.Name, StringComparison.OrdinalIgnoreCase) ? t : null),
-                PremiereDate = series.FirstAirDate,
-                FinaleDate = series.LastAirDate?.NullIf(series.InProduction),
+                FirstAired = series.FirstAirDate,
+                LastAired = series.LastAirDate?.NullIf(series.InProduction),
                 Runtime = series.EpisodeRunTime.NullIfEmpty()?.Average().Pipe(TimeSpan.FromMinutes),
                 EpisodeCount = series.NumberOfEpisodes,
                 ExternalRating = series.VoteAverage,
                 Synopsis = series.Overview,
                 CoverImageId = image?.Id,
-                Tags = series.Genres.Select(g => new FlickTagEntity
-                {
-                    Name = g.Name
-                }).ToList()
+                Tags = series.Genres.Select(g => g.Name).ToArray()
             };
 
             await AddOrUpdateFlickAsync(flickEntity, cancellationToken);

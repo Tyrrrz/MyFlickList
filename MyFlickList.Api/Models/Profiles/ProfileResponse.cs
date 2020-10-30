@@ -15,13 +15,7 @@ namespace MyFlickList.Api.Models.Profiles
 
         public string? Bio { get; set; }
 
-        public string? WebsiteUrl { get; set; }
-
-        public string? TwitterId { get; set; }
-
-        public string? InstagramId { get; set; }
-
-        public string? GitHubId { get; set; }
+        public IReadOnlyList<string>? ExternalLinks { get; set; }
 
         public IReadOnlyList<FlickListingResponse>? FavoriteFlicks { get; set; }
     }

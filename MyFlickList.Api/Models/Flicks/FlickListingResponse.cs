@@ -16,9 +16,9 @@ namespace MyFlickList.Api.Models.Flicks
         [Required]
         public string Title { get; set; } = default!;
 
-        public DateTimeOffset? PremiereDate { get; set; }
+        public DateTimeOffset? FirstAired { get; set; }
 
-        public DateTimeOffset? FinaleDate { get; set; }
+        public DateTimeOffset? LastAired { get; set; }
 
         public int? EpisodeCount { get; set; }
 
@@ -26,8 +26,8 @@ namespace MyFlickList.Api.Models.Flicks
 
         public double? ExternalRating { get; set; }
 
-        public int? CoverImageId { get; set; }
-
         public IReadOnlyList<string>? Tags { get; set; }
+
+        public int? CoverImageId { get; set; }
     }
 }

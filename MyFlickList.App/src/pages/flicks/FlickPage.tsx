@@ -156,17 +156,17 @@ export default function FlickPage() {
               </div>
             )}
 
-            {flick.premiereDate && (
+            {flick.firstAired && (
               <div className="space-x-1">
-                <span>Premiere date:</span>{' '}
-                <span className="font-semibold">{flickHelper.formatPremiereDate()}</span>
+                <span>First aired:</span>{' '}
+                <span className="font-semibold">{flickHelper.formatFirstAired()}</span>
               </div>
             )}
 
-            {flick.finaleDate && (
+            {flick.lastAired && (
               <div className="space-x-1">
-                <span>Finale date:</span>{' '}
-                <span className="font-semibold">{flickHelper.formatFinaleDate()}</span>
+                <span>Last aired:</span>{' '}
+                <span className="font-semibold">{flickHelper.formatLastAired()}</span>
               </div>
             )}
           </div>

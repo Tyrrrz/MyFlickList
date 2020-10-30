@@ -75,8 +75,8 @@ namespace MyFlickList.Api.Controllers
 
             IQueryable<FlickEntity> GetNewFlicks() =>
                 _dbContext.Flicks
-                    .Where(f => f.PremiereDate != null)
-                    .OrderByDescending(f => f.PremiereDate);
+                    .Where(f => f.FirstAired != null)
+                    .OrderByDescending(f => f.FirstAired);
 
             var flicksSource = order switch
             {
@@ -89,7 +89,7 @@ namespace MyFlickList.Api.Controllers
             var flicksFiltered = flicksSource;
 
             if (!string.IsNullOrWhiteSpace(filterTag))
-                flicksFiltered = flicksFiltered.Where(f => f.Tags.Any(t => t.Name.ToLower() == filterTag.ToLower()));
+                flicksFiltered = flicksFiltered.Where(f => f.Tags.Contains(filterTag));
 
             var flicks = flicksFiltered
                 .ProjectTo<FlickListingResponse>(_mapper.ConfigurationProvider);

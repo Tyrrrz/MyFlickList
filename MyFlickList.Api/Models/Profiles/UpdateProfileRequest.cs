@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 
 namespace MyFlickList.Api.Models.Profiles
 {
@@ -10,16 +10,6 @@ namespace MyFlickList.Api.Models.Profiles
 
         public string? Bio { get; set; }
 
-        [StringLength(2048)]
-        public string? WebsiteUrl { get; set; }
-
-        [StringLength(15)]
-        public string? TwitterId { get; set; }
-
-        [StringLength(30)]
-        public string? InstagramId { get; set; }
-
-        [StringLength(39)]
-        public string? GitHubId { get; set; }
+        public IReadOnlyList<string>? ExternalLinks { get; set; }
     }
 }

@@ -13,10 +13,6 @@ namespace MyFlickList.Api
 
         public DbSet<FlickEntity> Flicks { get; set; } = default!;
 
-        public DbSet<FlickExternalLinkEntity> FlickExternalLinks { get; set; } = default!;
-
-        public DbSet<FlickTagEntity> FlickTags { get; set; } = default!;
-
         public DbSet<UserEntity> Users { get; set; } = default!;
 
         public DbSet<ProfileEntity> Profiles { get; set; } = default!;

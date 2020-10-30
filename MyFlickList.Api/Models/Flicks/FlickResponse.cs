@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyFlickList.Api.Models.Flicks
 {
@@ -10,5 +11,7 @@ namespace MyFlickList.Api.Models.Flicks
         public string? OriginalTitle { get; set; }
 
         public string? Synopsis { get; set; }
+
+        public IReadOnlyList<string>? ExternalLinks { get; set; }
     }
 }

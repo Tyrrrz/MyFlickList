@@ -32,7 +32,7 @@ function HeaderUserBox() {
           profileName: tokenHelper.getUsername()
         })}
       >
-        Profile
+        {tokenHelper.getUsername()}
       </Link>
 
       <Link className="font-normal" href={routes.signOut()}>

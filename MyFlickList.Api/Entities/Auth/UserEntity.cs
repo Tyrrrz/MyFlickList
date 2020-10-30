@@ -11,6 +11,8 @@ namespace MyFlickList.Api.Entities.Auth
     {
         public int Id { get; set; }
 
+        public DateTimeOffset Created { get; set; } = DateTimeOffset.UtcNow;
+
         public UserRole Role { get; set; } = UserRole.Normal;
 
         public string Username { get; set; } = default!;
@@ -20,8 +22,6 @@ namespace MyFlickList.Api.Entities.Auth
         public bool IsEmailConfirmed { get; set; }
 
         public byte[] PasswordHash { get; set; } = default!;
-
-        public DateTimeOffset Created { get; set; } = DateTimeOffset.UtcNow;
 
         public ProfileEntity? Profile { get; set; }
     }
