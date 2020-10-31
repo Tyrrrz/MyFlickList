@@ -17,11 +17,7 @@ namespace MyFlickList.Api
                 {
                     o.UseStartup<Startup>();
                     o.UseSentry();
-
-                    if (Heroku.GetPort() is {} port)
-                    {
-                        o.UseUrls("http://*:" + port);
-                    }
+                    o.UseHeroku();
                 });
 
         private static async Task ApplyMigrationsAsync(IHost host)

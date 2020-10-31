@@ -34,11 +34,7 @@ namespace MyFlickList.Api
             // Database
             services.AddDbContextPool<DatabaseContext>(o =>
             {
-                var connectionString =
-                    Heroku.GetDatabaseConnectionString() ??
-                    Configuration.GetDatabaseConnectionString();
-
-                o.UseNpgsql(connectionString);
+                o.UseNpgsql(Configuration.GetDatabaseConnectionString());
                 o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }, 20);
 
