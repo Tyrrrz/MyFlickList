@@ -33,7 +33,7 @@ namespace MyFlickList.Api.Transport
         [ProducesResponseType(typeof(ProfileResponse), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         [ProducesResponseType(typeof(ProblemDetails), 403)]
-        public async Task<IActionResult> GetProfile(
+        public async Task<IActionResult> Get(
             int profileId,
             CancellationToken cancellationToken = default)
         {
@@ -66,7 +66,7 @@ namespace MyFlickList.Api.Transport
         [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         [ProducesResponseType(typeof(ProblemDetails), 403)]
-        public async Task<IActionResult> UpdateProfile(
+        public async Task<IActionResult> Put(
             int profileId,
             UpdateProfileRequest request,
             CancellationToken cancellationToken = default)
@@ -188,7 +188,7 @@ namespace MyFlickList.Api.Transport
         [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         [ProducesResponseType(typeof(ProblemDetails), 403)]
-        public async Task<IActionResult> UpdateFlickEntry(
+        public async Task<IActionResult> PutFlickEntry(
             int profileId,
             int flickId,
             UpdateProfileFlickEntryRequest request,
@@ -233,6 +233,49 @@ namespace MyFlickList.Api.Transport
             flickEntry.Review = request.Review;
 
             await _database.SaveChangesAsync(cancellationToken);
+
+            return Ok();
+        }
+
+        [HttpDelete("{profileId}/flicks/{flickId}")]
+        [Authorize]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        [ProducesResponseType(typeof(ProblemDetails), 403)]
+        public async Task<IActionResult> DeleteFlickEntry(
+            int profileId,
+            int flickId,
+            CancellationToken cancellationToken = default)
+        {
+            var profile = await _database.Profiles
+                .AsTracking()
+                .Include(p => p.FlickEntries)
+                .FirstOrDefaultAsync(p => p.Id == profileId, cancellationToken);
+
+            if (profile == null)
+            {
+                return ErrorResponse.Create(
+                    HttpStatusCode.NotFound,
+                    $"Profile '{profileId}' not found"
+                );
+            }
+
+            if (User.TryGetProfileId() != profileId)
+            {
+                return ErrorResponse.Create(
+                    HttpStatusCode.Forbidden,
+                    $"Profile '{profileId}' does not belong to the authenticated user"
+                );
+            }
+
+            var flickEntry = profile.FlickEntries.FirstOrDefault(f => f.FlickId == flickId);
+            if (flickEntry != null)
+            {
+                profile.FlickEntries.Remove(flickEntry);
+                _database.ProfileFlickEntries.Remove(flickEntry);
+                await _database.SaveChangesAsync(cancellationToken);
+            }
 
             return Ok();
         }

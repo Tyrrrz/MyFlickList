@@ -34,31 +34,9 @@ namespace MyFlickList.Api.Transport
             _catalogPopulator = catalogPopulator;
         }
 
-        [HttpGet("{flickId}")]
-        [ProducesResponseType(typeof(FlickResponse), 200)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetFlick(
-            int flickId,
-            CancellationToken cancellationToken = default)
-        {
-            var flick = await _database.Flicks
-                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(f => f.Id == flickId, cancellationToken);
-
-            if (flick == null)
-            {
-                return ErrorResponse.Create(
-                    HttpStatusCode.NotFound,
-                    $"Flick '{flickId}' not found"
-                );
-            }
-
-            return Ok(flick);
-        }
-
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedResponse<FlickListingResponse>), 200)]
-        public async Task<IActionResult> GetFlicks(
+        public async Task<IActionResult> GetMany(
             FlickOrder order = FlickOrder.Top,
             string? filterTag = null,
             int page = 1,
@@ -100,12 +78,34 @@ namespace MyFlickList.Api.Transport
             );
         }
 
+        [HttpGet("{flickId}")]
+        [ProducesResponseType(typeof(FlickResponse), 200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(
+            int flickId,
+            CancellationToken cancellationToken = default)
+        {
+            var flick = await _database.Flicks
+                .ProjectTo<FlickResponse>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(f => f.Id == flickId, cancellationToken);
+
+            if (flick == null)
+            {
+                return ErrorResponse.Create(
+                    HttpStatusCode.NotFound,
+                    $"Flick '{flickId}' not found"
+                );
+            }
+
+            return Ok(flick);
+        }
+
         [HttpPost]
         [Authorize]
         [ProducesResponseType(typeof(AddFlickResponse), 200)]
         [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> AddFlick(
+        public async Task<IActionResult> Add(
             AddFlickRequest request,
             CancellationToken cancellationToken = default)
         {

@@ -16,7 +16,7 @@ export default function ProfilePage() {
   const { profileId, profileName } = useParams();
   const [token] = useAuthToken();
 
-  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [
+  const profile = useQuery(() => api.profiles(token).get(Number(profileId)), [
     'profile',
     profileId
   ]);
@@ -171,12 +171,34 @@ export default function ProfilePage() {
               >
                 {entry.flickTitle}
               </Link>
+              <Link
+                href={routes.profileEditFlickEntry({
+                  profileId: Number(profileId),
+                  profileName,
+                  flickId: entry.flickId
+                })}
+              >
+                Edit
+              </Link>
+              <Link
+                href={routes.profileDeleteFlickEntry({
+                  profileId: Number(profileId),
+                  profileName,
+                  flickId: entry.flickId
+                })}
+              >
+                Delete
+              </Link>
             </div>
           ))}
 
-        <Link href={routes.profileUpdateFlickEntry({ profileId: Number(profileId), profileName })}>
-          Add
-        </Link>
+        {isAuthenticatedUser && (
+          <div>
+            <Link href={routes.profileAddFlickEntry({ profileId: Number(profileId), profileName })}>
+              Add
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

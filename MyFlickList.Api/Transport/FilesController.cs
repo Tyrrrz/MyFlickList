@@ -24,7 +24,7 @@ namespace MyFlickList.Api.Transport
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ResponseCache(Duration = Durations.SecondsIn.OneDay)]
-        public async Task<IActionResult> GetFile(
+        public async Task<IActionResult> Get(
             int id,
             CancellationToken cancellationToken = default)
         {

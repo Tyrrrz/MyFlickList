@@ -18,7 +18,7 @@ interface FormData {
   review?: string;
 }
 
-export default function UpdateFlickEntryPage() {
+export default function AddFlickEntryPage() {
   const history = useHistory();
   const { profileId, profileName } = useParams();
   const [token] = useAuthToken();
@@ -39,7 +39,7 @@ export default function UpdateFlickEntryPage() {
           className="space-y-5"
           onSubmit={handleSubmit(async ({ flickId, ...data }) => {
             try {
-              await api.profiles(token).updateFlickEntry(Number(profileId), flickId, data);
+              await api.profiles(token).putFlickEntry(Number(profileId), flickId, data);
               queryCache.clear();
               history.push(routes.profile({ profileId: Number(profileId), profileName }));
             } catch (error) {

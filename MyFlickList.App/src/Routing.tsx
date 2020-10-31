@@ -13,9 +13,11 @@ import CreditsPage from './pages/misc/CreditsPage';
 import DonatePage from './pages/misc/DonatePage';
 import FeedbackPage from './pages/misc/FeedbackPage';
 import NotFoundPage from './pages/NotFoundPage';
+import AddFlickEntryPage from './pages/profiles/AddFlickEntryPage';
+import DeleteFlickEntryPage from './pages/profiles/DeleteFlickEntryPage';
+import EditFlickEntryPage from './pages/profiles/EditFlickEntryPage';
 import EditProfilePage from './pages/profiles/EditProfilePage';
 import ProfilePage from './pages/profiles/ProfilePage';
-import UpdateFlickEntryPage from './pages/profiles/UpdateFlickEntryPage';
 import SearchPage from './pages/search/SearchPage';
 
 interface PaginationParams {
@@ -41,12 +43,22 @@ interface ProfileParams {
   profileName?: string; // only used for human-friendly URLs
 }
 
+interface ProfileFlickEntryParams extends ProfileParams {
+  flickId: number;
+}
+
 export const routes = {
   flickAdd: route('/flicks/add'),
   flick: route<FlickParams>('/flicks/:flickId/:flickTitle?'),
   flicks: route<FlicksParams>('/flicks'),
   search: route<SearchParams>('/search'),
-  profileUpdateFlickEntry: route<ProfileParams>('/profiles/:profileId/:profileName?/flicks/add'),
+  profileAddFlickEntry: route<ProfileParams>('/profiles/:profileId/:profileName?/flicks/add'),
+  profileEditFlickEntry: route<ProfileFlickEntryParams>(
+    '/profiles/:profileId/:profileName?/flicks/:flickId/edit'
+  ),
+  profileDeleteFlickEntry: route<ProfileFlickEntryParams>(
+    '/profiles/:profileId/:profileName?/flicks/:flickId/delete'
+  ),
   profileEdit: route<ProfileParams>('/profiles/:profileId/:profileName?/edit'),
   profile: route<ProfileParams>('/profiles/:profileId/:profileName?'),
   signIn: route('/auth/signin'),
@@ -65,10 +77,12 @@ export default function Routing() {
       <Route exact path={routes.flick.template} component={FlickPage} />
       <Route exact path={routes.flicks.template} component={FlicksPage} />
       <Route exact path={routes.search.template} component={SearchPage} />
+      <Route exact path={routes.profileAddFlickEntry.template} component={AddFlickEntryPage} />
+      <Route exact path={routes.profileEditFlickEntry.template} component={EditFlickEntryPage} />
       <Route
         exact
-        path={routes.profileUpdateFlickEntry.template}
-        component={UpdateFlickEntryPage}
+        path={routes.profileDeleteFlickEntry.template}
+        component={DeleteFlickEntryPage}
       />
       <Route exact path={routes.profileEdit.template} component={EditProfilePage} />
       <Route exact path={routes.profile.template} component={ProfilePage} />
