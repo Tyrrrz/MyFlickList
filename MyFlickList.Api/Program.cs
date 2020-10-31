@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyFlickList.Api.Database;
 using MyFlickList.Api.Internal;
 
 namespace MyFlickList.Api
@@ -26,7 +27,7 @@ namespace MyFlickList.Api
         private static async Task ApplyMigrationsAsync(IHost host)
         {
             using var scope = host.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
 
             await dbContext.Database.MigrateAsync();
         }

@@ -8,11 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using MyFlickList.Api.Database;
 using MyFlickList.Api.Internal;
 using MyFlickList.Api.Internal.Extensions;
-using MyFlickList.Api.Internal.Infrastructure;
-using MyFlickList.Api.Models;
 using MyFlickList.Api.Services;
+using MyFlickList.Api.Transport.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NSwag;
@@ -32,7 +32,7 @@ namespace MyFlickList.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // Database
-            services.AddDbContextPool<AppDbContext>(o =>
+            services.AddDbContextPool<DatabaseContext>(o =>
             {
                 var connectionString =
                     Heroku.GetDatabaseConnectionString() ??
@@ -58,7 +58,7 @@ namespace MyFlickList.Api
                 o.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
             });
 
-            services.AddHealthChecks().AddDbContextCheck<AppDbContext>();
+            services.AddHealthChecks().AddDbContextCheck<DatabaseContext>();
             services.AddAutoMapper(typeof(Mapping));
 
             // Request pipeline

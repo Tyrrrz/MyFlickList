@@ -6,8 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MyFlickList.Api.Entities.Files;
-using MyFlickList.Api.Entities.Flicks;
+using MyFlickList.Api.Database;
+using MyFlickList.Api.Database.Files;
+using MyFlickList.Api.Database.Flicks;
 using MyFlickList.Api.Internal.Extensions;
 using TMDbLib.Client;
 using TMDbLib.Objects.Find;
@@ -18,16 +19,16 @@ namespace MyFlickList.Api.Services
 {
     public class TmdbCatalogPopulator : ICatalogPopulator
     {
-        private readonly AppDbContext _dbContext;
+        private readonly DatabaseContext _database;
         private readonly HttpClient _httpClient;
 
         private readonly Lazy<TMDbClient> _tmdbClientLazy;
 
         private TMDbClient TmDbClient => _tmdbClientLazy.Value;
 
-        public TmdbCatalogPopulator(IConfiguration configuration, AppDbContext dbContext, HttpClient httpClient)
+        public TmdbCatalogPopulator(IConfiguration configuration, DatabaseContext database, HttpClient httpClient)
         {
-            _dbContext = dbContext;
+            _database = database;
             _httpClient = httpClient;
 
             // We want this to be lazy so that constructor doesn't throw if the API key is not set in configuration
@@ -50,28 +51,28 @@ namespace MyFlickList.Api.Services
                 ContentType = $"image/{extension}"
             };
 
-            await _dbContext.Files.AddAsync(entity, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _database.Files.AddAsync(entity, cancellationToken);
+            await _database.SaveChangesAsync(cancellationToken);
 
             return entity;
         }
 
         private async Task AddOrUpdateFlickAsync(FlickEntity flickEntity, CancellationToken cancellationToken = default)
         {
-            var existing = await _dbContext.Flicks
+            var existing = await _database.Flicks
                 .FirstOrDefaultAsync(f => f.ImdbId == flickEntity.ImdbId, cancellationToken);
 
             if (existing != null)
             {
                 if (existing.CoverImageId != null)
-                    _dbContext.Files.RemoveRange(_dbContext.Files.Where(f => f.Id == existing.CoverImageId));
+                    _database.Files.RemoveRange(_database.Files.Where(f => f.Id == existing.CoverImageId));
 
                 flickEntity.Id = existing.Id;
-                _dbContext.Entry(existing).CurrentValues.SetValues(flickEntity);
+                _database.Entry(existing).CurrentValues.SetValues(flickEntity);
             }
             else
             {
-                await _dbContext.Flicks.AddAsync(flickEntity, cancellationToken);
+                await _database.Flicks.AddAsync(flickEntity, cancellationToken);
             }
         }
 
@@ -98,7 +99,7 @@ namespace MyFlickList.Api.Services
             };
 
             await AddOrUpdateFlickAsync(flickEntity, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _database.SaveChangesAsync(cancellationToken);
 
             return flickEntity;
         }
@@ -130,7 +131,7 @@ namespace MyFlickList.Api.Services
             };
 
             await AddOrUpdateFlickAsync(flickEntity, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _database.SaveChangesAsync(cancellationToken);
 
             return flickEntity;
         }
@@ -145,7 +146,7 @@ namespace MyFlickList.Api.Services
 
             if (movieMatch != null)
             {
-                await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+                await using var transaction = await _database.Database.BeginTransactionAsync(cancellationToken);
 
                 var movie = await TmDbClient.GetMovieAsync(movieMatch.Id, cancellationToken: cancellationToken);
                 var flickEntity = await PopulateMovieFlickAsync(movie, cancellationToken);
@@ -157,7 +158,7 @@ namespace MyFlickList.Api.Services
 
             if (seriesMatch != null)
             {
-                await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+                await using var transaction = await _database.Database.BeginTransactionAsync(cancellationToken);
 
                 var series = await TmDbClient.GetTvShowAsync(seriesMatch.Id, cancellationToken: cancellationToken);
                 var flickEntity = await PopulateSeriesFlickAsync(series, cancellationToken);

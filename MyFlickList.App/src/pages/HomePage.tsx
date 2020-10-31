@@ -40,7 +40,7 @@ function FlickSpotlightItem({ flick, position }: FlickSpotlightItemProps) {
 
 export default function HomePage() {
   const [token] = useAuthToken();
-  const flicks = useQuery(() => api.flicks(token).getFlicks('Top'), []);
+  const flicks = useQuery(() => api.flicks(token).getFlicks('Top'), ['home top flicks']);
 
   return (
     <div>

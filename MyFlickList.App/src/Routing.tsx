@@ -15,6 +15,7 @@ import FeedbackPage from './pages/misc/FeedbackPage';
 import NotFoundPage from './pages/NotFoundPage';
 import EditProfilePage from './pages/profiles/EditProfilePage';
 import ProfilePage from './pages/profiles/ProfilePage';
+import UpdateFlickEntryPage from './pages/profiles/UpdateFlickEntryPage';
 import SearchPage from './pages/search/SearchPage';
 
 interface PaginationParams {
@@ -45,6 +46,7 @@ export const routes = {
   flick: route<FlickParams>('/flicks/:flickId/:flickTitle?'),
   flicks: route<FlicksParams>('/flicks'),
   search: route<SearchParams>('/search'),
+  profileUpdateFlickEntry: route<ProfileParams>('/profiles/:profileId/:profileName?/flicks/add'),
   profileEdit: route<ProfileParams>('/profiles/:profileId/:profileName?/edit'),
   profile: route<ProfileParams>('/profiles/:profileId/:profileName?'),
   signIn: route('/auth/signin'),
@@ -63,6 +65,11 @@ export default function Routing() {
       <Route exact path={routes.flick.template} component={FlickPage} />
       <Route exact path={routes.flicks.template} component={FlicksPage} />
       <Route exact path={routes.search.template} component={SearchPage} />
+      <Route
+        exact
+        path={routes.profileUpdateFlickEntry.template}
+        component={UpdateFlickEntryPage}
+      />
       <Route exact path={routes.profileEdit.template} component={EditProfilePage} />
       <Route exact path={routes.profile.template} component={ProfilePage} />
       <Route exact path={routes.signIn.template} component={SignInPage} />
@@ -72,7 +79,7 @@ export default function Routing() {
       <Route exact path={routes.feedback.template} component={FeedbackPage} />
       <Route exact path={routes.donate.template} component={DonatePage} />
       <Route exact path={routes.home.template} component={HomePage} />
-      <Route path="*" component={NotFoundPage} />{' '}
+      <Route path="*" component={NotFoundPage} />
     </Switch>
   );
 }

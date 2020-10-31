@@ -71,7 +71,7 @@ export default function FlickPage() {
   const { flickId, flickTitle } = useParams();
   const [token] = useAuthToken();
 
-  const flick = useQuery(() => api.flicks(token).getFlick(Number(flickId)), [flickId]);
+  const flick = useQuery(() => api.flicks(token).getFlick(Number(flickId)), ['flick', flickId]);
 
   // Normalize URL
   useEffect(() => {

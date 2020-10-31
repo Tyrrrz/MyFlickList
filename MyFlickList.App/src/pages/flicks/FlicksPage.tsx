@@ -17,7 +17,7 @@ export default function FlicksPage() {
 
   const flicks = useQuery(
     () => api.flicks(token).getFlicks(order as FlickOrder, filterTag, pageNumber),
-    [order, filterTag, pageNumber]
+    ['flicks', order, filterTag, pageNumber]
   );
 
   return (

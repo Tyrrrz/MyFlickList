@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useQueryCache } from 'react-query';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { routes } from '../../Routing';
@@ -21,8 +22,11 @@ export default function EditProfilePage() {
   const { profileId } = useParams();
   const [token] = useAuthToken();
 
-  // TODO: no cache
-  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [profileId]);
+  const queryCache = useQueryCache();
+  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [
+    'profile',
+    profileId
+  ]);
 
   const { register, control, handleSubmit } = useForm<FormData>({ defaultValues: profile });
   const [error, setError] = useState<unknown>();
@@ -39,11 +43,10 @@ export default function EditProfilePage() {
           onSubmit={handleSubmit(async (data) => {
             try {
               await api.profiles(token).updateProfile(profile.id, data);
-              return history.push(
-                routes.profile({ profileId: profile.id, profileName: profile.name })
-              );
+              queryCache.clear();
+              history.push(routes.profile({ profileId: profile.id, profileName: profile.name }));
             } catch (error) {
-              return setError(error);
+              setError(error);
             }
           })}
         >

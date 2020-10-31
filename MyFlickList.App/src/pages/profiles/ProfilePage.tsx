@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { FiEdit, FiGlobe, FiMapPin, FiStar } from 'react-icons/fi';
+import { FiEdit, FiGlobe, FiMapPin } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import api from '../../infra/api';
-import { AuthTokenHelper, FlickHelper, ProfileHelper } from '../../infra/helpers';
+import { AuthTokenHelper, ProfileHelper } from '../../infra/helpers';
 import { slugify } from '../../infra/utils';
 import { routes } from '../../Routing';
 import Link from '../../shared/Link';
@@ -16,7 +16,10 @@ export default function ProfilePage() {
   const { profileId, profileName } = useParams();
   const [token] = useAuthToken();
 
-  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [profileId]);
+  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [
+    'profile',
+    profileId
+  ]);
 
   // Normalize URL
   useEffect(() => {
@@ -25,10 +28,13 @@ export default function ProfilePage() {
     }
   }, [profile.id, profile.name, history, profileName]);
 
+  const flickEntries = useQuery(() => api.profiles(token).getFlickEntries(Number(profileId)), [
+    'profileFlickEntries',
+    profileId
+  ]);
+
   const isAuthenticatedUser = token && new AuthTokenHelper(token).getProfileId() === profile.id;
   const profileHelper = new ProfileHelper(profile);
-
-  // TODO: watch list, etc.
 
   return (
     <div>
@@ -149,50 +155,29 @@ export default function ProfilePage() {
         </Link>
       </div>
 
-      {/* Watch list */}
-      <table className="w-3/4 mx-auto mt-5">
-        <tbody>
-          {!profile.favoriteFlicks || (profile.favoriteFlicks.length <= 0 && <div>None :(</div>)}
+      {/* Flick entries */}
+      <div className="w-3/4 mx-auto mt-5">
+        {!flickEntries || (flickEntries.length <= 0 && <div>None :(</div>)}
 
-          {profile.favoriteFlicks &&
-            profile.favoriteFlicks.map((flick) => (
-              <tr key={flick.id}>
-                <td>
-                  <div className="py-1 flex flex-row space-x-2">
-                    <img
-                      className="rounded"
-                      alt={flick.title}
-                      src={new FlickHelper(flick).getCoverImageUrl()}
-                      width={40}
-                    />
+        {flickEntries &&
+          flickEntries.map((entry) => (
+            <div key={entry.flickId}>
+              <Link
+                className="text-xl"
+                href={routes.flick({
+                  flickId: entry.flickId,
+                  flickTitle: slugify(entry.flickTitle)
+                })}
+              >
+                {entry.flickTitle}
+              </Link>
+            </div>
+          ))}
 
-                    <div>
-                      <div>
-                        <Link
-                          className="text-xl"
-                          href={routes.flick({
-                            flickId: flick.id,
-                            flickTitle: slugify(flick.title)
-                          })}
-                        >
-                          {flick.title}
-                        </Link>
-                      </div>
-
-                      <div>{new FlickHelper(flick).formatKind()}</div>
-                    </div>
-                  </div>
-                </td>
-
-                <td>
-                  <div className="flex flex-row items-center text-lg space-x-1">
-                    <FiStar /> <div>{new FlickHelper(flick).formatRating()}</div>
-                  </div>
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
+        <Link href={routes.profileUpdateFlickEntry({ profileId: Number(profileId), profileName })}>
+          Add
+        </Link>
+      </div>
     </div>
   );
 }
