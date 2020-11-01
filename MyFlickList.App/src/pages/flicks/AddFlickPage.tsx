@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FiLoader } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import ErrorAlert from '../../shared/ErrorAlert';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';

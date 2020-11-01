@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import api from '../infra/api';
-import { FlickListingResponse } from '../infra/api.generated';
+import { GetFlicksResponseItem } from '../infra/api.generated';
 import { FlickHelper } from '../infra/helpers';
 import { slugify } from '../infra/utils';
-import { routes } from '../Routing';
+import routes from '../routes';
 import Link from '../shared/Link';
 import Meta from '../shared/Meta';
 import useAuthToken from '../shared/useAuthToken';
 import useQuery from '../shared/useQuery';
 
 interface FlickSpotlightItemProps {
-  flick: FlickListingResponse;
+  flick: GetFlicksResponseItem;
   position: number;
 }
 

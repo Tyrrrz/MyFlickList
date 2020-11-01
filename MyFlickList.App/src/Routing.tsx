@@ -1,7 +1,5 @@
 import React from 'react';
 import { Route, Switch } from 'react-router';
-import { route } from 'route-descriptor';
-import { FlickOrder } from './infra/api.generated';
 import SignInPage from './pages/auth/SignInPage';
 import SignOutPage from './pages/auth/SignOutPage';
 import SignUpPage from './pages/auth/SignUpPage';
@@ -19,64 +17,26 @@ import EditFlickEntryPage from './pages/profiles/EditFlickEntryPage';
 import EditProfilePage from './pages/profiles/EditProfilePage';
 import ProfilePage from './pages/profiles/ProfilePage';
 import SearchPage from './pages/search/SearchPage';
-
-interface PaginationParams {
-  page?: number;
-}
-
-interface FlicksParams extends PaginationParams {
-  order?: FlickOrder;
-  filterTag?: string;
-}
-
-interface FlickParams {
-  flickId: number;
-  flickTitle?: string; // only used for human-friendly URLs
-}
-
-interface SearchParams {
-  query?: string;
-}
-
-interface ProfileParams {
-  profileId: number;
-  profileName?: string; // only used for human-friendly URLs
-}
-
-interface ProfileFlickEntryParams extends ProfileParams {
-  flickId: number;
-}
-
-export const routes = {
-  flickAdd: route('/flicks/add'),
-  flick: route<FlickParams>('/flicks/:flickId/:flickTitle?'),
-  flicks: route<FlicksParams>('/flicks'),
-  search: route<SearchParams>('/search'),
-  profileAddFlickEntry: route<ProfileParams>('/profiles/:profileId/:profileName?/flicks/add'),
-  profileEditFlickEntry: route<ProfileFlickEntryParams>(
-    '/profiles/:profileId/:profileName?/flicks/:flickId/edit'
-  ),
-  profileDeleteFlickEntry: route<ProfileFlickEntryParams>(
-    '/profiles/:profileId/:profileName?/flicks/:flickId/delete'
-  ),
-  profileEdit: route<ProfileParams>('/profiles/:profileId/:profileName?/edit'),
-  profile: route<ProfileParams>('/profiles/:profileId/:profileName?'),
-  signIn: route('/auth/signin'),
-  signOut: route('/auth/signout'),
-  signUp: route('/auth/signup'),
-  credits: route('/misc/credits'),
-  feedback: route('/misc/feedback'),
-  donate: route('/misc/donate'),
-  home: route('/')
-};
+import routes from './routes';
 
 export default function Routing() {
   return (
     <Switch>
-      <Route exact path={routes.flickAdd.template} component={AddFlickPage} />
-      <Route exact path={routes.flick.template} component={FlickPage} />
+      <Route exact path={routes.home.template} component={HomePage} />
+
+      {/* Auth */}
+      <Route exact path={routes.signIn.template} component={SignInPage} />
+      <Route exact path={routes.signOut.template} component={SignOutPage} />
+      <Route exact path={routes.signUp.template} component={SignUpPage} />
+
+      {/* Flicks */}
       <Route exact path={routes.flicks.template} component={FlicksPage} />
-      <Route exact path={routes.search.template} component={SearchPage} />
+      <Route exact path={routes.flick.template} component={FlickPage} />
+      <Route exact path={routes.flickAdd.template} component={AddFlickPage} />
+
+      {/* Profiles */}
+      <Route exact path={routes.profile.template} component={ProfilePage} />
+      <Route exact path={routes.profileEdit.template} component={EditProfilePage} />
       <Route exact path={routes.profileAddFlickEntry.template} component={AddFlickEntryPage} />
       <Route exact path={routes.profileEditFlickEntry.template} component={EditFlickEntryPage} />
       <Route
@@ -84,15 +44,16 @@ export default function Routing() {
         path={routes.profileDeleteFlickEntry.template}
         component={DeleteFlickEntryPage}
       />
-      <Route exact path={routes.profileEdit.template} component={EditProfilePage} />
-      <Route exact path={routes.profile.template} component={ProfilePage} />
-      <Route exact path={routes.signIn.template} component={SignInPage} />
-      <Route exact path={routes.signOut.template} component={SignOutPage} />
-      <Route exact path={routes.signUp.template} component={SignUpPage} />
+
+      {/* Search */}
+      <Route exact path={routes.search.template} component={SearchPage} />
+
+      {/* Misc */}
       <Route exact path={routes.credits.template} component={CreditsPage} />
       <Route exact path={routes.feedback.template} component={FeedbackPage} />
       <Route exact path={routes.donate.template} component={DonatePage} />
-      <Route exact path={routes.home.template} component={HomePage} />
+
+      {/* Fallback */}
       <Route path="*" component={NotFoundPage} />
     </Switch>
   );

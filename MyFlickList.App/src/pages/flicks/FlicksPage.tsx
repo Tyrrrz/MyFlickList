@@ -1,7 +1,7 @@
 import React from 'react';
 import api from '../../infra/api';
 import { GetFlicksOrder } from '../../infra/api.generated';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
 import useAuthToken from '../../shared/useAuthToken';

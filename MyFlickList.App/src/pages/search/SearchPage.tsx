@@ -5,7 +5,7 @@ import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { FlickHelper, ProfileHelper } from '../../infra/helpers';
 import { slugify } from '../../infra/utils';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useParams from '../../shared/useParams';

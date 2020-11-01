@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQueryCache } from 'react-query';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import ErrorAlert from '../../shared/ErrorAlert';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';

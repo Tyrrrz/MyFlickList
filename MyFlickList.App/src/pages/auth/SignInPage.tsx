@@ -4,7 +4,7 @@ import { FiLock, FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { AuthTokenHelper } from '../../infra/helpers';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import ErrorAlert from '../../shared/ErrorAlert';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';

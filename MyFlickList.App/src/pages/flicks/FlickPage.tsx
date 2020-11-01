@@ -5,7 +5,7 @@ import api from '../../infra/api';
 import config from '../../infra/config';
 import { FlickHelper } from '../../infra/helpers';
 import { getAbsoluteUrl, slugify } from '../../infra/utils';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import Link from '../../shared/Link';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';

@@ -4,7 +4,7 @@ import { useQueryCache } from 'react-query';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
 import { ProfileFlickEntryStatus } from '../../infra/api.generated';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import ErrorAlert from '../../shared/ErrorAlert';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';

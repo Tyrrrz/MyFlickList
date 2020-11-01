@@ -1,13 +1,13 @@
 import React from 'react';
 import { FiStar } from 'react-icons/fi';
-import { FlickListingResponse } from '../../../infra/api.generated';
+import { GetFlicksResponseItem } from '../../../infra/api.generated';
 import { FlickHelper } from '../../../infra/helpers';
 import { slugify } from '../../../infra/utils';
-import { routes } from '../../../Routing';
+import routes from '../../../routes';
 import Link from '../../../shared/Link';
 
 interface FlickRowProps {
-  flick: FlickListingResponse;
+  flick: GetFlicksResponseItem;
   position: number;
 }
 
@@ -56,7 +56,7 @@ function FlickRow({ flick, position }: FlickRowProps) {
 }
 
 interface FlickTableProps {
-  flicks: FlickListingResponse[];
+  flicks: GetFlicksResponseItem[];
   startingPosition: number;
 }
 

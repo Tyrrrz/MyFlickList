@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FiAtSign, FiLock, FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { routes } from '../../Routing';
+import routes from '../../routes';
 import ErrorAlert from '../../shared/ErrorAlert';
 import Meta from '../../shared/Meta';
 import useAuthToken from '../../shared/useAuthToken';
