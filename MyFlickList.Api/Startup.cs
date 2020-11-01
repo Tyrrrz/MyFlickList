@@ -9,10 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MyFlickList.Api.Database;
+using MyFlickList.Api.Endpoints;
 using MyFlickList.Api.Internal;
-using MyFlickList.Api.Internal.Extensions;
-using MyFlickList.Api.Services;
-using MyFlickList.Api.Transport.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NSwag;
@@ -55,7 +53,7 @@ namespace MyFlickList.Api
             });
 
             services.AddHealthChecks().AddDbContextCheck<DatabaseContext>();
-            services.AddAutoMapper(typeof(Mapping));
+            services.AddAutoMapper(o => o.AddMaps(typeof(Startup).Assembly));
 
             // Request pipeline
             services.AddCors();
@@ -93,9 +91,6 @@ namespace MyFlickList.Api
                     .RequireAuthenticatedUser()
                     .Build();
             });
-
-            // Local services
-            services.AddHttpClient<ICatalogPopulator, TmdbCatalogPopulator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

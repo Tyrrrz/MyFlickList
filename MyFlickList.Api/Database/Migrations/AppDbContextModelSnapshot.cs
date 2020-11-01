@@ -2,8 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MyFlickList.Api.Database;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MyFlickList.Api.Database.Migrations

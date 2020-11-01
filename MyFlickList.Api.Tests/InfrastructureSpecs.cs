@@ -9,7 +9,7 @@ namespace MyFlickList.Api.Tests
         public void Mapping_should_be_configured_correctly_for_all_models()
         {
             // Arrange
-            var mapper = new Mapper(new MapperConfiguration(c => c.AddMaps(typeof(Startup).Assembly)));
+            var mapper = new Mapper(new MapperConfiguration(o => o.AddMaps(typeof(Startup).Assembly)));
 
             // Act & assert
             mapper.ConfigurationProvider.AssertConfigurationIsValid();

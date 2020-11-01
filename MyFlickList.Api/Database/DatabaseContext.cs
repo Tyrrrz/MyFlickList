@@ -3,7 +3,6 @@ using MyFlickList.Api.Database.Auth;
 using MyFlickList.Api.Database.Files;
 using MyFlickList.Api.Database.Flicks;
 using MyFlickList.Api.Database.Profiles;
-using MyFlickList.Api.Internal;
 
 namespace MyFlickList.Api.Database
 {

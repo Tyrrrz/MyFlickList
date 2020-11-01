@@ -2,7 +2,7 @@
 
 namespace MyFlickList.Api.Database
 {
-    internal static class Postgres
+    public static class Postgres
     {
         // DB Functions
         public static class Functions
