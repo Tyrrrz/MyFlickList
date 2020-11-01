@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { FiCalendar, FiClock, FiFilm, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import api from '../../infra/api';
-import { FlickResponse } from '../../infra/api.generated';
 import config from '../../infra/config';
 import { FlickHelper } from '../../infra/helpers';
 import { getAbsoluteUrl, slugify } from '../../infra/utils';
@@ -13,31 +12,31 @@ import useAuthToken from '../../shared/useAuthToken';
 import useParams from '../../shared/useParams';
 import useQuery from '../../shared/useQuery';
 
-function getNetworkLinks(flick: FlickResponse) {
+function getNetworkLinks(flickTitle: string, imdbId: string) {
   return [
     {
       name: 'IMDB',
-      url: 'https://imdb.com/title/' + encodeURIComponent(flick.imdbId)
+      url: 'https://imdb.com/title/' + encodeURIComponent(imdbId)
     },
     {
       name: 'TMDB',
-      url: 'https://themoviedb.org/search?' + new URLSearchParams({ query: flick.title }).toString()
+      url: 'https://themoviedb.org/search?' + new URLSearchParams({ query: flickTitle }).toString()
     },
     {
       name: 'Netflix',
-      url: 'https://netflix.com/search?' + new URLSearchParams({ q: flick.title }).toString()
+      url: 'https://netflix.com/search?' + new URLSearchParams({ q: flickTitle }).toString()
     },
     {
       name: 'HBO',
-      url: 'https://hbo.com/searchresults?' + new URLSearchParams({ q: flick.title }).toString()
+      url: 'https://hbo.com/searchresults?' + new URLSearchParams({ q: flickTitle }).toString()
     }
   ];
 }
 
-function getShareLinks(flick: FlickResponse) {
+function getShareLinks(flickId: number, flickTitle: string) {
   const selfUrl = getAbsoluteUrl(
     config.appUrl,
-    routes.flick({ flickId: flick.id, flickTitle: slugify(flick.title) })
+    routes.flick({ flickId, flickTitle: slugify(flickTitle) })
   );
 
   return [
@@ -49,7 +48,7 @@ function getShareLinks(flick: FlickResponse) {
           related: config.appUrl,
           via: 'myflicklist',
           url: selfUrl,
-          text: flick.title,
+          text: flickTitle,
           hashtags: 'myflicklist'
         }).toString()
     },
@@ -57,7 +56,7 @@ function getShareLinks(flick: FlickResponse) {
       name: 'Reddit',
       url:
         'https://reddit.com/submit?' +
-        new URLSearchParams({ url: selfUrl, title: flick.title }).toString()
+        new URLSearchParams({ url: selfUrl, title: flickTitle }).toString()
     },
     {
       name: 'Facebook',
@@ -71,7 +70,7 @@ export default function FlickPage() {
   const { flickId, flickTitle } = useParams();
   const [token] = useAuthToken();
 
-  const flick = useQuery(() => api.flicks(token).get(Number(flickId)), ['flick', flickId]);
+  const flick = useQuery(() => api.flicks(token).getFlick(Number(flickId)), ['flick', flickId]);
 
   // Normalize URL
   useEffect(() => {
@@ -176,7 +175,7 @@ export default function FlickPage() {
             <div>Find on:</div>
 
             <div className="flex flex-row pl-1 space-x-2">
-              {getNetworkLinks(flick).map((link) => (
+              {getNetworkLinks(flick.title, flick.imdbId).map((link) => (
                 <div key={link.name} className="inline">
                   <Link href={link.url} target="_blank">
                     {link.name}
@@ -191,7 +190,7 @@ export default function FlickPage() {
             <div>Share on:</div>
 
             <div className="flex flex-row pl-1 space-x-2">
-              {getShareLinks(flick).map((link) => (
+              {getShareLinks(flick.id, flick.title).map((link) => (
                 <div key={link.name} className="inline">
                   <Link href={link.url} target="_blank">
                     {link.name}

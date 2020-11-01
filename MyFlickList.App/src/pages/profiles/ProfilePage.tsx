@@ -16,7 +16,7 @@ export default function ProfilePage() {
   const { profileId, profileName } = useParams();
   const [token] = useAuthToken();
 
-  const profile = useQuery(() => api.profiles(token).get(Number(profileId)), [
+  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [
     'profile',
     profileId
   ]);
@@ -157,10 +157,10 @@ export default function ProfilePage() {
 
       {/* Flick entries */}
       <div className="w-3/4 mx-auto mt-5">
-        {!flickEntries || (flickEntries.length <= 0 && <div>None :(</div>)}
+        {!flickEntries.items || (flickEntries.items.length <= 0 && <div>None :(</div>)}
 
-        {flickEntries &&
-          flickEntries.map((entry) => (
+        {flickEntries.items &&
+          flickEntries.items.map((entry) => (
             <div key={entry.flickId}>
               <Link
                 className="text-xl"

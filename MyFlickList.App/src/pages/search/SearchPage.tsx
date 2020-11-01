@@ -12,7 +12,7 @@ import useParams from '../../shared/useParams';
 import useQuery from '../../shared/useQuery';
 
 function SearchResultsSection({ query }: { query: string }) {
-  const results = useQuery(() => api.search().getResults(query), ['search', query]);
+  const results = useQuery(() => api.search().search(query), ['search', query]);
 
   const isNothingFound =
     (!results.flicks || results.flicks.length <= 0) &&

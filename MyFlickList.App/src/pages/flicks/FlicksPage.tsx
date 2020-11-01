@@ -1,6 +1,6 @@
 import React from 'react';
 import api from '../../infra/api';
-import { FlickOrder } from '../../infra/api.generated';
+import { GetFlicksOrder } from '../../infra/api.generated';
 import { routes } from '../../Routing';
 import Meta from '../../shared/Meta';
 import Paginator from '../../shared/Paginator';
@@ -16,7 +16,7 @@ export default function FlicksPage() {
   const pageNumber = Number(page) || 1;
 
   const flicks = useQuery(
-    () => api.flicks(token).getMany(order as FlickOrder, filterTag, pageNumber),
+    () => api.flicks(token).getFlicks(order as GetFlicksOrder, filterTag, pageNumber),
     ['flicks', order, filterTag, pageNumber]
   );
 
@@ -31,7 +31,7 @@ export default function FlicksPage() {
       <Paginator
         currentPage={pageNumber}
         lastPage={flicks.totalPages}
-        getPageHref={(p) => routes.flicks({ order: order as FlickOrder, filterTag, page: p })}
+        getPageHref={(p) => routes.flicks({ order: order as GetFlicksOrder, filterTag, page: p })}
       />
     </div>
   );

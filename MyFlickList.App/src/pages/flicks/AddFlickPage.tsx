@@ -48,7 +48,7 @@ export default function AddFlickPage() {
           className="space-y-5"
           onSubmit={handleSubmit(async (data) => {
             try {
-              const { flickId } = await api.flicks(token).add(data);
+              const { flickId } = await api.flicks(token).addFlick(data);
               history.push(routes.flick({ flickId }));
             } catch (error) {
               setError(error);

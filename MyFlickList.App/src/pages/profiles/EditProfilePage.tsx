@@ -23,7 +23,7 @@ export default function EditProfilePage() {
   const [token] = useAuthToken();
 
   const queryCache = useQueryCache();
-  const profile = useQuery(() => api.profiles(token).get(Number(profileId)), [
+  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [
     'profile',
     profileId
   ]);
@@ -42,7 +42,7 @@ export default function EditProfilePage() {
           className="space-y-5"
           onSubmit={handleSubmit(async (data) => {
             try {
-              await api.profiles(token).put(profile.id, data);
+              await api.profiles(token).putProfile(profile.id, data);
               queryCache.clear();
               history.push(routes.profile({ profileId: profile.id, profileName: profile.name }));
             } catch (error) {
