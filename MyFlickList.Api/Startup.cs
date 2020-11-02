@@ -54,6 +54,7 @@ namespace MyFlickList.Api
 
             services.AddHealthChecks().AddDbContextCheck<DatabaseContext>();
             services.AddAutoMapper(o => o.AddMaps(typeof(Startup).Assembly));
+            services.AddHttpClient();
 
             // Request pipeline
             services.AddCors();
