@@ -23,37 +23,27 @@ export default function Routing() {
   return (
     <Switch>
       <Route exact path={routes.home.template} component={HomePage} />
-
-      {/* Auth */}
-      <Route exact path={routes.signIn.template} component={SignInPage} />
-      <Route exact path={routes.signOut.template} component={SignOutPage} />
-      <Route exact path={routes.signUp.template} component={SignUpPage} />
-
-      {/* Flicks */}
-      <Route exact path={routes.flicks.template} component={FlicksPage} />
-      <Route exact path={routes.flick.template} component={FlickPage} />
-      <Route exact path={routes.flickAdd.template} component={AddFlickPage} />
-
-      {/* Profiles */}
-      <Route exact path={routes.profile.template} component={ProfilePage} />
-      <Route exact path={routes.profileEdit.template} component={EditProfilePage} />
-      <Route exact path={routes.profileAddFlickEntry.template} component={AddFlickEntryPage} />
-      <Route exact path={routes.profileEditFlickEntry.template} component={EditFlickEntryPage} />
-      <Route
-        exact
-        path={routes.profileDeleteFlickEntry.template}
-        component={DeleteFlickEntryPage}
-      />
-
-      {/* Search */}
       <Route exact path={routes.search.template} component={SearchPage} />
 
-      {/* Misc */}
-      <Route exact path={routes.credits.template} component={CreditsPage} />
-      <Route exact path={routes.feedback.template} component={FeedbackPage} />
-      <Route exact path={routes.donate.template} component={DonatePage} />
+      <Route exact path={routes.auth.signIn.template} component={SignInPage} />
+      <Route exact path={routes.auth.signOut.template} component={SignOutPage} />
+      <Route exact path={routes.auth.signUp.template} component={SignUpPage} />
 
-      {/* Fallback */}
+      <Route exact path={routes.flicks.all.template} component={FlicksPage} />
+      <Route exact path={routes.flicks.add.template} component={AddFlickPage} />
+      <Route exact path={routes.flicks.specific.template} component={FlickPage} />
+
+      <Route exact path={routes.profiles.specific.template} component={ProfilePage} />
+      <Route exact path={routes.profiles.current.template} component={ProfilePage} />
+      <Route exact path={routes.profiles.edit.template} component={EditProfilePage} />
+      <Route exact path={routes.profiles.addFlick.template} component={AddFlickEntryPage} />
+      <Route exact path={routes.profiles.editFlick.template} component={EditFlickEntryPage} />
+      <Route exact path={routes.profiles.deleteFlick.template} component={DeleteFlickEntryPage} />
+
+      <Route exact path={routes.misc.credits.template} component={CreditsPage} />
+      <Route exact path={routes.misc.feedback.template} component={FeedbackPage} />
+      <Route exact path={routes.misc.donate.template} component={DonatePage} />
+
       <Route path="*" component={NotFoundPage} />
     </Switch>
   );

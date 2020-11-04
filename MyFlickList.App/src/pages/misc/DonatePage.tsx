@@ -1,23 +1,18 @@
 import React from 'react';
 import { FiHeart } from 'react-icons/fi';
-import Link from '../../shared/Link';
-import Meta from '../../shared/Meta';
+import Card from '../../components/Card';
+import Link from '../../components/Link';
+import Page from '../../components/Page';
 
 export default function DonatePage() {
   return (
-    <div>
-      <Meta title="Donate" />
-
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Donate</h1>
-
+    <Page title="Donate">
+      <Card>
         <p>
           MyFlickList is a personal project built and maintained by{' '}
-          <Link href="https://tyrrrz.me" target="_blank">
-            Alexey Golub
-          </Link>
-          . Besides occupying a significant amount of time, there are some financial costs
-          associated as well. These include hosting, domain, development tools, hardware, and more.
+          <Link href="https://tyrrrz.me">Alexey Golub</Link>. Besides occupying a significant amount
+          of time, there are some financial costs associated as well. These include hosting, domain,
+          development tools, hardware, and more.
         </p>
 
         <div className="p-4 flex flex-row border rounded border-pink-200 bg-pink-100 space-x-10">
@@ -29,26 +24,20 @@ export default function DonatePage() {
 
             <ul className="mt-1">
               <li>
-                <Link href="https://patreon.com/Tyrrrz" target="_blank">
-                  Patreon
-                </Link>{' '}
+                <Link href="https://patreon.com/Tyrrrz">Patreon</Link>{' '}
                 <span className="font-light">(recurring)</span>
               </li>
 
               <li>
-                <Link href="https://buymeacoffee.com/Tyrrrz" target="_blank">
-                  BuyMeACoffee
-                </Link>{' '}
+                <Link href="https://buymeacoffee.com/Tyrrrz">BuyMeACoffee</Link>{' '}
                 <span className="font-light">(one-time)</span>
               </li>
             </ul>
 
             <p className="mt-4 text-sm text-gray-700 italic">
               In case the above donation options don&apos;t work for you, please{' '}
-              <Link href="https://twitter.com/Tyrrrz" target="_blank">
-                contact me on Twitter
-              </Link>{' '}
-              to figure out an alternative.
+              <Link href="https://twitter.com/Tyrrrz">contact me on Twitter</Link> to figure out an
+              alternative.
             </p>
           </div>
 
@@ -56,7 +45,7 @@ export default function DonatePage() {
             <FiHeart strokeWidth={1} />
           </div>
         </div>
-      </div>
-    </div>
+      </Card>
+    </Page>
   );
 }

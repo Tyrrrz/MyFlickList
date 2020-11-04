@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React from 'react';
 import { useQueryCache } from 'react-query';
-import { useHistory } from 'react-router';
-import api from '../../infra/api';
-import { ProfileFlickEntryStatus } from '../../infra/api.generated';
+import { Redirect, useHistory } from 'react-router';
+import Card from '../../components/Card';
+import Form from '../../components/Form';
+import FormButton from '../../components/FormButton';
+import FormInput from '../../components/FormInput';
+import FormSelect from '../../components/FormSelect';
+import FormTextArea from '../../components/FormTextArea';
+import Page from '../../components/Page';
+import useAuth from '../../context/useAuth';
+import api from '../../internal/api';
+import { ProfileFlickEntryStatus } from '../../internal/api.generated';
 import routes from '../../routes';
-import ErrorAlert from '../../shared/ErrorAlert';
-import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
-import useParams from '../../shared/useParams';
 
-interface FormData {
+interface FormValues {
   flickId: number;
   status?: ProfileFlickEntryStatus;
   episodeCount?: number;
@@ -20,85 +23,74 @@ interface FormData {
 
 export default function AddFlickEntryPage() {
   const history = useHistory();
-  const { profileId, profileName } = useParams();
-  const [token] = useAuthToken();
-
+  const auth = useAuth();
   const queryCache = useQueryCache();
 
-  const { register, handleSubmit } = useForm<FormData>();
-  const [error, setError] = useState<unknown>();
+  // If not signed in, redirect to sign in page
+  if (!auth.token) {
+    return <Redirect to={routes.auth.signIn()} />;
+  }
+
+  const profileId = auth.token.getProfileId();
+
+  const defaultFormValues: FormValues = {
+    flickId: 0
+  };
 
   return (
-    <div>
-      <Meta title="Add Flick to Profile" />
+    <Page title="Profile - Add Flick">
+      <Card>
+        <Form
+          defaultValues={defaultFormValues}
+          onSubmit={async ({ flickId, ...data }) => {
+            await api.profiles(auth.token?.value).putFlickEntry(profileId, flickId, data);
 
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Add Flick to Profile</h1>
-
-        <form
-          className="space-y-5"
-          onSubmit={handleSubmit(async ({ flickId, ...data }) => {
-            try {
-              await api.profiles(token).putFlickEntry(Number(profileId), flickId, data);
-              queryCache.clear();
-              history.push(routes.profile({ profileId: Number(profileId), profileName }));
-            } catch (error) {
-              setError(error);
-            }
-          })}
+            queryCache.clear();
+            history.push(routes.profiles.current());
+          }}
         >
-          <div>
-            <label htmlFor="flickId">Flick ID:</label>
-            <input className="w-1/3" type="text" name="flickId" ref={register} />
-          </div>
+          <FormInput name="flickId" label="Flick ID" required />
 
-          <div>
-            <label htmlFor="status">Status:</label>
-            <select className="w-1/3" name="status" ref={register}>
-              <option value="Planned">Plan to watch</option>
-              <option value="Watching">Currently watching</option>
-              <option value="Watched">Already watched</option>
-              <option value="Dropped">Dropped</option>
-            </select>
-          </div>
+          <FormSelect
+            name="status"
+            label="Status"
+            options={[
+              { label: 'Plan to watch', value: 'Planned' },
+              { label: 'Currently watching', value: 'Watching' },
+              { label: 'Already watched', value: 'Watched' },
+              { label: 'Dropped', value: 'Dropped' }
+            ]}
+          />
 
-          <div>
-            <label htmlFor="episodeCount">Episodes:</label>
-            <input className="w-1/3" type="number" name="episodeCount" ref={register} />
-          </div>
+          <FormInput name="episodeCount" label="Episodes" />
 
-          <div>
-            <label htmlFor="rating">Rating:</label>
-            <select className="w-1/3" name="rating" ref={register}>
-              <option value="0">Horrible</option>
-              <option value="0.5">Average</option>
-              <option value="1">Amazing</option>
-            </select>
-          </div>
+          <FormSelect
+            name="rating"
+            label="Rating"
+            options={[
+              { label: 'Unrated', value: null },
+              { label: 'Horrible', value: 0 },
+              { label: 'Average', value: 0.5 },
+              { label: 'Amazing', value: 1 }
+            ]}
+          />
 
-          <div>
-            <label htmlFor="review">Review:</label>
-            <textarea name="review" cols={50} rows={5} ref={register} />
-          </div>
-
-          <hr />
-
-          <ErrorAlert error={error} />
+          <FormTextArea name="review" label="Review" />
 
           <div className="flex flex-row items-center space-x-2">
-            <button type="submit">Add</button>
+            <FormButton isSubmit={true}>Add</FormButton>
 
-            <button
+            <FormButton
               onClick={(e) => {
                 e.preventDefault();
                 history.goBack();
               }}
             >
               Cancel
-            </button>
+            </FormButton>
           </div>
-        </form>
-      </div>
-    </div>
+        </Form>
+      </Card>
+    </Page>
   );
 }

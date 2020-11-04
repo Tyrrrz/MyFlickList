@@ -1,90 +1,61 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FiLoader } from 'react-icons/fi';
+import classnames from 'classnames';
+import React from 'react';
 import { useHistory } from 'react-router';
-import api from '../../infra/api';
+import Alert from '../../components/Alert';
+import Card from '../../components/Card';
+import Form from '../../components/Form';
+import FormButton from '../../components/FormButton';
+import FormInput from '../../components/FormInput';
+import Link from '../../components/Link';
+import Page from '../../components/Page';
+import useAuth from '../../context/useAuth';
+import api from '../../internal/api';
 import routes from '../../routes';
-import ErrorAlert from '../../shared/ErrorAlert';
-import Link from '../../shared/Link';
-import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
-
-interface FormData {
-  sourceUrl: string;
-}
 
 export default function AddFlickPage() {
   const history = useHistory();
-  const [token] = useAuthToken();
-  const { register, handleSubmit, formState } = useForm<FormData>();
-  const [error, setError] = useState<unknown>();
+  const auth = useAuth();
 
   return (
-    <div>
-      <Meta title="Add Flick" />
-
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Add Flick</h1>
-
-        <p>
+    <Page title="Add Flick">
+      <Card>
+        <p className={classnames('text-lg')}>
           If a movie or series you&apos;re looking for is not available, you can add it by simply
-          copy-pasting its{' '}
-          <Link href="https://imdb.com" target="_blank">
-            IMDB
-          </Link>{' '}
-          link. All of the associated data will be pulled automatically.
+          copy-pasting its <Link href="https://imdb.com">IMDB</Link> link. All of the associated
+          data will be pulled automatically.
         </p>
 
-        {!token && (
-          <div className="p-4 border rounded border-red-400 bg-red-100 text-red-700">
-            <p>
-              You need to be <Link href={routes.signIn()}>signed in</Link> in order to request a new
-              flick
-            </p>
-          </div>
+        {!auth.token && (
+          <Alert className={classnames('mt-3')} type="error">
+            You need to be <Link href={routes.auth.signIn()}>signed in</Link> in order to request a
+            new flick
+          </Alert>
         )}
+      </Card>
 
-        <form
-          className="space-y-5"
-          onSubmit={handleSubmit(async (data) => {
-            try {
-              const { flickId } = await api.flicks(token).addFlick(data);
-              history.push(routes.flick({ flickId }));
-            } catch (error) {
-              setError(error);
-            }
-          })}
+      <Card>
+        <Form
+          orientation="horizontal"
+          defaultValues={{ sourceUrl: '' }}
+          onSubmit={async (data) => {
+            const { flickId } = await api.flicks(auth.token?.value).addFlick(data);
+            history.push(routes.flicks.specific({ flickId }));
+          }}
         >
-          <div>
-            <label htmlFor="sourceUrl">IMDB link:</label>
+          <FormInput
+            className={classnames(['flex-grow'])}
+            name="sourceUrl"
+            placeholder="https://imdb.com/title/tt0029583"
+            disabled={!auth.token}
+            autoFocus
+            required
+          />
 
-            <div className="flex flex-row items-center space-x-2">
-              <input
-                className="flex-grow"
-                type="url"
-                name="sourceUrl"
-                autoFocus
-                required
-                placeholder="https://imdb.com/title/tt0029583"
-                disabled={formState.isSubmitting || !token}
-                ref={register}
-              />
-
-              {!formState.isSubmitting ? (
-                <button type="submit" disabled={formState.isSubmitting || !token}>
-                  Pull
-                </button>
-              ) : (
-                <div className="px-3">
-                  <FiLoader className="text-xl animate-spin" />
-                </div>
-              )}
-            </div>
-          </div>
-
-          <ErrorAlert error={error} />
-        </form>
-      </div>
-    </div>
+          <FormButton isSubmit={true} disabled={!auth.token}>
+            Pull
+          </FormButton>
+        </Form>
+      </Card>
+    </Page>
   );
 }

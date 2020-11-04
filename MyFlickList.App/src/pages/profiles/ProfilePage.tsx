@@ -1,170 +1,173 @@
-import React, { useEffect } from 'react';
-import { FiEdit, FiGlobe, FiMapPin } from 'react-icons/fi';
-import { useHistory } from 'react-router-dom';
-import api from '../../infra/api';
-import { AuthTokenHelper, ProfileHelper } from '../../infra/helpers';
-import { slugify } from '../../infra/utils';
+import classnames from 'classnames';
+import copy from 'copy-to-clipboard';
+import React from 'react';
+import { FiEdit, FiLink, FiMapPin } from 'react-icons/fi';
+import { Redirect } from 'react-router';
+import Card from '../../components/Card';
+import Link from '../../components/Link';
+import Page from '../../components/Page';
+import useAuth from '../../context/useAuth';
+import useCanonicalUrl from '../../context/useCanonicalUrl';
+import useParams from '../../context/useParams';
+import useQuery from '../../context/useQuery';
+import api from '../../internal/api';
+import config from '../../internal/config';
+import { getAvatarImageUrl } from '../../internal/profileHelpers';
+import { getAbsoluteUrl, slugify } from '../../internal/utils';
 import routes from '../../routes';
-import Link from '../../shared/Link';
-import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
-import useParams from '../../shared/useParams';
-import useQuery from '../../shared/useQuery';
 
 export default function ProfilePage() {
-  const history = useHistory();
-  const { profileId, profileName } = useParams();
-  const [token] = useAuthToken();
+  const { profileId } = useParams();
+  const auth = useAuth();
 
-  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [
-    'profile',
-    profileId
-  ]);
+  const actualProfileId = profileId ? Number(profileId) : auth.token?.getProfileId();
 
-  // Normalize URL
-  useEffect(() => {
-    if (profileName !== profile.name) {
-      history.replace(routes.profile({ profileId: profile.id, profileName: profile.name }));
-    }
-  }, [profile.id, profile.name, history, profileName]);
+  // TODO: make this cleaner when `actualProfileId` is undefined
+  const profile = useQuery(
+    () => api.profiles(auth.token?.value).getProfile(actualProfileId || -1),
+    ['profile', profileId]
+  );
 
-  const flickEntries = useQuery(() => api.profiles(token).getFlickEntries(Number(profileId)), [
-    'profileFlickEntries',
-    profileId
-  ]);
+  const flickEntries = useQuery(
+    () => api.profiles(auth.token?.value).getFlickEntries(actualProfileId || -1),
+    ['profileFlickEntries', profileId]
+  );
 
-  const isAuthenticatedUser = token && new AuthTokenHelper(token).getProfileId() === profile.id;
-  const profileHelper = new ProfileHelper(profile);
+  useCanonicalUrl(
+    // Normalize based on the type of route that was used
+    !profileId
+      ? routes.profiles.current()
+      : routes.profiles.specific({ profileId: profile.id, profileName: profile.name })
+  );
+
+  // If not signed in and profile ID is not explicitly provided, redirect to sign in page
+  if (!actualProfileId) {
+    return <Redirect to={routes.auth.signIn()} />;
+  }
+
+  const isAuthUserProfile = auth.token?.getProfileId() === profile.id;
 
   return (
-    <div>
-      <Meta
-        title={profile.name}
-        description={profile.bio}
-        imageUrl={profileHelper.getAvatarImageUrl()}
-        contentType="profile"
-      />
+    <Page
+      title={profile.name}
+      description={profile.bio}
+      imageUrl={getAvatarImageUrl(profile)}
+      contentType="profile"
+    >
+      <Card>
+        <div className={classnames('flex', 'space-x-10')}>
+          {/* Avatar */}
+          <div style={{ minWidth: 'max-content' }}>
+            <img
+              className={classnames('rounded-full', 'shadow')}
+              alt={`${profile.name}'s avatar`}
+              src={getAvatarImageUrl(profile)}
+              width={170}
+              height={170}
+            />
+          </div>
 
-      {/* Avatar & main profile info */}
-      <div className="flex flex-row justify-center items-center space-x-10">
-        {/* Avatar */}
-        <div style={{ minWidth: 'max-content' }}>
-          <img
-            className="rounded-full shadow"
-            alt={`${profile.name}'s avatar`}
-            src={profileHelper.getAvatarImageUrl()}
-            width={170}
-            height={170}
-          />
-        </div>
+          {/* Meta */}
+          <div className={classnames('flex-grow', 'self-center')}>
+            <div className={classnames('flex', 'items-center')}>
+              {/* Name */}
+              <div className={classnames('tracking-wide', 'truncate', 'text-3xl')}>
+                {profile.name}
+              </div>
 
-        <div>
-          <div className="flex flex-row items-center">
-            {/* Name */}
-            <h1 className="tracking-wide">{profile.name}</h1>
+              {/* Role badge */}
+              {profile.role !== 'Normal' && (
+                <div
+                  className={classnames(
+                    'ml-2',
+                    'mt-2',
+                    'p-1',
+                    'border',
+                    'rounded',
+                    'border-red-200',
+                    'bg-red-100',
+                    'text-sm',
+                    'text-red-500'
+                  )}
+                >
+                  {profile.role}
+                </div>
+              )}
+            </div>
 
-            {/* Role badge */}
-            {profile.role !== 'Normal' && (
-              <div className="ml-2 mt-2 p-1 border rounded border-red-200 bg-red-100 text-sm text-red-500">
-                {profile.role}
+            {/* Location */}
+            {profile.location && (
+              <div
+                className={classnames('-mt-1', 'flex', 'items-center', 'font-light', 'space-x-1')}
+              >
+                <FiMapPin strokeWidth={1} />
+                <div>{profile.location}</div>
               </div>
             )}
           </div>
 
-          {/* Location */}
-          {profile.location && (
-            <div className="-mt-1 flex flex-row items-center font-light space-x-1">
-              <FiMapPin strokeWidth={1} />
-              <div>{profile.location}</div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Profile info */}
-      <div className="w-3/4 my-6 mx-auto space-y-5">
-        {/* Bio */}
-        {profile.bio && <article className="text-gray-800 text-center">{profile.bio}</article>}
-
-        {/* External links */}
-        <div className="flex flex-row justify-center text-lg space-x-3">
-          {profile.externalLinks &&
-            profile.externalLinks.map((link) => (
+          {/* Buttons */}
+          <div>
+            {/* Edit */}
+            {isAuthUserProfile && (
               <Link
-                key={link}
-                className="inline-flex flex-row items-center font-normal space-x-1"
-                href={link}
-                target="_blank"
+                className={classnames('flex', 'items-center', 'space-x-1')}
+                href={routes.profiles.edit()}
               >
-                <FiGlobe />
-                <div>{new URL(link).hostname}</div>
+                <FiEdit />
+                <div>Edit Profile</div>
               </Link>
-            ))}
+            )}
+
+            {/* Copy permalink */}
+            {isAuthUserProfile && (
+              <Link
+                className={classnames('flex', 'items-center', 'space-x-1')}
+                href={routes.profiles.specific({
+                  profileId: profile.id,
+                  profileName: profile.name
+                })}
+                onClick={(e) => {
+                  e.preventDefault();
+
+                  copy(
+                    getAbsoluteUrl(
+                      config.appUrl,
+                      routes.profiles.specific({
+                        profileId: profile.id,
+                        profileName: profile.name
+                      })
+                    )
+                  );
+                }}
+              >
+                <FiLink />
+                <div>Copy Link</div>
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
+      </Card>
 
-      {/* Buttons */}
-      <div className="text-center">
-        {isAuthenticatedUser && (
-          <Link
-            className="btn inline-flex flex-row items-center space-x-1"
-            href={routes.profileEdit({ profileId: profile.id, profileName: profile.name })}
-          >
-            <FiEdit />
-            <div>Edit Profile</div>
-          </Link>
-        )}
-      </div>
+      {/* Bio */}
+      {profile.bio && (
+        <Card>
+          <div className={classnames('text-2xl', 'font-thin', 'tracking-wide')}>Bio</div>
+          <p>{profile.bio}</p>
+        </Card>
+      )}
 
-      {/* Separator */}
-      <hr className="w-1/2 my-8 mx-auto" />
-
-      {/* Stats & tabs */}
-      <div className="flex flex-row justify-center items-center">
-        {/* Watched */}
-        <Link href="#">
-          <div className="text-xl">123</div>
-          <div className="text-sm font-normal tracking-wider">Watched</div>
-        </Link>
-
-        {/* Separator */}
-        <div className="w-px h-8 mt-1 mx-4 border border-gray-200" />
-
-        {/* Planned */}
-        <Link href="#">
-          <div className="text-xl">45</div>
-          <div className="text-sm font-normal tracking-wider">Planned</div>
-        </Link>
-
-        {/* Separator */}
-        <div className="w-px h-8 mt-1 mx-4 border border-gray-200" />
-
-        {/* Reviews */}
-        <Link href="#">
-          <div className="text-xl">67</div>
-          <div className="text-sm font-normal tracking-wider">Reviews</div>
-        </Link>
-
-        {/* Separator */}
-        <div className="w-px h-8 mt-1 mx-4 border border-gray-200" />
-
-        {/* Collections */}
-        <Link href="#">
-          <div className="text-xl">89</div>
-          <div className="text-sm font-normal tracking-wider">Collections</div>
-        </Link>
-      </div>
-
-      {/* Flick entries */}
-      <div className="w-3/4 mx-auto mt-5">
-        {!flickEntries.items || (flickEntries.items.length <= 0 && <div>None :(</div>)}
+      {/* Entries */}
+      <Card>
+        {!flickEntries.items ||
+          (flickEntries.items.length <= 0 && <div>This user hasn&apos;t added any flicks yet</div>)}
 
         {flickEntries.items &&
           flickEntries.items.map((entry) => (
             <div key={entry.flickId}>
               <Link
-                className="text-xl"
-                href={routes.flick({
+                className={classnames('text-xl')}
+                href={routes.flicks.specific({
                   flickId: entry.flickId,
                   flickTitle: slugify(entry.flickTitle)
                 })}
@@ -172,18 +175,14 @@ export default function ProfilePage() {
                 {entry.flickTitle}
               </Link>
               <Link
-                href={routes.profileEditFlickEntry({
-                  profileId: Number(profileId),
-                  profileName,
+                href={routes.profiles.editFlick({
                   flickId: entry.flickId
                 })}
               >
                 Edit
               </Link>
               <Link
-                href={routes.profileDeleteFlickEntry({
-                  profileId: Number(profileId),
-                  profileName,
+                href={routes.profiles.deleteFlick({
                   flickId: entry.flickId
                 })}
               >
@@ -192,14 +191,12 @@ export default function ProfilePage() {
             </div>
           ))}
 
-        {isAuthenticatedUser && (
+        {isAuthUserProfile && (
           <div>
-            <Link href={routes.profileAddFlickEntry({ profileId: Number(profileId), profileName })}>
-              Add
-            </Link>
+            <Link href={routes.profiles.addFlick()}>Add</Link>
           </div>
         )}
-      </div>
-    </div>
+      </Card>
+    </Page>
   );
 }

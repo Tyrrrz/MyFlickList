@@ -2,7 +2,7 @@ import { useLocation, useParams as useRouteParams } from 'react-router';
 
 export default function useParams() {
   const routeParamsRaw = useRouteParams();
-  const { search } = useLocation();
+  const location = useLocation();
 
   const routeParams = Object.fromEntries(
     Object.entries(routeParamsRaw)
@@ -10,10 +10,10 @@ export default function useParams() {
       .map(([key, value]) => [key, decodeURIComponent(value as string)] as const)
   );
 
-  const queryParams = Object.fromEntries(new URLSearchParams(search).entries());
+  const queryParams = Object.fromEntries(new URLSearchParams(location.search).entries());
 
-  return {
+  return <Record<string, string | undefined>>{
     ...queryParams,
     ...routeParams
-  } as Record<string, string>;
+  };
 }

@@ -1,27 +1,26 @@
+import classnames from 'classnames';
 import React from 'react';
 import { useLocation } from 'react-router';
-import { routes } from '../Routing';
-import Link from '../shared/Link';
-import Meta from '../shared/Meta';
+import dinoDizzy from '../assets/dino-dizzy.png';
+import Alert from '../components/Alert';
+import Link from '../components/Link';
+import Page from '../components/Page';
+import routes from '../routes';
 
 export default function NotFoundPage() {
-  const { pathname } = useLocation();
+  const location = useLocation();
 
   return (
-    <div>
-      <Meta title="Not Found" />
+    <Page title="Not Found">
+      <Alert type="error" title="Requested page does not exist" sub={`Path: ${location.pathname}`}>
+        <div className={classnames('flex')}>
+          <Link className={classnames('flex-grow')} href={routes.home()}>
+            Go home
+          </Link>
 
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Not Found</h1>
-
-        <p className="text-lg">
-          Requested page (<code>{pathname}</code>) does not exist
-        </p>
-
-        <div>
-          <Link href={routes.home()}>Return to home page</Link>
+          <img className={classnames('opacity-25')} src={dinoDizzy} width={100} height={100} />
         </div>
-      </div>
-    </div>
+      </Alert>
+    </Page>
   );
 }

@@ -7,10 +7,22 @@ module.exports = {
     './public/**/*.html'
   ],
   theme: {
-    extend: {}
+    extend: {
+      width: {
+        'fit-content': 'fit-content'
+      },
+      minWidth: {
+        '1/4': '25%',
+        '1/2': '50%',
+        '3/4': '75%'
+      }
+    }
   },
   variants: {
-    opacity: ['responsive', 'hover', 'focus', 'group-hover']
+    backgroundColor: ['hover', 'focus', 'disabled'],
+    borderColor: ['hover', 'focus', 'disabled'],
+    textColor: ['hover', 'focus', 'disabled'],
+    cursor: ['hover', 'focus', 'disabled']
   },
   plugins: [],
   future: {

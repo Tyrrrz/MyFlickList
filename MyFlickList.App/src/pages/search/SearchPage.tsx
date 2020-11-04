@@ -1,109 +1,118 @@
+import classnames from 'classnames';
 import React from 'react';
-import { useForm } from 'react-hook-form';
 import { FiCalendar, FiFilm, FiMapPin, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router';
-import api from '../../infra/api';
-import { FlickHelper, ProfileHelper } from '../../infra/helpers';
-import { slugify } from '../../infra/utils';
+import Card from '../../components/Card';
+import Form from '../../components/Form';
+import FormButton from '../../components/FormButton';
+import FormInput from '../../components/FormInput';
+import Link from '../../components/Link';
+import Page from '../../components/Page';
+import TagLink from '../../components/TagLink';
+import useParams from '../../context/useParams';
+import useQuery from '../../context/useQuery';
+import api from '../../internal/api';
+import {
+  formatKind,
+  formatRating,
+  formatYears,
+  getCoverImageUrl
+} from '../../internal/flickHelpers';
+import { getAvatarImageUrl } from '../../internal/profileHelpers';
+import { slugify } from '../../internal/utils';
 import routes from '../../routes';
-import Link from '../../shared/Link';
-import Meta from '../../shared/Meta';
-import useParams from '../../shared/useParams';
-import useQuery from '../../shared/useQuery';
 
 function SearchResultsSection({ query }: { query: string }) {
   const results = useQuery(() => api.search().search(query), ['search', query]);
 
-  const isNothingFound =
-    (!results.flicks || results.flicks.length <= 0) &&
-    (!results.profiles || results.profiles.length <= 0);
-
   return (
-    <div className="space-y-5">
+    <>
       {/* Flicks */}
-      {results.flicks && results.flicks.length > 0 && (
-        <div className="space-y-3">
-          {/* Count */}
-          <div className="flex flex-row items-center space-x-5">
-            <div className="text-2xl font-thin tracking-wide">Flicks ({results.flicks.length})</div>{' '}
-            <hr className="flex-grow" />
-          </div>
+      <Card>
+        {/* Count */}
+        <div className={classnames('text-2xl', 'font-thin', 'tracking-wide')}>
+          Flicks ({results.flicks?.length || 0})
+        </div>
 
-          {results.flicks.map((flick) => (
-            <div key={flick.id} className="flex flex-row space-x-3">
+        {results.flicks && results.flicks.length > 0 ? (
+          results.flicks.map((flick) => (
+            <div key={flick.id} className={classnames('flex', 'space-x-3')}>
               <div>
                 <img
-                  className="rounded shadow"
+                  className={classnames('rounded', 'shadow')}
                   alt={flick.title}
-                  src={new FlickHelper(flick).getCoverImageUrl()}
+                  src={getCoverImageUrl(flick)}
                   width={100}
                   height={150}
                 />
               </div>
 
-              <div>
+              <div className={classnames('flex', 'flex-col')}>
                 <div>
                   <Link
-                    className="text-lg tracking-wide truncate"
-                    href={routes.flick({
+                    className={classnames('text-lg', 'font-semibold', 'truncate')}
+                    href={routes.flicks.specific({
                       flickId: flick.id,
                       flickTitle: slugify(flick.title)
                     })}
+                    underline={false}
                   >
                     {flick.title}
                   </Link>
                 </div>
 
                 {/* Kind */}
-                <div className="flex flex-row items-center space-x-1">
+                <div className={classnames('flex', 'items-center', 'space-x-1')}>
                   <FiFilm strokeWidth={1} />
-                  <div>{new FlickHelper(flick).formatKind()}</div>
+                  <div>{formatKind(flick)}</div>
                 </div>
 
                 {/* Years */}
-                <div className="flex flex-row items-center space-x-1">
+                <div className={classnames('flex', 'items-center', 'space-x-1')}>
                   <FiCalendar strokeWidth={1} />
-                  <div>{new FlickHelper(flick).formatYears()}</div>
+                  <div>{formatYears(flick)}</div>
                 </div>
 
                 {/* Rating */}
-                <div className="flex flex-row items-center space-x-1">
+                <div className={classnames('flex', 'items-center', 'space-x-1')}>
                   <FiStar strokeWidth={1} />
-                  <div>{new FlickHelper(flick).formatRating()}</div>
+                  <div>{formatRating(flick)}</div>
                 </div>
 
+                {/* Spacer */}
+                <div className={classnames('flex-grow')} />
+
                 {/* Tags */}
-                <div className="mt-1 flex flex-row space-x-1">
+                <div className={classnames('flex', 'items-center', 'space-x-1')}>
                   {flick.tags?.map((tag) => (
-                    <div key={tag} className="px-3 py-1 rounded bg-gray-200 text-sm">
-                      <Link href={routes.flicks({ filterTag: tag })}>{tag}</Link>
-                    </div>
+                    <TagLink key={tag} href={routes.flicks.all({ tag })}>
+                      {tag}
+                    </TagLink>
                   ))}
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        ) : (
+          <div>Not found</div>
+        )}
+      </Card>
 
       {/* Profiles */}
-      {results.profiles && results.profiles.length > 0 && (
-        <div className="space-y-3">
-          {/* Count */}
-          <div className="flex flex-row items-center space-x-5">
-            <div className="text-2xl font-thin tracking-wide">
-              Profiles ({results.profiles.length})
-            </div>{' '}
-            <hr className="flex-grow" />
-          </div>
+      <Card>
+        {/* Count */}
+        <div className={classnames('text-2xl', 'font-thin', 'tracking-wide')}>
+          Profiles ({results.profiles?.length || 0})
+        </div>
 
-          {results.profiles.map((profile) => (
-            <div key={profile.id} className="flex flex-row space-x-3">
+        {results.profiles && results.profiles.length > 0 ? (
+          results.profiles.map((profile) => (
+            <div key={profile.id} className={classnames('flex', 'space-x-3')}>
               <div>
                 <img
-                  className="rounded-full shadow"
+                  className={classnames('rounded-full', 'shadow')}
                   alt={profile.name}
-                  src={new ProfileHelper(profile).getAvatarImageUrl()}
+                  src={getAvatarImageUrl(profile)}
                   width={100}
                   height={100}
                 />
@@ -112,79 +121,72 @@ function SearchResultsSection({ query }: { query: string }) {
               <div>
                 <div>
                   <Link
-                    className="text-lg tracking-wide truncate"
-                    href={routes.profile({
+                    className={classnames('text-lg', 'font-semibold', 'truncate')}
+                    href={routes.profiles.specific({
                       profileId: profile.id,
                       profileName: profile.name
                     })}
+                    underline={false}
                   >
                     {profile.name}
                   </Link>
                 </div>
 
                 {/* Location */}
-                <div className="flex flex-row items-center space-x-1">
+                <div className={classnames('flex', 'items-center', 'space-x-1')}>
                   <FiMapPin strokeWidth={1} />
                   <div>{profile.location || '--'}</div>
                 </div>
 
                 {/* Watched */}
-                <div className="flex flex-row items-center space-x-1">
+                <div className={classnames('flex', 'items-center', 'space-x-1')}>
                   <FiFilm strokeWidth={1} />
-                  <div>123 watched</div>
+                  <div>{profile.flickEntriesCount} entries</div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Postscriptum */}
-      <div>
-        {isNothingFound && <p className="text-3xl text-center font-thin">Nothing found :(</p>}
-
-        <p className="text-lg text-center font-thin">
-          Didn&apos;t find what you were looking for? You can{' '}
-          <Link href={routes.flickAdd()}>request</Link> a new flick to be added.
-        </p>
-      </div>
-    </div>
+          ))
+        ) : (
+          <div>Not found</div>
+        )}
+      </Card>
+    </>
   );
 }
 
 export default function SearchPage() {
   const history = useHistory();
   const { query } = useParams();
-  const { register, handleSubmit } = useForm({ defaultValues: { query } });
 
   return (
-    <div>
-      <Meta title="Search" />
-
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Search</h1>
-
-        <form
-          className="w-full flex flex-row text-xl space-x-2"
-          onSubmit={handleSubmit((data) => {
-            history.push(routes.search({ query: data.query as string }));
-          })}
+    <Page title="Search">
+      <Card>
+        <Form
+          orientation="horizontal"
+          defaultValues={{ query }}
+          onSubmit={(data) => {
+            history.push(routes.search({ query: data.query }));
+          }}
         >
-          <input
-            className="flex-grow"
+          <FormInput
+            className={classnames('flex-grow')}
             type="search"
             name="query"
             autoFocus
             required
             placeholder="Search"
-            ref={register}
           />
 
-          <button type="submit">Search</button>
-        </form>
+          <FormButton isSubmit={true}>Search</FormButton>
+        </Form>
 
-        {query && <SearchResultsSection query={query} />}
-      </div>
-    </div>
+        <div className={classnames('text-lg', 'text-center', 'font-thin')}>
+          Can&apos;t find a specific flick? You can <Link href={routes.flicks.add()}>request</Link>{' '}
+          it to be added
+        </div>
+      </Card>
+
+      {query && <SearchResultsSection query={query} />}
+    </Page>
   );
 }

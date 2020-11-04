@@ -1,0 +1,66 @@
+import classnames from 'classnames';
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
+
+interface FormInputProps {
+  className?: string;
+  type?: 'text' | 'number' | 'date' | 'password' | 'email' | 'search' | 'submit';
+  name: string;
+  icon?: React.ReactNode;
+  label?: string;
+  autoFocus?: boolean;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  hidden?: boolean;
+}
+
+export default function FormInput({ className, name, icon, label, ...props }: FormInputProps) {
+  const form = useFormContext();
+
+  return (
+    <div className={className}>
+      {label && (
+        <label
+          className={classnames(
+            'w-full',
+            'mb-1',
+            'flex',
+            'flex-row',
+            'items-center',
+            'space-x-1',
+            'font-semibold'
+          )}
+          htmlFor={name}
+        >
+          {icon}
+          <div>{label}</div>
+        </label>
+      )}
+
+      <input
+        {...props}
+        className={classnames(
+          'w-full',
+          'px-4',
+          'py-2',
+          'border',
+          'border-gray-400',
+          'rounded-md',
+          'text-gray-700',
+          'hover:border-gray-500',
+          'focus:border-gray-500',
+          'focus:outline-none',
+          'disabled:bg-gray-100',
+          'disabled:text-gray-600',
+          'disabled:cursor-not-allowed'
+        )}
+        name={name}
+        ref={form.register}
+      />
+    </div>
+  );
+}

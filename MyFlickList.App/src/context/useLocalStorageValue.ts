@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import useLocalStorage from './useLocalStorage';
 
-export default function useLocalStorageEntry(key: string) {
-  const [localStorage, setLocalStorage] = useLocalStorage();
+export default function useLocalStorageValue(key: string) {
+  const { localStorage, setLocalStorage } = useLocalStorage();
 
   const entry = localStorage[key];
 

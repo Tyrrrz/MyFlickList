@@ -1,15 +1,13 @@
 import React from 'react';
-import Link from '../../shared/Link';
-import Meta from '../../shared/Meta';
+import Card from '../../components/Card';
+import HorizontalSeparator from '../../components/HorizontalSeparator';
+import Link from '../../components/Link';
+import Page from '../../components/Page';
 
 export default function DonatePage() {
   return (
-    <div>
-      <Meta title="Feedback" />
-
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Feedback</h1>
-
+    <Page title="Feedback">
+      <Card>
         <p>
           If you found a <i>bug</i> or have a <i>feature</i> suggestion, you can submit it in a form
           of a GitHub issue. As MyFlickList is completely open source, GitHub is used as the primary
@@ -20,7 +18,7 @@ export default function DonatePage() {
           on the official Discord server. Please avoid creating new issues for questions.
         </p>
 
-        <hr className="w-3/4 mx-auto" />
+        <HorizontalSeparator />
 
         <div className="grid grid-cols-2 gap-4">
           {/* Bugs & features */}
@@ -28,9 +26,7 @@ export default function DonatePage() {
 
           <div>
             <div>
-              <Link href="https://github.com/Tyrrrz/MyFlickList/issues" target="_blank">
-                GitHub Issues
-              </Link>
+              <Link href="https://github.com/Tyrrrz/MyFlickList/issues">GitHub Issues</Link>
             </div>
 
             <p className="text-sm italic">You will need a GitHub account to create new issues</p>
@@ -41,15 +37,13 @@ export default function DonatePage() {
 
           <div>
             <div>
-              <Link href="https://discord.gg/hgVa7qS" target="_blank">
-                Discord Server
-              </Link>
+              <Link href="https://discord.gg/hgVa7qS">Discord Server</Link>
             </div>
 
             <p className="text-sm italic">You will need a Discord account to join</p>
           </div>
         </div>
-      </div>
-    </div>
+      </Card>
+    </Page>
   );
 }

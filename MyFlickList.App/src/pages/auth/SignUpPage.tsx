@@ -1,135 +1,94 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import classnames from 'classnames';
+import React from 'react';
 import { FiAtSign, FiLock, FiUser } from 'react-icons/fi';
-import { useHistory } from 'react-router';
-import api from '../../infra/api';
+import { Redirect, useHistory } from 'react-router';
+import Card from '../../components/Card';
+import Form from '../../components/Form';
+import FormButton from '../../components/FormButton';
+import FormInput from '../../components/FormInput';
+import Page from '../../components/Page';
+import useAuth from '../../context/useAuth';
+import api from '../../internal/api';
 import routes from '../../routes';
-import ErrorAlert from '../../shared/ErrorAlert';
-import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
-
-interface FormData {
-  username: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-}
 
 export default function SignUpPage() {
-  const [token] = useAuthToken();
   const history = useHistory();
-  const { register, handleSubmit, formState } = useForm<FormData>();
-  const [error, setError] = useState<unknown>();
+  const auth = useAuth();
+
+  // If already signed in, redirect to profile
+  if (auth.token) {
+    return <Redirect to={routes.profiles.current()} />;
+  }
 
   return (
-    <div>
-      <Meta title="Sign up" />
-
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Sign up</h1>
-
-        <p>Create a profile and start tracking your favorite movies and shows!</p>
-
-        <form
-          className="space-y-5"
-          onSubmit={handleSubmit(async (data) => {
-            try {
-              if (data.password !== data.passwordConfirm) {
-                throw Error('Passwords must match');
-              }
-
-              await api.auth(token).signUp(data);
-              history.push(routes.signIn());
-            } catch (error) {
-              setError(error);
+    <Page title="Sign up">
+      <Card className={classnames(['w-1/2', 'mx-auto'])}>
+        <Form
+          defaultValues={{
+            username: '',
+            email: '',
+            password: '',
+            passwordConfirm: ''
+          }}
+          onSubmit={async (data) => {
+            if (data.password !== data.passwordConfirm) {
+              throw Error('Passwords must match');
             }
-          })}
+
+            await api.auth().signUp(data);
+            history.push(routes.auth.signIn());
+          }}
         >
-          <div>
-            <label className="flex flex-row items-center space-x-1" htmlFor="username">
-              <FiUser /> <div>Username:</div>
-            </label>
-            <input
-              className="w-1/3"
-              type="text"
-              name="username"
-              autoFocus
-              required
-              minLength={3}
-              maxLength={48}
-              pattern="^[a-zA-Z0-9_\-]+$"
-              placeholder="john_titor1"
-              ref={register}
-            />
-            <div className="mt-2 text-sm text-gray-600 italic">
-              <ul>
-                <li>At least 3 characters</li>
-                <li>At most 48 characters</li>
-                <li>Only latin letters, digits, underscores, and dashes</li>
-              </ul>
-            </div>
-          </div>
+          <FormInput
+            type="text"
+            name="username"
+            icon={<FiUser />}
+            label="Username"
+            required
+            minLength={3}
+            maxLength={48}
+            pattern="^[a-zA-Z0-9_\-]+$"
+            placeholder="john_titor1"
+          />
 
-          <div>
-            <label className="flex flex-row items-center space-x-1" htmlFor="email">
-              <FiAtSign /> <div>Email:</div>
-            </label>
-            <input
-              className="w-1/3"
-              type="email"
-              name="email"
-              required
-              minLength={3}
-              maxLength={256}
-              placeholder="sern@dmail.com"
-              ref={register}
-            />
-          </div>
+          <FormInput
+            type="email"
+            name="email"
+            icon={<FiAtSign />}
+            label="Email"
+            required
+            minLength={3}
+            maxLength={256}
+            placeholder="sern@dmail.com"
+          />
 
-          <div>
-            <label className="flex flex-row items-center space-x-1" htmlFor="password">
-              <FiLock /> <div>Password:</div>
-            </label>
-            <input
-              className="w-1/3"
-              type="password"
-              name="password"
-              required
-              minLength={6}
-              maxLength={1024}
-              placeholder="••••••"
-              ref={register}
-            />
-            <div className="mt-2 text-sm text-gray-600 italic">
-              <ul>
-                <li>At least 6 characters</li>
-              </ul>
-            </div>
-          </div>
+          <FormInput
+            type="password"
+            name="password"
+            icon={<FiLock />}
+            label="Password"
+            required
+            minLength={6}
+            maxLength={1024}
+            placeholder="••••••"
+          />
 
-          <div>
-            <label className="flex flex-row items-center space-x-1" htmlFor="passwordConfirm">
-              <FiLock /> <div>Password (confirm):</div>
-            </label>
-            <input
-              className="w-1/3"
-              type="password"
-              name="passwordConfirm"
-              required
-              minLength={6}
-              maxLength={1024}
-              placeholder="••••••"
-              ref={register}
-            />
-          </div>
+          <FormInput
+            type="password"
+            name="passwordConfirm"
+            icon={<FiLock />}
+            label="Password (confirm)"
+            required
+            minLength={6}
+            maxLength={1024}
+            placeholder="••••••"
+          />
 
-          <ErrorAlert error={error} />
-
-          <button type="submit" disabled={formState.isSubmitting}>
+          <FormButton className={classnames(['w-full'])} isSubmit={true}>
             Sign up
-          </button>
-        </form>
-      </div>
-    </div>
+          </FormButton>
+        </Form>
+      </Card>
+    </Page>
   );
 }

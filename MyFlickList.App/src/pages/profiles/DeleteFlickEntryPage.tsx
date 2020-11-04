@@ -1,68 +1,66 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQueryCache } from 'react-query';
-import { useHistory } from 'react-router';
-import api from '../../infra/api';
+import { Redirect, useHistory } from 'react-router';
+import Card from '../../components/Card';
+import Form from '../../components/Form';
+import FormButton from '../../components/FormButton';
+import Page from '../../components/Page';
+import useAuth from '../../context/useAuth';
+import useParams from '../../context/useParams';
+import useQuery from '../../context/useQuery';
+import api from '../../internal/api';
 import routes from '../../routes';
-import ErrorAlert from '../../shared/ErrorAlert';
-import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
-import useParams from '../../shared/useParams';
-import useQuery from '../../shared/useQuery';
 
 export default function DeleteFlickEntryPage() {
   const history = useHistory();
-  const { profileId, profileName, flickId } = useParams();
-  const [token] = useAuthToken();
-
+  const { flickId } = useParams();
+  const auth = useAuth();
   const queryCache = useQueryCache();
+
+  const profileId = auth.token?.getProfileId() || -1;
+
   const flickEntry = useQuery(
-    () => api.profiles(token).getFlickEntry(Number(profileId), Number(flickId)),
+    () => api.profiles(auth.token?.value).getFlickEntry(profileId, Number(flickId)),
     ['flickEntry', profileId, flickId]
   );
 
-  const [error, setError] = useState<unknown>();
+  // If not signed in, redirect to sign in page
+  if (!auth.token) {
+    return <Redirect to={routes.auth.signIn()} />;
+  }
 
   return (
-    <div>
-      <Meta title="Remove Flick from Profile" />
+    <Page title="Profile - Remove Flick">
+      <Card>
+        <Form
+          onSubmit={async () => {
+            await api
+              .profiles(auth.token?.value)
+              .deleteFlickEntry(flickEntry.profileId, flickEntry.flickId);
 
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Remove Flick from Profile</h1>
+            queryCache.clear();
+            history.push(routes.profiles.current());
+          }}
+        >
+          <p>
+            Are you sure you want to remove{' '}
+            <span className="font-semibold">{flickEntry.flickTitle}</span> from your profile?
+          </p>
 
-        <p>
-          Are you sure you want to remove{' '}
-          <span className="font-semibold">{flickEntry.flickTitle}</span> from your profile?
-        </p>
+          <div className="flex flex-row items-center space-x-2">
+            <FormButton isSubmit={true}>Delete</FormButton>
 
-        <ErrorAlert error={error} />
-
-        <div className="flex flex-row items-center space-x-2">
-          <button
-            type="submit"
-            onClick={async (e) => {
-              try {
+            <FormButton
+              onClick={(e) => {
                 e.preventDefault();
-                await api.profiles(token).deleteFlickEntry(Number(profileId), Number(flickId));
-                queryCache.clear();
-                history.push(routes.profile({ profileId: Number(profileId), profileName }));
-              } catch (error) {
-                setError(error);
-              }
-            }}
-          >
-            Delete
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              history.goBack();
-            }}
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
+                history.goBack();
+              }}
+            >
+              Cancel
+            </FormButton>
+          </div>
+        </Form>
+      </Card>
+    </Page>
   );
 }

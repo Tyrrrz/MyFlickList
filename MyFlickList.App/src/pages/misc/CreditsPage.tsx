@@ -1,21 +1,19 @@
 import React from 'react';
-import Link from '../../shared/Link';
-import Meta from '../../shared/Meta';
+import Card from '../../components/Card';
+import HorizontalSeparator from '../../components/HorizontalSeparator';
+import Link from '../../components/Link';
+import Page from '../../components/Page';
 
 export default function CreditsPage() {
   return (
-    <div>
-      <Meta title="Credits" />
-
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Credits</h1>
-
+    <Page title="Credits">
+      <Card>
         <p>
           This page lists all external assets used by MyFlickList that require formal attribution,
           along with their corresponding licenses.
         </p>
 
-        <hr className="w-3/4 mx-auto" />
+        <HorizontalSeparator />
 
         {/* Graphics */}
         <div className="grid grid-cols-2 gap-4">
@@ -24,13 +22,10 @@ export default function CreditsPage() {
           <div>
             <ul>
               <li>
-                <Link href="https://feathericons.com" target="_blank">
-                  Feather Icons
-                </Link>{' '}
-                (MIT License)
+                <Link href="https://feathericons.com">Feather Icons</Link> (MIT License)
               </li>
               <li>
-                <Link href="https://flaticon.com/free-icon/tv-monitor_2916372" target="_blank">
+                <Link href="https://flaticon.com/free-icon/tv-monitor_2916372">
                   TV Monitor icon by surang
                 </Link>{' '}
                 (Flaticon License)
@@ -38,7 +33,7 @@ export default function CreditsPage() {
             </ul>
           </div>
         </div>
-      </div>
-    </div>
+      </Card>
+    </Page>
   );
 }

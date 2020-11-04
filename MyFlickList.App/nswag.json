@@ -113,7 +113,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "src/infra/api.generated.ts",
+      "output": "src/internal/api.generated.ts",
       "newLineBehavior": "Auto"
     }
   }

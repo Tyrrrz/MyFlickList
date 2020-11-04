@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React from 'react';
 import { useQueryCache } from 'react-query';
-import { useHistory } from 'react-router';
-import api from '../../infra/api';
-import { ProfileFlickEntryStatus } from '../../infra/api.generated';
+import { Redirect, useHistory } from 'react-router';
+import Card from '../../components/Card';
+import Form from '../../components/Form';
+import FormButton from '../../components/FormButton';
+import FormInput from '../../components/FormInput';
+import FormSelect from '../../components/FormSelect';
+import FormTextArea from '../../components/FormTextArea';
+import Page from '../../components/Page';
+import useAuth from '../../context/useAuth';
+import useParams from '../../context/useParams';
+import useQuery from '../../context/useQuery';
+import api from '../../internal/api';
+import { ProfileFlickEntryStatus } from '../../internal/api.generated';
 import routes from '../../routes';
-import ErrorAlert from '../../shared/ErrorAlert';
-import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
-import useParams from '../../shared/useParams';
-import useQuery from '../../shared/useQuery';
 
-interface FormData {
+interface FormValues {
   status?: ProfileFlickEntryStatus;
   episodeCount?: number;
   rating?: number;
@@ -20,89 +24,80 @@ interface FormData {
 
 export default function EditFlickEntryPage() {
   const history = useHistory();
-  const { profileId, profileName, flickId } = useParams();
-  const [token] = useAuthToken();
-
+  const { flickId } = useParams();
+  const auth = useAuth();
   const queryCache = useQueryCache();
+
+  const profileId = auth.token?.getProfileId() || -1;
+
   const flickEntry = useQuery(
-    () => api.profiles(token).getFlickEntry(Number(profileId), Number(flickId)),
+    () => api.profiles(auth.token?.value).getFlickEntry(profileId, Number(flickId)),
     ['flickEntry', profileId, flickId]
   );
 
-  const { register, handleSubmit } = useForm<FormData>({ defaultValues: flickEntry });
-  const [error, setError] = useState<unknown>();
+  // If not signed in, redirect to sign in page
+  if (!auth.token) {
+    return <Redirect to={routes.auth.signIn()} />;
+  }
+
+  const defaultFormValues: FormValues = { ...flickEntry };
 
   return (
-    <div>
-      <Meta title="Edit Flick Entry" />
+    <Page title="Profile - Edit Flick">
+      <Card>
+        <Form
+          defaultValues={defaultFormValues}
+          onSubmit={async (data) => {
+            await api
+              .profiles(auth.token?.value)
+              .putFlickEntry(flickEntry.profileId, flickEntry.flickId, data);
 
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Edit Flick Entry</h1>
-
-        <form
-          className="space-y-5"
-          onSubmit={handleSubmit(async (data) => {
-            try {
-              await api.profiles(token).putFlickEntry(Number(profileId), Number(flickId), data);
-              queryCache.clear();
-              history.push(routes.profile({ profileId: Number(profileId), profileName }));
-            } catch (error) {
-              setError(error);
-            }
-          })}
+            queryCache.clear();
+            history.push(routes.profiles.current());
+          }}
         >
-          <div>
-            <label htmlFor="flickId">Flick ID:</label>
-            <input className="w-1/3" type="text" name="flickId" value={flickId} disabled />
-          </div>
+          <FormInput name="flickId" label="Flick ID" disabled />
 
-          <div>
-            <label htmlFor="status">Status:</label>
-            <select className="w-1/3" name="status" ref={register}>
-              <option value="Planned">Plan to watch</option>
-              <option value="Watching">Currently watching</option>
-              <option value="Watched">Already watched</option>
-              <option value="Dropped">Dropped</option>
-            </select>
-          </div>
+          <FormSelect
+            name="status"
+            label="Status"
+            options={[
+              { label: 'Plan to watch', value: 'Planned' },
+              { label: 'Currently watching', value: 'Watching' },
+              { label: 'Already watched', value: 'Watched' },
+              { label: 'Dropped', value: 'Dropped' }
+            ]}
+          />
 
-          <div>
-            <label htmlFor="episodeCount">Episodes:</label>
-            <input className="w-1/3" type="number" name="episodeCount" ref={register} />
-          </div>
+          <FormInput name="episodeCount" label="Episodes" />
 
-          <div>
-            <label htmlFor="rating">Rating:</label>
-            <select className="w-1/3" name="rating" ref={register}>
-              <option value="0">Horrible</option>
-              <option value="0.5">Average</option>
-              <option value="1">Amazing</option>
-            </select>
-          </div>
+          <FormSelect
+            name="rating"
+            label="Rating"
+            options={[
+              { label: 'Unrated', value: null },
+              { label: 'Horrible', value: 0 },
+              { label: 'Average', value: 0.5 },
+              { label: 'Amazing', value: 1 }
+            ]}
+          />
 
-          <div>
-            <label htmlFor="review">Review:</label>
-            <textarea name="review" cols={50} rows={5} ref={register} />
-          </div>
-
-          <hr />
-
-          <ErrorAlert error={error} />
+          <FormTextArea name="review" label="Review" />
 
           <div className="flex flex-row items-center space-x-2">
-            <button type="submit">Save</button>
+            <FormButton isSubmit={true}>Add</FormButton>
 
-            <button
+            <FormButton
               onClick={(e) => {
                 e.preventDefault();
                 history.goBack();
               }}
             >
               Cancel
-            </button>
+            </FormButton>
           </div>
-        </form>
-      </div>
-    </div>
+        </Form>
+      </Card>
+    </Page>
   );
 }

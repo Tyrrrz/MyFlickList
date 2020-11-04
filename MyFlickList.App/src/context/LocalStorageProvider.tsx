@@ -2,15 +2,18 @@ import React, { createContext, Dispatch, SetStateAction, useEffect, useState } f
 
 type LocalStorage = Record<string, string | undefined>;
 
-type LocalStorageContextValue = [LocalStorage, Dispatch<SetStateAction<LocalStorage>>];
+interface LocalStorageContextValue {
+  localStorage: LocalStorage;
+  setLocalStorage: Dispatch<SetStateAction<LocalStorage>>;
+}
 
 // Used when there is no provider in the tree
-const dummyContextValue: LocalStorageContextValue = [
-  {},
-  () => {
+const dummyContextValue: LocalStorageContextValue = {
+  localStorage: {},
+  setLocalStorage: () => {
     // Do nothing
   }
-];
+};
 
 export const LocalStorageContext = createContext<LocalStorageContextValue>(dummyContextValue);
 
@@ -34,7 +37,7 @@ export default function LocalStorageProvider({ children }: LocalStorageProviderP
   }, [localStorage]);
 
   return (
-    <LocalStorageContext.Provider value={[localStorage, setLocalStorage]}>
+    <LocalStorageContext.Provider value={{ localStorage, setLocalStorage }}>
       {children}
     </LocalStorageContext.Provider>
   );

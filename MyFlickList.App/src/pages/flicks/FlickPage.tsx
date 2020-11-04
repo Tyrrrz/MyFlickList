@@ -1,227 +1,193 @@
-import React, { useEffect } from 'react';
-import { FiCalendar, FiClock, FiFilm, FiStar } from 'react-icons/fi';
-import { useHistory } from 'react-router';
-import api from '../../infra/api';
-import config from '../../infra/config';
-import { FlickHelper } from '../../infra/helpers';
-import { getAbsoluteUrl, slugify } from '../../infra/utils';
+import classnames from 'classnames';
+import React from 'react';
+import { AiOutlineReddit } from 'react-icons/ai';
+import { FiCalendar, FiClock, FiFacebook, FiFilm, FiStar, FiTwitter } from 'react-icons/fi';
+import Alert from '../../components/Alert';
+import Card from '../../components/Card';
+import HorizontalSeparator from '../../components/HorizontalSeparator';
+import Link from '../../components/Link';
+import Page from '../../components/Page';
+import TagLink from '../../components/TagLink';
+import VerticalSeparator from '../../components/VerticalSeparator';
+import useAuth from '../../context/useAuth';
+import useCanonicalUrl from '../../context/useCanonicalUrl';
+import useParams from '../../context/useParams';
+import useQuery from '../../context/useQuery';
+import api from '../../internal/api';
+import config from '../../internal/config';
+import {
+  formatFirstAired,
+  formatKind,
+  formatLastAired,
+  formatRating,
+  formatRuntime,
+  formatYears,
+  getCoverImageUrl
+} from '../../internal/flickHelpers';
+import {
+  createFacebookShareLink,
+  createRedditShareLink,
+  createTwitterShareLink
+} from '../../internal/socialHelpers';
+import { getAbsoluteUrl, slugify } from '../../internal/utils';
 import routes from '../../routes';
-import Link from '../../shared/Link';
-import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
-import useParams from '../../shared/useParams';
-import useQuery from '../../shared/useQuery';
-
-function getNetworkLinks(flickTitle: string, imdbId: string) {
-  return [
-    {
-      name: 'IMDB',
-      url: 'https://imdb.com/title/' + encodeURIComponent(imdbId)
-    },
-    {
-      name: 'TMDB',
-      url: 'https://themoviedb.org/search?' + new URLSearchParams({ query: flickTitle }).toString()
-    },
-    {
-      name: 'Netflix',
-      url: 'https://netflix.com/search?' + new URLSearchParams({ q: flickTitle }).toString()
-    },
-    {
-      name: 'HBO',
-      url: 'https://hbo.com/searchresults?' + new URLSearchParams({ q: flickTitle }).toString()
-    }
-  ];
-}
-
-function getShareLinks(flickId: number, flickTitle: string) {
-  const selfUrl = getAbsoluteUrl(
-    config.appUrl,
-    routes.flick({ flickId, flickTitle: slugify(flickTitle) })
-  );
-
-  return [
-    {
-      name: 'Twitter',
-      url:
-        'https://twitter.com/share?' +
-        new URLSearchParams({
-          related: config.appUrl,
-          via: 'myflicklist',
-          url: selfUrl,
-          text: flickTitle,
-          hashtags: 'myflicklist'
-        }).toString()
-    },
-    {
-      name: 'Reddit',
-      url:
-        'https://reddit.com/submit?' +
-        new URLSearchParams({ url: selfUrl, title: flickTitle }).toString()
-    },
-    {
-      name: 'Facebook',
-      url: 'https://facebook.com/share.php?' + new URLSearchParams({ u: selfUrl }).toString()
-    }
-  ];
-}
 
 export default function FlickPage() {
-  const history = useHistory();
-  const { flickId, flickTitle } = useParams();
-  const [token] = useAuthToken();
+  const { flickId } = useParams();
+  const auth = useAuth();
 
-  const flick = useQuery(() => api.flicks(token).getFlick(Number(flickId)), ['flick', flickId]);
+  const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(Number(flickId)), [
+    'flick',
+    flickId
+  ]);
 
-  // Normalize URL
-  useEffect(() => {
-    if (flickTitle !== slugify(flick.title)) {
-      history.replace(routes.flick({ flickId: flick.id, flickTitle: slugify(flick.title) }));
-    }
-  }, [flick.id, flick.title, history, flickTitle]);
+  const selfUrl = routes.flicks.specific({ flickId: flick.id, flickTitle: slugify(flick.title) });
+  const selfUrlAbsolute = getAbsoluteUrl(config.appUrl, selfUrl);
 
-  const flickHelper = new FlickHelper(flick);
+  useCanonicalUrl(selfUrl);
 
   return (
-    <div>
-      <Meta
-        title={flick.title}
-        description={flick.synopsis}
-        imageUrl={flickHelper.getCoverImageUrl()}
-        contentType={flick.kind === 'Movie' ? 'video.movie' : 'video.tv_show'}
-      />
+    <Page
+      title={flick.title}
+      description={flick.synopsis}
+      imageUrl={getCoverImageUrl(flick)}
+      contentType={flick.kind === 'Movie' ? 'video.movie' : 'video.tv_show'}
+    >
+      <Card>
+        <div className={classnames('flex', 'space-x-10')}>
+          {/* Flick info */}
+          <div className={classnames('flex', 'flex-col', 'flex-grow', 'space-y-3')}>
+            <div>
+              {/* Title */}
+              <p className={classnames('tracking-wide', 'truncate', 'text-3xl')}>{flick.title}</p>
 
-      <div className="w-3/4 mx-auto flex flex-row space-x-10">
-        {/* Flick info */}
-        <div className="flex-grow space-y-3">
-          <div>
-            {/* Title */}
-            <h1 className="tracking-wide truncate">{flick.title}</h1>
+              {/* Metadata */}
+              <div className={classnames('-mt-1', 'flex', 'text-lg', 'font-light', 'space-x-3')}>
+                {/* Kind */}
+                <div className={classnames('flex', 'items-center', 'space-x-2')}>
+                  <FiFilm strokeWidth={1} />
+                  <div>{formatKind(flick)}</div>
+                </div>
 
-            {/* Metadata */}
-            <div className="-mt-1 flex flex-row text-lg font-light space-x-3">
-              {/* Kind */}
-              <div className="flex flex-row items-center space-x-2">
-                <FiFilm strokeWidth={1} />
-                <div>{flickHelper.formatKind()}</div>
-              </div>
+                {/* Separator */}
+                <VerticalSeparator />
 
-              {/* Separator */}
-              <div className="w-px h-6 mt-1 border border-gray-200" />
+                {/* Runtime */}
+                <div className={classnames('flex', 'items-center', 'space-x-2')}>
+                  <FiClock strokeWidth={1} />
+                  <div>{formatRuntime(flick)}</div>
+                </div>
 
-              {/* Runtime */}
-              <div className="flex flex-row items-center space-x-2">
-                <FiClock strokeWidth={1} />
-                <div>{flickHelper.formatRuntime()}</div>
-              </div>
+                {/* Separator */}
+                <VerticalSeparator />
 
-              {/* Separator */}
-              <div className="w-px h-6 mt-1 border border-gray-200" />
+                {/* Years */}
+                <div className={classnames('flex', 'items-center', 'space-x-2')}>
+                  <FiCalendar strokeWidth={1} />
+                  <div>{formatYears(flick)}</div>
+                </div>
 
-              {/* Years */}
-              <div className="flex flex-row items-center space-x-2">
-                <FiCalendar strokeWidth={1} />
-                <div>{flickHelper.formatYears()}</div>
-              </div>
+                {/* Separator */}
+                <VerticalSeparator />
 
-              {/* Separator */}
-              <div className="w-px h-6 mt-1 border border-gray-200" />
-
-              {/* Rating */}
-              <div className="flex flex-row items-center space-x-2 font-normal">
-                <FiStar strokeWidth={1} fill="#f6ad55" />
-                <div>{flickHelper.formatRating()}</div>
+                {/* Rating */}
+                <div className={classnames('flex', 'items-center', 'space-x-2', 'font-normal')}>
+                  <FiStar strokeWidth={1} fill="#f6ad55" />
+                  <div>{formatRating(flick)}</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Synopsis */}
-          <article className="text-gray-800">{flick.synopsis}</article>
+            {/* Synopsis */}
+            <article className={classnames('text-gray-800')}>{flick.synopsis}</article>
 
-          {/* Tags */}
-          <div className="flex flex-row space-x-1">
-            {flick.tags?.map((tag) => (
-              <div key={tag} className="px-3 py-1 rounded bg-gray-200 text-sm">
-                <Link href={routes.flicks({ filterTag: tag })}>{tag}</Link>
-              </div>
-            ))}
-          </div>
-
-          {/* Additional info */}
-          <div className="text-sm">
-            {flick.originalTitle && (
-              <div className="space-x-1">
-                <span>Original title:</span>{' '}
-                <span className="font-semibold">{flick.originalTitle}</span>
-              </div>
-            )}
-
-            {flick.firstAired && (
-              <div className="space-x-1">
-                <span>First aired:</span>{' '}
-                <span className="font-semibold">{flickHelper.formatFirstAired()}</span>
-              </div>
-            )}
-
-            {flick.lastAired && (
-              <div className="space-x-1">
-                <span>Last aired:</span>{' '}
-                <span className="font-semibold">{flickHelper.formatLastAired()}</span>
-              </div>
-            )}
-          </div>
-
-          {/* Other sites */}
-          <div className="text-sm">
-            <div>Find on:</div>
-
-            <div className="flex flex-row pl-1 space-x-2">
-              {getNetworkLinks(flick.title, flick.imdbId).map((link) => (
-                <div key={link.name} className="inline">
-                  <Link href={link.url} target="_blank">
-                    {link.name}
-                  </Link>
-                </div>
+            {/* Tags */}
+            <div className={classnames('flex', 'space-x-1')}>
+              {flick.tags?.map((tag) => (
+                <TagLink key={tag} href={routes.flicks.all({ tag })}>
+                  {tag}
+                </TagLink>
               ))}
             </div>
-          </div>
 
-          {/* Share */}
-          <div className="text-sm">
-            <div>Share on:</div>
+            {/* Separator */}
+            <HorizontalSeparator />
 
-            <div className="flex flex-row pl-1 space-x-2">
-              {getShareLinks(flick.id, flick.title).map((link) => (
-                <div key={link.name} className="inline">
-                  <Link href={link.url} target="_blank">
-                    {link.name}
-                  </Link>
+            {/* Additional info */}
+            <div className={classnames('text-sm')}>
+              {flick.originalTitle && (
+                <div className={classnames('flex', 'space-x-1')}>
+                  <div>Original title:</div>
+                  <div className={classnames('font-semibold')}>{flick.originalTitle}</div>
                 </div>
-              ))}
+              )}
+
+              {flick.firstAired && (
+                <div className={classnames('flex', 'space-x-1')}>
+                  <div>First aired:</div>
+                  <div className={classnames('font-semibold')}>{formatFirstAired(flick)}</div>
+                </div>
+              )}
+
+              {flick.lastAired && (
+                <div className={classnames('flex', 'space-x-1')}>
+                  <div>Last aired:</div>
+                  <div className={classnames('font-semibold')}>{formatLastAired(flick)}</div>
+                </div>
+              )}
+            </div>
+
+            {/* Spacer */}
+            <div className={classnames('flex-grow')} />
+
+            {/* Share */}
+            <div className={classnames('flex', 'text-2xl', 'space-x-3')}>
+              <Link
+                href={createTwitterShareLink(selfUrlAbsolute, {
+                  text: flick.title,
+                  hashtags: flick.tags?.join(','),
+                  via: 'my_flick_list',
+                  related: config.appUrl
+                })}
+              >
+                <FiTwitter />
+              </Link>
+
+              <Link
+                href={createRedditShareLink(selfUrlAbsolute, {
+                  title: flick.title
+                })}
+              >
+                <AiOutlineReddit />
+              </Link>
+
+              <Link
+                href={createFacebookShareLink(selfUrlAbsolute, {
+                  title: flick.title
+                })}
+              >
+                <FiFacebook />
+              </Link>
             </div>
           </div>
-        </div>
 
-        {/* Cover */}
-        <div style={{ minWidth: 'max-content' }}>
-          <img
-            className="rounded-md shadow"
-            alt={flick.title}
-            src={flickHelper.getCoverImageUrl()}
-            width={230}
-            height={345}
-          />
+          {/* Cover */}
+          <div style={{ minWidth: 'max-content' }}>
+            <img
+              className={classnames('rounded-md', 'shadow')}
+              alt={flick.title}
+              src={getCoverImageUrl(flick)}
+              width={230}
+              height={345}
+            />
+          </div>
         </div>
-      </div>
-
-      {/* Separator */}
-      <hr className="w-1/2 my-8 mx-auto" />
+      </Card>
 
       {/* User listing */}
-      <div className="text-lg text-center">
-        Have you watched this {flick.kind.toLowerCase()}?
-        <br />
-        <Link href={routes.signIn()}>Sign in</Link> to add it to your list!
-      </div>
-    </div>
+      <Alert title={`Have you watched this ${flick.kind.toLowerCase()}?`}>
+        <Link href={routes.auth.signIn()}>Sign in</Link> to add it to your list!
+      </Alert>
+    </Page>
   );
 }

@@ -1,7 +1,8 @@
+import classnames from 'classnames';
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import config from '../infra/config';
-import { getAbsoluteUrl } from '../infra/utils';
+import config from '../internal/config';
+import { getAbsoluteUrl } from '../internal/utils';
 
 interface MetaProps {
   title?: string;
@@ -11,7 +12,7 @@ interface MetaProps {
   contentType?: 'website' | 'profile' | 'video.movie' | 'video.tv_show';
 }
 
-export default function Meta({ title, description, keywords, imageUrl, contentType }: MetaProps) {
+function Meta({ title, description, keywords, imageUrl, contentType }: MetaProps) {
   const defaults = {
     title: 'MyFlickList',
     description: 'Social cataloging app',
@@ -45,5 +46,18 @@ export default function Meta({ title, description, keywords, imageUrl, contentTy
       <meta name="twitter:description" content={actual.description} />
       <meta name="twitter:image" content={actual.imageUrl} />
     </Helmet>
+  );
+}
+
+interface PageProps extends MetaProps {
+  children?: React.ReactNode;
+}
+
+export default function Page({ children, ...props }: PageProps) {
+  return (
+    <div className={classnames('space-y-3')}>
+      <Meta {...props} />
+      {children}
+    </div>
   );
 }

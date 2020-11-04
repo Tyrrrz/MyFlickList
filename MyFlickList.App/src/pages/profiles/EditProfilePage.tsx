@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import React from 'react';
 import { useQueryCache } from 'react-query';
-import { useHistory } from 'react-router';
-import api from '../../infra/api';
+import { Redirect, useHistory } from 'react-router';
+import Card from '../../components/Card';
+import Form from '../../components/Form';
+import FormButton from '../../components/FormButton';
+import FormInput from '../../components/FormInput';
+import FormSelect from '../../components/FormSelect';
+import FormTextArea from '../../components/FormTextArea';
+import useAuth from '../../context/useAuth';
+import useQuery from '../../context/useQuery';
+import api from '../../internal/api';
 import routes from '../../routes';
-import ErrorAlert from '../../shared/ErrorAlert';
-import Meta from '../../shared/Meta';
-import useAuthToken from '../../shared/useAuthToken';
-import useParams from '../../shared/useParams';
-import useQuery from '../../shared/useQuery';
 
-interface FormData {
+interface FormValues {
   isPublic?: boolean;
   location?: string;
   bio?: string;
@@ -19,119 +21,66 @@ interface FormData {
 
 export default function EditProfilePage() {
   const history = useHistory();
-  const { profileId } = useParams();
-  const [token] = useAuthToken();
-
+  const auth = useAuth();
   const queryCache = useQueryCache();
-  const profile = useQuery(() => api.profiles(token).getProfile(Number(profileId)), [
+
+  const profileId = auth.token?.getProfileId() || -1;
+
+  const profile = useQuery(() => api.profiles(auth.token?.value).getProfile(profileId), [
     'profile',
     profileId
   ]);
 
-  const { register, control, handleSubmit } = useForm<FormData>({ defaultValues: profile });
-  const [error, setError] = useState<unknown>();
+  // If not signed in, redirect to sign in page
+  if (!auth.token) {
+    return <Redirect to={routes.auth.signIn()} />;
+  }
+
+  const defaultFormValues: FormValues = { ...profile };
 
   return (
-    <div>
-      <Meta title="Edit Profile" />
+    <div title="Edit Profile">
+      <Card>
+        <Form
+          defaultValues={defaultFormValues}
+          onSubmit={async (data) => {
+            await api.profiles(auth.token?.value).putProfile(profile.id, data);
 
-      <div className="w-3/4 mx-auto space-y-5">
-        <h1>Edit Profile</h1>
-
-        <form
-          className="space-y-5"
-          onSubmit={handleSubmit(async (data) => {
-            try {
-              await api.profiles(token).putProfile(profile.id, data);
-              queryCache.clear();
-              history.push(routes.profile({ profileId: profile.id, profileName: profile.name }));
-            } catch (error) {
-              setError(error);
-            }
-          })}
+            queryCache.clear();
+            history.push(routes.profiles.current());
+          }}
         >
-          <div>
-            <label htmlFor="name">Name:</label>
-            <input className="w-1/3" type="text" name="name" value={profile.name} disabled />
-            <div className="mt-2 text-sm text-gray-600 italic">
-              Your profile name cannot be changed
-            </div>
-          </div>
+          <FormInput name="name" label="Name" disabled />
 
-          <div>
-            <label htmlFor="location">Profile privacy:</label>
-            <select className="w-1/3" name="isPublic" placeholder="Bag End, Shire" ref={register}>
-              <option value="true">Public</option>
-              <option value="false">Private</option>
-            </select>
-            <div className="mt-2 text-sm text-gray-600 italic">
-              If you choose to make your profile private, only you will be able to see it
-            </div>
-          </div>
+          <FormSelect
+            name="isPublic"
+            label="Profile privacy"
+            options={[
+              { label: 'Public', value: true },
+              { label: 'Private', value: false }
+            ]}
+          />
 
-          <div>
-            <label htmlFor="location">Location:</label>
-            <input
-              className="w-1/3"
-              type="text"
-              name="location"
-              placeholder="Bag End, Shire"
-              ref={register}
-            />
-          </div>
+          <FormInput name="location" label="Location" placeholder="Bag End, Shire" />
 
-          <div>
-            <label htmlFor="bio">Bio:</label>
-            <textarea
-              name="bio"
-              cols={50}
-              rows={5}
-              placeholder="Lorem ipsum dolor sit amet..."
-              ref={register}
-            />
-          </div>
+          <FormTextArea name="bio" label="Bio" placeholder="Lorem ipsum dolor sit amet..." />
 
-          <div>
-            <label htmlFor="websiteUrl">External links:</label>
-            <Controller
-              name="externalLinks"
-              control={control}
-              render={({ onChange, value, name }) => (
-                <textarea
-                  name={name}
-                  defaultValue={(value as string[])?.join('\n')}
-                  onChange={(e) => onChange(e.target.value.split('\n'))}
-                  cols={50}
-                  rows={3}
-                  placeholder="Lorem ipsum dolor sit amet..."
-                  ref={register}
-                />
-              )}
-            />
-            <div className="mt-2 text-sm text-gray-600 italic">
-              You can display external links on your profile, such as your accounts in other social
-              networks
-            </div>
-          </div>
-
-          <hr />
-
-          <ErrorAlert error={error} />
+          <FormTextArea name="externalLinks" label="External links" />
 
           <div className="flex flex-row items-center space-x-2">
-            <button type="submit">Save</button>
+            <FormButton isSubmit={true}>Save</FormButton>
 
-            <button
+            <FormButton
               onClick={(e) => {
                 e.preventDefault();
                 history.goBack();
               }}
             >
               Cancel
-            </button>
+            </FormButton>
           </div>
-        </form>
-      </div>
+        </Form>
+      </Card>
     </div>
   );
 }
