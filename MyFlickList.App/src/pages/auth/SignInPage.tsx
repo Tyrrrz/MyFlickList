@@ -1,12 +1,12 @@
 import classnames from 'classnames';
 import React from 'react';
 import { Redirect } from 'react-router';
-import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
 import api from '../../internal/api';
 import routes from '../../routes';
@@ -21,7 +21,7 @@ export default function SignInPage() {
 
   return (
     <Page title="Sign in">
-      <Card className={classnames(['w-1/2', 'mx-auto'])}>
+      <Section className={classnames(['w-1/2', 'mx-auto'])} title="Sign in">
         <Form
           defaultValues={{
             username: '',
@@ -47,14 +47,14 @@ export default function SignInPage() {
           />
 
           <FormButton className={classnames(['w-full'])} isSubmit={true}>
-            Sign in
+            Submit
           </FormButton>
         </Form>
-      </Card>
+      </Section>
 
-      <Card className={classnames(['w-1/2', 'mx-auto', 'text-lg', 'text-center'])}>
+      <Section className={classnames(['w-1/2', 'mx-auto', 'text-lg', 'text-center'])}>
         Don&apos;t have a profile yet? <Link href={routes.auth.signUp()}>Sign up</Link> now
-      </Card>
+      </Section>
     </Page>
   );
 }

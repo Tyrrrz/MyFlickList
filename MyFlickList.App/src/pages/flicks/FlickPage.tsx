@@ -4,10 +4,10 @@ import { AiOutlineReddit } from 'react-icons/ai';
 import { FiCalendar, FiClock, FiFacebook, FiFilm, FiStar, FiTwitter } from 'react-icons/fi';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Alert from '../../components/Alert';
-import Card from '../../components/Card';
 import HorizontalSeparator from '../../components/HorizontalSeparator';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import TagLink from '../../components/TagLink';
 import VerticalSeparator from '../../components/VerticalSeparator';
 import useAuth from '../../context/useAuth';
@@ -53,7 +53,7 @@ export default function FlickPage() {
       imageUrl={coverImageUrl}
       contentType={flick.kind === 'Movie' ? 'video.movie' : 'video.tv_show'}
     >
-      <Card>
+      <Section>
         <div className={classnames('flex', 'space-x-10')}>
           {/* Flick info */}
           <div className={classnames('flex', 'flex-col', 'flex-grow', 'space-y-3')}>
@@ -182,7 +182,7 @@ export default function FlickPage() {
             />
           </div>
         </div>
-      </Card>
+      </Section>
 
       {/* User listing */}
       <Alert title={`Have you watched this ${flick.kind.toLowerCase()}?`}>

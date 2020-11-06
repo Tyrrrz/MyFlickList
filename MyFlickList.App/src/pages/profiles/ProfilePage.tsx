@@ -4,9 +4,9 @@ import React from 'react';
 import { FiEdit, FiLink, FiMapPin, FiPlus, FiStar } from 'react-icons/fi';
 import { Redirect } from 'react-router';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
-import Card from '../../components/Card';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
 import useCanonicalUrl from '../../context/useCanonicalUrl';
 import useParam from '../../context/useParam';
@@ -57,7 +57,7 @@ export default function ProfilePage() {
       imageUrl={getAvatarImageUrl(profile)}
       contentType="profile"
     >
-      <Card>
+      <Section>
         <div className={classnames('flex', 'items-center', 'space-x-10')}>
           {/* Avatar */}
           <div style={{ minWidth: 'max-content' }}>
@@ -150,29 +150,23 @@ export default function ProfilePage() {
             )}
           </div>
         </div>
-      </Card>
+      </Section>
 
       {/* Bio */}
       {profile.bio && (
-        <Card>
-          <div className={classnames('text-2xl', 'font-thin', 'tracking-wide')}>Bio</div>
+        <Section title="Bio">
           <p>{profile.bio}</p>
-        </Card>
+        </Section>
       )}
 
       {/* Flicks */}
-      <Card>
-        <div className={classnames('flex', 'items-center')}>
-          <div className={classnames('flex-grow', 'text-2xl', 'font-thin', 'tracking-wide')}>
-            Flicks
-          </div>
-          <div className={classnames('text-xl')}>
-            {isAuthUserProfile && (
-              <Link href={routes.profiles.addFlick()}>
-                <FiPlus />
-              </Link>
-            )}
-          </div>
+      <Section title="Flicks">
+        <div className={classnames('text-2xl')}>
+          {isAuthUserProfile && (
+            <Link href={routes.profiles.addFlick()}>
+              <FiPlus />
+            </Link>
+          )}
         </div>
 
         {flickEntries.items && flickEntries.items.length > 0 ? (
@@ -235,7 +229,7 @@ export default function ProfilePage() {
         ) : (
           <div>This user hasn&apos;t added any flicks yet</div>
         )}
-      </Card>
+      </Section>
     </Page>
   );
 }

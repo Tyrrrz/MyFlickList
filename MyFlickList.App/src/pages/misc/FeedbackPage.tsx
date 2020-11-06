@@ -1,13 +1,13 @@
 import React from 'react';
-import Card from '../../components/Card';
 import HorizontalSeparator from '../../components/HorizontalSeparator';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 
 export default function DonatePage() {
   return (
     <Page title="Feedback">
-      <Card>
+      <Section title="Feedback">
         <p>
           If you found a <i>bug</i> or have a <i>feature</i> suggestion, you can submit it in a form
           of a GitHub issue. As MyFlickList is completely open source, GitHub is used as the primary
@@ -43,7 +43,7 @@ export default function DonatePage() {
             <p className="text-sm italic">You will need a Discord account to join</p>
           </div>
         </div>
-      </Card>
+      </Section>
     </Page>
   );
 }

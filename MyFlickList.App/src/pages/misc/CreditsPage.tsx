@@ -1,13 +1,13 @@
 import React from 'react';
-import Card from '../../components/Card';
 import HorizontalSeparator from '../../components/HorizontalSeparator';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 
 export default function CreditsPage() {
   return (
     <Page title="Credits">
-      <Card>
+      <Section title="Credits">
         <p>
           This page lists all external assets used by MyFlickList that require formal attribution,
           along with their corresponding licenses.
@@ -33,7 +33,7 @@ export default function CreditsPage() {
             </ul>
           </div>
         </div>
-      </Card>
+      </Section>
     </Page>
   );
 }

@@ -2,11 +2,11 @@ import classnames from 'classnames';
 import React from 'react';
 import { FiAtSign, FiLock, FiUser } from 'react-icons/fi';
 import { Redirect, useHistory } from 'react-router';
-import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
 import api from '../../internal/api';
 import routes from '../../routes';
@@ -22,7 +22,7 @@ export default function SignUpPage() {
 
   return (
     <Page title="Sign up">
-      <Card className={classnames(['w-1/2', 'mx-auto'])}>
+      <Section className={classnames(['w-1/2', 'mx-auto'])} title="Sign up">
         <Form
           defaultValues={{
             username: '',
@@ -85,10 +85,10 @@ export default function SignUpPage() {
           />
 
           <FormButton className={classnames(['w-full'])} isSubmit={true}>
-            Sign up
+            Submit
           </FormButton>
         </Form>
-      </Card>
+      </Section>
     </Page>
   );
 }

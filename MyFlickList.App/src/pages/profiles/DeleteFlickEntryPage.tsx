@@ -1,10 +1,10 @@
 import React from 'react';
 import { useQueryCache } from 'react-query';
 import { Redirect, useHistory } from 'react-router';
-import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
@@ -33,7 +33,7 @@ export default function DeleteFlickEntryPage() {
 
   return (
     <Page title="Profile - Remove Flick">
-      <Card>
+      <Section title="Profile - Remove Flick">
         <Form
           onSubmit={async () => {
             await api
@@ -62,7 +62,7 @@ export default function DeleteFlickEntryPage() {
             </FormButton>
           </div>
         </Form>
-      </Card>
+      </Section>
     </Page>
   );
 }

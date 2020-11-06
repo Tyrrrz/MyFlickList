@@ -3,13 +3,13 @@ import React from 'react';
 import { FiCalendar, FiFilm, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
-import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Pagination from '../../components/Pagination';
+import Section from '../../components/Section';
 import TagLink from '../../components/TagLink';
 import useAuth from '../../context/useAuth';
 import useParam from '../../context/useParam';
@@ -64,7 +64,7 @@ export default function FlicksPage() {
   return (
     <Page title={order ? `${order} Flicks` : 'Flicks'}>
       {/* Parmeters */}
-      <Card>
+      <Section>
         <Form
           orientation="horizontal"
           defaultValues={defaultFormValues}
@@ -76,10 +76,10 @@ export default function FlicksPage() {
           <FormInput name="tag" label="Tag" />
           <FormButton isSubmit={true}>Show</FormButton>
         </Form>
-      </Card>
+      </Section>
 
       {/* Flicks */}
-      <Card>
+      <Section>
         {flicks.items.map((flick) => (
           <div key={flick.id} className={classnames('flex', 'space-x-3')}>
             <div>
@@ -145,7 +145,7 @@ export default function FlicksPage() {
           lastPage={flicks.totalPages}
           getPageHref={(p) => routes.flicks.all({ order, tag, page: p })}
         />
-      </Card>
+      </Section>
     </Page>
   );
 }

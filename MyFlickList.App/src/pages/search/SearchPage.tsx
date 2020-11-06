@@ -3,12 +3,12 @@ import React from 'react';
 import { FiCalendar, FiFilm, FiMapPin, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
-import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import TagLink from '../../components/TagLink';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
@@ -25,12 +25,7 @@ function SearchResultsSection({ query }: { query: string }) {
   return (
     <>
       {/* Flicks */}
-      <Card>
-        {/* Count */}
-        <div className={classnames('text-2xl', 'font-thin', 'tracking-wide')}>
-          Flicks ({results.flicks?.length || 0})
-        </div>
-
+      <Section title={`Flicks (${results.flicks?.length || 0})`}>
         {results.flicks && results.flicks.length > 0 ? (
           results.flicks.map((flick) => (
             <div key={flick.id} className={classnames('flex', 'space-x-3')}>
@@ -93,15 +88,10 @@ function SearchResultsSection({ query }: { query: string }) {
         ) : (
           <div>Not found</div>
         )}
-      </Card>
+      </Section>
 
       {/* Profiles */}
-      <Card>
-        {/* Count */}
-        <div className={classnames('text-2xl', 'font-thin', 'tracking-wide')}>
-          Profiles ({results.profiles?.length || 0})
-        </div>
-
+      <Section title={`Profiles (${results.profiles?.length || 0})`}>
         {results.profiles && results.profiles.length > 0 ? (
           results.profiles.map((profile) => (
             <div key={profile.id} className={classnames('flex', 'space-x-3')}>
@@ -146,7 +136,7 @@ function SearchResultsSection({ query }: { query: string }) {
         ) : (
           <div>Not found</div>
         )}
-      </Card>
+      </Section>
     </>
   );
 }
@@ -157,7 +147,7 @@ export default function SearchPage() {
 
   return (
     <Page title="Search">
-      <Card>
+      <Section>
         <Form
           orientation="horizontal"
           defaultValues={{ query }}
@@ -181,7 +171,7 @@ export default function SearchPage() {
           Can&apos;t find a specific flick? You can <Link href={routes.flicks.add()}>request</Link>{' '}
           it to be added
         </div>
-      </Card>
+      </Section>
 
       {query && <SearchResultsSection query={query} />}
     </Page>

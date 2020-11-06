@@ -2,12 +2,12 @@ import classnames from 'classnames';
 import React from 'react';
 import { useHistory } from 'react-router';
 import Alert from '../../components/Alert';
-import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
 import api from '../../internal/api';
 import routes from '../../routes';
@@ -18,7 +18,7 @@ export default function AddFlickPage() {
 
   return (
     <Page title="Add Flick">
-      <Card>
+      <Section title="Add Flick">
         <p className={classnames('text-lg')}>
           If a movie or series you&apos;re looking for is not available, you can add it by simply
           copy-pasting its <Link href="https://imdb.com">IMDB</Link> link. All of the associated
@@ -53,7 +53,7 @@ export default function AddFlickPage() {
             new flick
           </Alert>
         )}
-      </Card>
+      </Section>
     </Page>
   );
 }

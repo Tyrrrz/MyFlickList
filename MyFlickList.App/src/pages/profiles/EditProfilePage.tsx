@@ -1,12 +1,13 @@
 import React from 'react';
 import { useQueryCache } from 'react-query';
 import { Redirect, useHistory } from 'react-router';
-import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import FormSelect from '../../components/FormSelect';
 import FormTextArea from '../../components/FormTextArea';
+import Page from '../../components/Page';
+import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
@@ -39,8 +40,8 @@ export default function EditProfilePage() {
   const defaultFormValues: FormValues = { ...profile };
 
   return (
-    <div title="Edit Profile">
-      <Card>
+    <Page title="Edit Profile">
+      <Section title="Edit Profile">
         <Form
           defaultValues={defaultFormValues}
           onSubmit={async (data) => {
@@ -80,7 +81,7 @@ export default function EditProfilePage() {
             </FormButton>
           </div>
         </Form>
-      </Card>
-    </div>
+      </Section>
+    </Page>
   );
 }

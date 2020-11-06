@@ -1,13 +1,13 @@
 import React from 'react';
 import { useQueryCache } from 'react-query';
 import { Redirect, useHistory } from 'react-router';
-import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import FormSelect from '../../components/FormSelect';
 import FormTextArea from '../../components/FormTextArea';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
@@ -45,7 +45,7 @@ export default function EditFlickEntryPage() {
 
   return (
     <Page title="Profile - Edit Flick">
-      <Card>
+      <Section title="Profile - Edit Flick">
         <Form
           defaultValues={defaultFormValues}
           onSubmit={async (data) => {
@@ -98,7 +98,7 @@ export default function EditFlickEntryPage() {
             </FormButton>
           </div>
         </Form>
-      </Card>
+      </Section>
     </Page>
   );
 }

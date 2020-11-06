@@ -1,19 +1,18 @@
 import classnames from 'classnames';
 import React from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
-import Select from 'react-select';
+import { useFormContext } from 'react-hook-form';
 
-interface Option<TValue = unknown> {
+interface Option<TOption = unknown> {
   label: string;
-  value: TValue;
+  value: TOption;
 }
 
-interface FormSelectProps {
+interface FormSelectProps<TOption> {
   className?: string;
   name: string;
   icon?: React.ReactNode;
   label?: string;
-  options: Option[];
+  options: Option<TOption>[];
   autoFocus?: boolean;
   required?: boolean;
   placeholder?: string;
@@ -21,7 +20,14 @@ interface FormSelectProps {
   hidden?: boolean;
 }
 
-export default function FormSelect({ className, name, icon, label, ...props }: FormSelectProps) {
+export default function FormSelect<TOption>({
+  className,
+  name,
+  icon,
+  label,
+  options,
+  ...props
+}: FormSelectProps<TOption>) {
   const form = useFormContext();
 
   return (
@@ -43,11 +49,32 @@ export default function FormSelect({ className, name, icon, label, ...props }: F
         </label>
       )}
 
-      <Controller
-        control={form.control}
+      <select
+        {...props}
+        className={classnames(
+          'w-full',
+          'px-4',
+          'py-2',
+          'border',
+          'border-gray-400',
+          'rounded-md',
+          'text-gray-700',
+          'hover:border-gray-500',
+          'focus:border-gray-500',
+          'focus:outline-none',
+          'disabled:bg-gray-100',
+          'disabled:text-gray-600',
+          'disabled:cursor-not-allowed'
+        )}
         name={name}
-        render={(controllerProps) => <Select {...props} {...controllerProps} name={name} />}
-      />
+        ref={form.register}
+      >
+        {options.map((option) => (
+          <option key={option.label + option.value} value={String(option.value)}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }

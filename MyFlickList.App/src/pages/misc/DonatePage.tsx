@@ -1,13 +1,13 @@
 import React from 'react';
 import { FiHeart } from 'react-icons/fi';
-import Card from '../../components/Card';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 
 export default function DonatePage() {
   return (
     <Page title="Donate">
-      <Card>
+      <Section title="Donate">
         <p>
           MyFlickList is a personal project built and maintained by{' '}
           <Link href="https://tyrrrz.me">Alexey Golub</Link>. Besides occupying a significant amount
@@ -45,7 +45,7 @@ export default function DonatePage() {
             <FiHeart strokeWidth={1} />
           </div>
         </div>
-      </Card>
+      </Section>
     </Page>
   );
 }
