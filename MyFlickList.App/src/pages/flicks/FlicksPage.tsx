@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { FiCalendar, FiFilm, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router';
+import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
@@ -14,12 +15,8 @@ import useAuth from '../../context/useAuth';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
-import {
-  formatKind,
-  formatRating,
-  formatYears,
-  getCoverImageUrl
-} from '../../internal/flickHelpers';
+import { getFileUrl } from '../../internal/fileHelpers';
+import { formatKind, formatRating, formatYears } from '../../internal/flickHelpers';
 import { slugify } from '../../internal/utils';
 import routes from '../../routes';
 
@@ -46,9 +43,9 @@ interface FormValues {
 }
 
 export default function FlicksPage() {
-  const order = useParam('order', { transform: parseOrder });
+  const order = useParam('order', parseOrder);
   const tag = useParam('tag');
-  const page = useParam('page', { transform: parsePage });
+  const page = useParam('page', parsePage);
 
   const history = useHistory();
   const auth = useAuth();
@@ -89,7 +86,7 @@ export default function FlicksPage() {
               <img
                 className={classnames('rounded', 'shadow')}
                 alt={flick.title}
-                src={getCoverImageUrl(flick)}
+                src={flick.coverImageId ? getFileUrl(flick.coverImageId) : posterFallbackAsset}
                 width={100}
                 height={150}
               />

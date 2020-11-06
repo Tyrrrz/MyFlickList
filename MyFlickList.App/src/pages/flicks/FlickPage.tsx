@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { AiOutlineReddit } from 'react-icons/ai';
 import { FiCalendar, FiClock, FiFacebook, FiFilm, FiStar, FiTwitter } from 'react-icons/fi';
+import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Alert from '../../components/Alert';
 import Card from '../../components/Card';
 import HorizontalSeparator from '../../components/HorizontalSeparator';
@@ -15,14 +16,14 @@ import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import config from '../../internal/config';
+import { getFileUrl } from '../../internal/fileHelpers';
 import {
   formatFirstAired,
   formatKind,
   formatLastAired,
   formatRating,
   formatRuntime,
-  formatYears,
-  getCoverImageUrl
+  formatYears
 } from '../../internal/flickHelpers';
 import {
   createFacebookShareLink,
@@ -33,7 +34,7 @@ import { getAbsoluteUrl, slugify } from '../../internal/utils';
 import routes from '../../routes';
 
 export default function FlickPage() {
-  const flickId = useParam('flickId', { transform: Number });
+  const flickId = useParam('flickId', Number);
   const auth = useAuth();
 
   const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(flickId), ['flick', flickId]);
@@ -43,11 +44,13 @@ export default function FlickPage() {
 
   useCanonicalUrl(selfUrl);
 
+  const coverImageUrl = flick.coverImageId ? getFileUrl(flick.coverImageId) : posterFallbackAsset;
+
   return (
     <Page
       title={flick.title}
       description={flick.synopsis}
-      imageUrl={getCoverImageUrl(flick)}
+      imageUrl={coverImageUrl}
       contentType={flick.kind === 'Movie' ? 'video.movie' : 'video.tv_show'}
     >
       <Card>
@@ -173,7 +176,7 @@ export default function FlickPage() {
             <img
               className={classnames('rounded-md', 'shadow')}
               alt={flick.title}
-              src={getCoverImageUrl(flick)}
+              src={coverImageUrl}
               width={230}
               height={345}
             />

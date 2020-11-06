@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import posterFallbackAsset from '../assets/poster-fallback.png';
 import Link from '../components/Link';
 import Page from '../components/Page';
 import useQuery from '../context/useQuery';
 import api from '../internal/api';
 import { GetFlicksResponseItem } from '../internal/api.generated';
-import { getCoverImageUrl } from '../internal/flickHelpers';
+import { getFileUrl } from '../internal/fileHelpers';
 import { slugify } from '../internal/utils';
 import routes from '../routes';
 
@@ -34,7 +35,7 @@ function FlickSpotlightItem({ flick, position }: FlickSpotlightItemProps) {
         <img
           className="shadow rounded-md"
           alt={flick.title}
-          src={getCoverImageUrl(flick)}
+          src={flick.coverImageId ? getFileUrl(flick.coverImageId) : posterFallbackAsset}
           width={500}
           height={750}
         />

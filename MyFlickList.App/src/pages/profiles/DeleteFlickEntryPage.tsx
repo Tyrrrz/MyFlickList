@@ -12,7 +12,7 @@ import api from '../../internal/api';
 import routes from '../../routes';
 
 export default function DeleteFlickEntryPage() {
-  const flickId = useParam('flickId', { transform: Number });
+  const flickId = useParam('flickId', Number);
 
   const history = useHistory();
   const auth = useAuth();

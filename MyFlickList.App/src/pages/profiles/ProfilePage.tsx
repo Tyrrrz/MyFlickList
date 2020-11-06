@@ -1,8 +1,9 @@
 import classnames from 'classnames';
 import copy from 'copy-to-clipboard';
 import React from 'react';
-import { FiEdit, FiLink, FiMapPin } from 'react-icons/fi';
+import { FiEdit, FiLink, FiMapPin, FiPlus, FiStar } from 'react-icons/fi';
 import { Redirect } from 'react-router';
+import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Card from '../../components/Card';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
@@ -12,12 +13,14 @@ import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import config from '../../internal/config';
+import { getFileUrl } from '../../internal/fileHelpers';
+import { formatRating } from '../../internal/flickHelpers';
 import { getAvatarImageUrl } from '../../internal/profileHelpers';
 import { getAbsoluteUrl, slugify } from '../../internal/utils';
 import routes from '../../routes';
 
 export default function ProfilePage() {
-  const profileId = useParam('profileId', { transform: Number });
+  const profileId = useParam('profileId', Number);
   const auth = useAuth();
 
   const actualProfileId = profileId || auth.token?.getProfileId();
@@ -35,9 +38,9 @@ export default function ProfilePage() {
 
   useCanonicalUrl(
     // Normalize based on the type of route that was used
-    !profileId
-      ? routes.profiles.current()
-      : routes.profiles.specific({ profileId: profile.id, profileName: profile.name })
+    profileId
+      ? routes.profiles.specific({ profileId: profile.id, profileName: profile.name })
+      : routes.profiles.current()
   );
 
   // If not signed in and profile ID is not explicitly provided, redirect to sign in page
@@ -55,20 +58,20 @@ export default function ProfilePage() {
       contentType="profile"
     >
       <Card>
-        <div className={classnames('flex', 'space-x-10')}>
+        <div className={classnames('flex', 'items-center', 'space-x-10')}>
           {/* Avatar */}
           <div style={{ minWidth: 'max-content' }}>
             <img
               className={classnames('rounded-full', 'shadow')}
               alt={`${profile.name}'s avatar`}
               src={getAvatarImageUrl(profile)}
-              width={170}
-              height={170}
+              width={130}
+              height={130}
             />
           </div>
 
           {/* Meta */}
-          <div className={classnames('flex-grow', 'self-center')}>
+          <div className={classnames('flex-grow')}>
             <div className={classnames('flex', 'items-center')}>
               {/* Name */}
               <div className={classnames('tracking-wide', 'truncate', 'text-3xl')}>
@@ -157,44 +160,80 @@ export default function ProfilePage() {
         </Card>
       )}
 
-      {/* Entries */}
+      {/* Flicks */}
       <Card>
-        {!flickEntries.items ||
-          (flickEntries.items.length <= 0 && <div>This user hasn&apos;t added any flicks yet</div>)}
-
-        {flickEntries.items &&
-          flickEntries.items.map((entry) => (
-            <div key={entry.flickId}>
-              <Link
-                className={classnames('text-xl')}
-                href={routes.flicks.specific({
-                  flickId: entry.flickId,
-                  flickTitle: slugify(entry.flickTitle)
-                })}
-              >
-                {entry.flickTitle}
-              </Link>
-              <Link
-                href={routes.profiles.editFlick({
-                  flickId: entry.flickId
-                })}
-              >
-                Edit
-              </Link>
-              <Link
-                href={routes.profiles.deleteFlick({
-                  flickId: entry.flickId
-                })}
-              >
-                Delete
-              </Link>
-            </div>
-          ))}
-
-        {isAuthUserProfile && (
-          <div>
-            <Link href={routes.profiles.addFlick()}>Add</Link>
+        <div className={classnames('flex', 'items-center')}>
+          <div className={classnames('flex-grow', 'text-2xl', 'font-thin', 'tracking-wide')}>
+            Flicks
           </div>
+          <div className={classnames('text-xl')}>
+            {isAuthUserProfile && (
+              <Link href={routes.profiles.addFlick()}>
+                <FiPlus />
+              </Link>
+            )}
+          </div>
+        </div>
+
+        {flickEntries.items && flickEntries.items.length > 0 ? (
+          flickEntries.items.map((entry) => (
+            <div key={entry.flickId} className={classnames('flex', 'space-x-3')}>
+              <div>
+                <img
+                  className={classnames('rounded', 'shadow')}
+                  alt={entry.flickTitle}
+                  src={
+                    entry.flickCoverImageId
+                      ? getFileUrl(entry.flickCoverImageId)
+                      : posterFallbackAsset
+                  }
+                  width={100}
+                  height={150}
+                />
+              </div>
+
+              <div className={classnames('flex', 'flex-col')}>
+                <div>
+                  <Link
+                    className={classnames('text-lg', 'font-semibold', 'truncate')}
+                    href={routes.flicks.specific({
+                      flickId: entry.flickId,
+                      flickTitle: slugify(entry.flickTitle)
+                    })}
+                    underline={false}
+                  >
+                    {entry.flickTitle}
+                  </Link>
+                </div>
+
+                {/* Rating */}
+                <div className={classnames('flex', 'items-center', 'space-x-1')}>
+                  <FiStar strokeWidth={1} />
+                  <div>{formatRating(entry)}</div>
+                </div>
+
+                {/* Controls */}
+                <div className={classnames('flex', 'items-center', 'space-x-1')}>
+                  <Link
+                    href={routes.profiles.editFlick({
+                      flickId: entry.flickId
+                    })}
+                  >
+                    Edit
+                  </Link>
+                  <Link
+                    href={routes.profiles.deleteFlick({
+                      flickId: entry.flickId
+                    })}
+                  >
+                    Delete
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div>This user hasn&apos;t added any flicks yet</div>
         )}
       </Card>
     </Page>

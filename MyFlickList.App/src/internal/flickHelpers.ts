@@ -1,15 +1,6 @@
-import config from './config';
-import { getAbsoluteUrl } from './utils';
+// TODO: refactor all of this
 
 type Kind = 'Movie' | 'Series';
-
-export function getCoverImageUrl({ coverImageId }: { coverImageId?: number }) {
-  if (!coverImageId) {
-    return '/images/poster-placeholder.png';
-  }
-
-  return getAbsoluteUrl(config.apiUrl, `/files/${coverImageId}`);
-}
 
 export function formatKind({ kind, episodeCount }: { kind: Kind; episodeCount?: number }) {
   if (kind === 'Series' && episodeCount && episodeCount > 0) {
@@ -19,15 +10,23 @@ export function formatKind({ kind, episodeCount }: { kind: Kind; episodeCount?: 
   return kind;
 }
 
-export function formatRating({ externalRating }: { externalRating?: number }) {
-  if (!externalRating) return '--';
+export function formatRating({
+  rating,
+  externalRating
+}: {
+  rating?: number;
+  externalRating?: number;
+}) {
+  const someRating = rating || externalRating;
+
+  if (!someRating) return '--';
 
   const formatter = new Intl.NumberFormat('en-US', {
     maximumFractionDigits: 1,
     minimumFractionDigits: 1
   });
 
-  return formatter.format(externalRating);
+  return formatter.format(someRating);
 }
 
 export function formatFirstAired({ firstAired }: { firstAired?: string }) {

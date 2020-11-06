@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { FiCalendar, FiFilm, FiMapPin, FiStar } from 'react-icons/fi';
 import { useHistory } from 'react-router';
+import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Card from '../../components/Card';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
@@ -12,12 +13,8 @@ import TagLink from '../../components/TagLink';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
-import {
-  formatKind,
-  formatRating,
-  formatYears,
-  getCoverImageUrl
-} from '../../internal/flickHelpers';
+import { getFileUrl } from '../../internal/fileHelpers';
+import { formatKind, formatRating, formatYears } from '../../internal/flickHelpers';
 import { getAvatarImageUrl } from '../../internal/profileHelpers';
 import { slugify } from '../../internal/utils';
 import routes from '../../routes';
@@ -41,7 +38,7 @@ function SearchResultsSection({ query }: { query: string }) {
                 <img
                   className={classnames('rounded', 'shadow')}
                   alt={flick.title}
-                  src={getCoverImageUrl(flick)}
+                  src={flick.coverImageId ? getFileUrl(flick.coverImageId) : posterFallbackAsset}
                   width={100}
                   height={150}
                 />

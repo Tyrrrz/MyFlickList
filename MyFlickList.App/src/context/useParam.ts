@@ -14,6 +14,7 @@ function useRouteParams() {
 
 function useQueryParams() {
   const location = useLocation();
+
   const params: Record<string, string | undefined> = Object.fromEntries(
     new URLSearchParams(location.search).entries()
   );
@@ -21,14 +22,12 @@ function useQueryParams() {
   return params;
 }
 
-interface UseParamOptions<T> {
-  transform?: (value: string | undefined) => T;
-}
+type ParamTransform<T> = (value: string | undefined) => T;
 
 export default function useParam(name: string): string | undefined;
-export default function useParam<T>(name: string, options: UseParamOptions<T>): T;
+export default function useParam<T>(name: string, transform: ParamTransform<T>): T;
 
-export default function useParam<T>(name: string, options?: UseParamOptions<T>) {
+export default function useParam<T>(name: string, transform?: ParamTransform<T>) {
   const routeParams = useRouteParams();
   const queryParams = useQueryParams();
 
@@ -39,8 +38,8 @@ export default function useParam<T>(name: string, options?: UseParamOptions<T>) 
 
   const param = params[name];
 
-  if (options?.transform) {
-    return options.transform(param);
+  if (transform) {
+    return transform(param);
   }
 
   return param;
