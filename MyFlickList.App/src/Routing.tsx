@@ -22,27 +22,27 @@ import routes from './routes';
 export default function Routing() {
   return (
     <Switch>
-      <Route exact path={routes.home.template} component={HomePage} />
-      <Route exact path={routes.search.template} component={SearchPage} />
+      <Route exact path={routes.home.path} component={HomePage} />
+      <Route exact path={routes.search.path} component={SearchPage} />
 
-      <Route exact path={routes.auth.signIn.template} component={SignInPage} />
-      <Route exact path={routes.auth.signOut.template} component={SignOutPage} />
-      <Route exact path={routes.auth.signUp.template} component={SignUpPage} />
+      <Route exact path={routes.auth.signIn.path} component={SignInPage} />
+      <Route exact path={routes.auth.signOut.path} component={SignOutPage} />
+      <Route exact path={routes.auth.signUp.path} component={SignUpPage} />
 
-      <Route exact path={routes.flicks.all.template} component={FlicksPage} />
-      <Route exact path={routes.flicks.add.template} component={AddFlickPage} />
-      <Route exact path={routes.flicks.specific.template} component={FlickPage} />
+      <Route exact path={routes.flicks.all.path} component={FlicksPage} />
+      <Route exact path={routes.flicks.add.path} component={AddFlickPage} />
+      <Route exact path={routes.flicks.specific.path} component={FlickPage} />
 
-      <Route exact path={routes.profiles.specific.template} component={ProfilePage} />
-      <Route exact path={routes.profiles.current.template} component={ProfilePage} />
-      <Route exact path={routes.profiles.edit.template} component={EditProfilePage} />
-      <Route exact path={routes.profiles.addFlick.template} component={AddFlickEntryPage} />
-      <Route exact path={routes.profiles.editFlick.template} component={EditFlickEntryPage} />
-      <Route exact path={routes.profiles.deleteFlick.template} component={DeleteFlickEntryPage} />
+      <Route exact path={routes.profiles.specific.path} component={ProfilePage} />
+      <Route exact path={routes.profiles.current.path} component={ProfilePage} />
+      <Route exact path={routes.profiles.edit.path} component={EditProfilePage} />
+      <Route exact path={routes.profiles.addFlick.path} component={AddFlickEntryPage} />
+      <Route exact path={routes.profiles.editFlick.path} component={EditFlickEntryPage} />
+      <Route exact path={routes.profiles.deleteFlick.path} component={DeleteFlickEntryPage} />
 
-      <Route exact path={routes.misc.credits.template} component={CreditsPage} />
-      <Route exact path={routes.misc.feedback.template} component={FeedbackPage} />
-      <Route exact path={routes.misc.donate.template} component={DonatePage} />
+      <Route exact path={routes.misc.credits.path} component={CreditsPage} />
+      <Route exact path={routes.misc.feedback.path} component={FeedbackPage} />
+      <Route exact path={routes.misc.donate.path} component={DonatePage} />
 
       <Route path="*" component={NotFoundPage} />
     </Switch>

@@ -31,8 +31,6 @@ export default function FlicksPage() {
     ['flicks', order, tag, pageNumber]
   );
 
-  // TODO: bug in `route-descriptor` makes `undefined` appear as a string
-
   return (
     <Page title={order ? `${order} Flicks` : 'Flicks'}>
       <Card>
