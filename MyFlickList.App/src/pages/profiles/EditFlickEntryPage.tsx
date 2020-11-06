@@ -9,7 +9,7 @@ import FormSelect from '../../components/FormSelect';
 import FormTextArea from '../../components/FormTextArea';
 import Page from '../../components/Page';
 import useAuth from '../../context/useAuth';
-import useParams from '../../context/useParams';
+import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import { ProfileFlickEntryStatus } from '../../internal/api.generated';
@@ -23,15 +23,16 @@ interface FormValues {
 }
 
 export default function EditFlickEntryPage() {
+  const flickId = useParam('flickId', { transform: Number });
+
   const history = useHistory();
-  const { flickId } = useParams();
   const auth = useAuth();
   const queryCache = useQueryCache();
 
   const profileId = auth.token?.getProfileId() || -1;
 
   const flickEntry = useQuery(
-    () => api.profiles(auth.token?.value).getFlickEntry(profileId, Number(flickId)),
+    () => api.profiles(auth.token?.value).getFlickEntry(profileId, flickId),
     ['flickEntry', profileId, flickId]
   );
 

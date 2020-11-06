@@ -11,7 +11,7 @@ import TagLink from '../../components/TagLink';
 import VerticalSeparator from '../../components/VerticalSeparator';
 import useAuth from '../../context/useAuth';
 import useCanonicalUrl from '../../context/useCanonicalUrl';
-import useParams from '../../context/useParams';
+import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import config from '../../internal/config';
@@ -33,13 +33,10 @@ import { getAbsoluteUrl, slugify } from '../../internal/utils';
 import routes from '../../routes';
 
 export default function FlickPage() {
-  const { flickId } = useParams();
+  const flickId = useParam('flickId', { transform: Number });
   const auth = useAuth();
 
-  const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(Number(flickId)), [
-    'flick',
-    flickId
-  ]);
+  const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(flickId), ['flick', flickId]);
 
   const selfUrl = routes.flicks.specific({ flickId: flick.id, flickTitle: slugify(flick.title) });
   const selfUrlAbsolute = getAbsoluteUrl(config.appUrl, selfUrl);

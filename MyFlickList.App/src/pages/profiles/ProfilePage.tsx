@@ -8,7 +8,7 @@ import Link from '../../components/Link';
 import Page from '../../components/Page';
 import useAuth from '../../context/useAuth';
 import useCanonicalUrl from '../../context/useCanonicalUrl';
-import useParams from '../../context/useParams';
+import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import config from '../../internal/config';
@@ -17,10 +17,10 @@ import { getAbsoluteUrl, slugify } from '../../internal/utils';
 import routes from '../../routes';
 
 export default function ProfilePage() {
-  const { profileId } = useParams();
+  const profileId = useParam('profileId', { transform: Number });
   const auth = useAuth();
 
-  const actualProfileId = profileId ? Number(profileId) : auth.token?.getProfileId();
+  const actualProfileId = profileId || auth.token?.getProfileId();
 
   // TODO: make this cleaner when `actualProfileId` is undefined
   const profile = useQuery(

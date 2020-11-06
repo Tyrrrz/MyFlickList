@@ -22,7 +22,7 @@ export default function FormInput({ className, name, icon, label, ...props }: Fo
   const form = useFormContext();
 
   return (
-    <div className={className}>
+    <div className={classnames(className, 'flex-grow')}>
       {label && (
         <label
           className={classnames(

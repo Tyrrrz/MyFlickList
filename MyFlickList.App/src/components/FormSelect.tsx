@@ -25,7 +25,7 @@ export default function FormSelect({ className, name, icon, label, ...props }: F
   const form = useFormContext();
 
   return (
-    <div className={className}>
+    <div className={classnames(className, 'flex-grow')}>
       {label && (
         <label
           className={classnames(

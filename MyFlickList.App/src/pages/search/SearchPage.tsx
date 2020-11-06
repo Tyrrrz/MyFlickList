@@ -9,7 +9,7 @@ import FormInput from '../../components/FormInput';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import TagLink from '../../components/TagLink';
-import useParams from '../../context/useParams';
+import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import {
@@ -155,8 +155,8 @@ function SearchResultsSection({ query }: { query: string }) {
 }
 
 export default function SearchPage() {
+  const query = useParam('query');
   const history = useHistory();
-  const { query } = useParams();
 
   return (
     <Page title="Search">

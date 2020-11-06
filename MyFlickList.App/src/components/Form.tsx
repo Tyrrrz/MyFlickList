@@ -47,7 +47,7 @@ export default function Form<TFormValues = Record<string, unknown>>({
         className={classnames(
           className,
           { flex: orientation === 'horizontal' },
-          { 'items-center': orientation === 'horizontal' },
+          { 'items-end': orientation === 'horizontal' },
           { 'space-y-3': orientation === 'vertical' },
           { 'space-x-3': orientation === 'horizontal' }
         )}

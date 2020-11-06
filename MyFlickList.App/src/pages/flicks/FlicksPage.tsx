@@ -1,16 +1,19 @@
 import classnames from 'classnames';
 import React from 'react';
 import { FiCalendar, FiFilm, FiStar } from 'react-icons/fi';
+import { useHistory } from 'react-router';
 import Card from '../../components/Card';
+import Form from '../../components/Form';
+import FormButton from '../../components/FormButton';
+import FormInput from '../../components/FormInput';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Pagination from '../../components/Pagination';
 import TagLink from '../../components/TagLink';
 import useAuth from '../../context/useAuth';
-import useParams from '../../context/useParams';
+import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
-import { GetFlicksOrder } from '../../internal/api.generated';
 import {
   formatKind,
   formatRating,
@@ -20,19 +23,65 @@ import {
 import { slugify } from '../../internal/utils';
 import routes from '../../routes';
 
+function parseOrder(order?: string) {
+  if (order === 'Top' || order === 'Trending' || order === 'New') {
+    return order;
+  }
+
+  return 'Top';
+}
+
+function parsePage(page?: string) {
+  const parsed = Number(page);
+  if (parsed && parsed >= 1) {
+    return parsed;
+  }
+
+  return 1;
+}
+
+interface FormValues {
+  order?: 'Top' | 'Trending' | 'New';
+  tag?: string;
+}
+
 export default function FlicksPage() {
-  const { order, tag, page } = useParams();
+  const order = useParam('order', { transform: parseOrder });
+  const tag = useParam('tag');
+  const page = useParam('page', { transform: parsePage });
+
+  const history = useHistory();
   const auth = useAuth();
 
-  const pageNumber = Number(page) || 1;
+  const flicks = useQuery(() => api.flicks(auth.token?.value).getFlicks(order, tag, page), [
+    'flicks',
+    order,
+    tag,
+    page
+  ]);
 
-  const flicks = useQuery(
-    () => api.flicks(auth.token?.value).getFlicks(order as GetFlicksOrder, tag, pageNumber),
-    ['flicks', order, tag, pageNumber]
-  );
+  // TODO: form inputs are not properly updated when navigating
+  // TODO: replace inputs with selects with autocomplete
+  const defaultFormValues: FormValues = { order, tag };
 
   return (
     <Page title={order ? `${order} Flicks` : 'Flicks'}>
+      {/* Parmeters */}
+      <Card>
+        <Form
+          orientation="horizontal"
+          defaultValues={defaultFormValues}
+          onSubmit={(data) => {
+            history.push(routes.flicks.all(data));
+          }}
+        >
+          <FormInput name="order" label="Order" />
+          <FormInput name="tag" label="Tag" />
+          <FormButton isSubmit={true}>Show</FormButton>
+        </Form>
+      </Card>
+
+      {/* Flicks */}
       <Card>
         {flicks.items.map((flick) => (
           <div key={flick.id} className={classnames('flex', 'space-x-3')}>
@@ -93,10 +142,11 @@ export default function FlicksPage() {
           </div>
         ))}
 
+        {/* Page buttons */}
         <Pagination
-          currentPage={pageNumber}
+          currentPage={page}
           lastPage={flicks.totalPages}
-          getPageHref={(p) => routes.flicks.all({ order: order as GetFlicksOrder, tag, page: p })}
+          getPageHref={(p) => routes.flicks.all({ order, tag, page: p })}
         />
       </Card>
     </Page>

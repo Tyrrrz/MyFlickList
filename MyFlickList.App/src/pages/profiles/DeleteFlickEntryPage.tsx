@@ -6,21 +6,23 @@ import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import Page from '../../components/Page';
 import useAuth from '../../context/useAuth';
-import useParams from '../../context/useParams';
+import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import routes from '../../routes';
 
 export default function DeleteFlickEntryPage() {
+  const flickId = useParam('flickId', { transform: Number });
+
   const history = useHistory();
-  const { flickId } = useParams();
   const auth = useAuth();
   const queryCache = useQueryCache();
 
+  // TODO: clean up
   const profileId = auth.token?.getProfileId() || -1;
 
   const flickEntry = useQuery(
-    () => api.profiles(auth.token?.value).getFlickEntry(profileId, Number(flickId)),
+    () => api.profiles(auth.token?.value).getFlickEntry(profileId, flickId),
     ['flickEntry', profileId, flickId]
   );
 

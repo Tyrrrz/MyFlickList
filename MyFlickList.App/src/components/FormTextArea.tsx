@@ -26,7 +26,7 @@ export default function FormTextArea({
   const form = useFormContext();
 
   return (
-    <div className={className}>
+    <div className={classnames(className, 'flex-grow')}>
       {label && (
         <label
           className={classnames(
@@ -61,6 +61,7 @@ export default function FormTextArea({
           'disabled:text-gray-600',
           'disabled:cursor-not-allowed'
         )}
+        style={{ minHeight: '6rem' }}
         rows={5}
         name={name}
         ref={form.register}
