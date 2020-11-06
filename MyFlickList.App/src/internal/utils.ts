@@ -17,5 +17,5 @@ export function getAbsoluteUrl(baseUrl: string, url: string) {
 }
 
 export function slugify(value: string) {
-  return value.replaceAll(/[\s&/\\#,+()$~%.'":*?<>{}]/g, '_');
+  return value.replace(/[\s&/\\#,+()$~%.'":*?<>{}]/g, '_');
 }
