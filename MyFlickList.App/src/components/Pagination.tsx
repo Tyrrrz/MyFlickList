@@ -37,7 +37,7 @@ function PageButton({ href, isActive, children }: PageButtonProps) {
           'border-gray-300',
           'bg-gray-200'
         )}
-        href="#"
+        href={href}
         underline={false}
       >
         {children}
