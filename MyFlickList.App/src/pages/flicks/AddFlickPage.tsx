@@ -25,15 +25,6 @@ export default function AddFlickPage() {
           data will be pulled automatically.
         </p>
 
-        {!auth.token && (
-          <Alert className={classnames('mt-3')} type="error">
-            You need to be <Link href={routes.auth.signIn()}>signed in</Link> in order to request a
-            new flick
-          </Alert>
-        )}
-      </Card>
-
-      <Card>
         <Form
           orientation="horizontal"
           defaultValues={{ sourceUrl: '' }}
@@ -55,6 +46,13 @@ export default function AddFlickPage() {
             Pull
           </FormButton>
         </Form>
+
+        {!auth.token && (
+          <Alert className={classnames('mt-3')} type="error">
+            You need to be <Link href={routes.auth.signIn()}>signed in</Link> in order to request a
+            new flick
+          </Alert>
+        )}
       </Card>
     </Page>
   );
