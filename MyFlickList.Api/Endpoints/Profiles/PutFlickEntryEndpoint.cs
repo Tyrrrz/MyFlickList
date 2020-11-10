@@ -20,7 +20,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
         [Range(0, int.MaxValue)]
         public int? EpisodeCount { get; set; }
 
-        [Range(0.0, 1.0)]
+        [Range(0.0, 10.0)]
         public double? Rating { get; set; }
 
         [MaxLength(20_000)]

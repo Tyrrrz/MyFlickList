@@ -39,7 +39,7 @@ export default function AddFlickEntryPage() {
 
   return (
     <Page title="Profile - Add Flick">
-      <Section title="Profile - Add Flick">
+      <Section title="Add Flick">
         <Form
           defaultValues={defaultFormValues}
           onSubmit={async ({ flickId, ...data }) => {
@@ -68,10 +68,17 @@ export default function AddFlickEntryPage() {
             name="rating"
             label="Rating"
             options={[
-              { label: 'Unrated', value: null },
-              { label: 'Horrible', value: 0 },
-              { label: 'Average', value: 0.5 },
-              { label: 'Amazing', value: 1 }
+              { label: '--', value: null },
+              { label: '🟊 1/10 — Appalling', value: 1 },
+              { label: '🟊 2/10 — Horrible', value: 2 },
+              { label: '🟊 3/10 — Very Bad', value: 3 },
+              { label: '🟊 4/10 — Bad', value: 4 },
+              { label: '🟊 5/10 — Average', value: 5 },
+              { label: '🟊 6/10 — Fine', value: 6 },
+              { label: '🟊 7/10 — Good', value: 7 },
+              { label: '🟊 8/10 — Very Good', value: 8 },
+              { label: '🟊 9/10 — Great', value: 9 },
+              { label: '🟊 10/10 — Masterpiece', value: 10 }
             ]}
           />
 

@@ -33,7 +33,7 @@ export default function DeleteFlickEntryPage() {
 
   return (
     <Page title="Profile - Remove Flick">
-      <Section title="Profile - Remove Flick">
+      <Section title="Remove Flick">
         <Form
           onSubmit={async () => {
             await api
