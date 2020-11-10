@@ -29,6 +29,7 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
 
   deploy-app:
+    needs: deploy-api
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
