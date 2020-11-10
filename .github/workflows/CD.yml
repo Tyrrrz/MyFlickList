@@ -7,58 +7,58 @@ jobs:
   deploy-api:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2.3.3
+      - name: Checkout
+        uses: actions/checkout@v2.3.3
 
-    - name: Install .NET Core
-      uses: actions/setup-dotnet@v1.7.2
-      with:
-        dotnet-version: 3.1.100
+      - name: Install .NET
+        uses: actions/setup-dotnet@v1.7.2
+        with:
+          dotnet-version: 5.0.100
 
-    - name: Install Heroku CLI
-      run: curl https://cli-assets.heroku.com/install.sh | sh
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
 
-    - name: Deploy
-      run: |
-        heroku container:login
-        docker build . -f MyFlickList.Api.dockerfile -t myflicklist.api
-        docker tag myflicklist.api registry.heroku.com/${{ secrets.HEROKU_APP }}/web
-        docker push registry.heroku.com/${{ secrets.HEROKU_APP }}/web
-        heroku container:release web -a ${{ secrets.HEROKU_APP }}
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
+      - name: Deploy
+        run: |
+          heroku container:login
+          docker build . -f MyFlickList.Api.dockerfile -t myflicklist.api
+          docker tag myflicklist.api registry.heroku.com/${{ secrets.HEROKU_APP }}/web
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP }}/web
+          heroku container:release web -a ${{ secrets.HEROKU_APP }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_TOKEN }}
 
   deploy-app:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2.3.3
+      - name: Checkout
+        uses: actions/checkout@v2.3.3
 
-    - name: Install NodeJS
-      uses: actions/setup-node@v2.1.2
-      with:
-        node-version: 12
+      - name: Install NodeJS
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 12
 
-    - name: Install Netlify CLI
-      run: npm i netlify-cli -g
+      - name: Install Netlify CLI
+        run: npm i netlify-cli -g
 
-    - name: Pull dependencies
-      run: npm ci --no-audit
-      working-directory: ./MyFlickList.App
+      - name: Pull dependencies
+        run: npm ci --no-audit
+        working-directory: ./MyFlickList.App
 
-    - name: Build
-      run: npm run build
-      working-directory: ./MyFlickList.App
-      env:
-        NODE_ENV: production
-        PUBLIC_URL: https://myflicklist.netlify.app/
-        REACT_APP_API_URL: https://myflicklist.herokuapp.com/
-        REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.GOOGLE_ANALYTICS_TOKEN }}
-        REACT_APP_SENTRY: ${{ secrets.SENTRY_TOKEN }}
+      - name: Build
+        run: npm run build
+        working-directory: ./MyFlickList.App
+        env:
+          NODE_ENV: production
+          PUBLIC_URL: https://myflicklist.netlify.app/
+          REACT_APP_API_URL: https://myflicklist.herokuapp.com/
+          REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.GOOGLE_ANALYTICS_TOKEN }}
+          REACT_APP_SENTRY: ${{ secrets.SENTRY_TOKEN }}
 
-    - name: Deploy
-      run: netlify deploy --dir=build --prod
-      working-directory: ./MyFlickList.App
-      env:
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE }}
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
+      - name: Deploy
+        run: netlify deploy --dir=build --prod
+        working-directory: ./MyFlickList.App
+        env:
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE }}
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}

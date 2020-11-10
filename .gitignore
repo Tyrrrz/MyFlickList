@@ -10,5 +10,7 @@ node_modules/
 bin/
 obj/
 build/
-
 *.generated.css
+
+# Coverage
+*.opencover.xml
