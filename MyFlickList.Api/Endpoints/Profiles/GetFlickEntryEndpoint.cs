@@ -59,10 +59,10 @@ namespace MyFlickList.Api.Endpoints.Profiles
         [OpenApiTag("Profiles")]
         [OpenApiOperation("getFlickEntry")]
         [HttpGet("profiles/{profileId}/flicks/{flickId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-        [ProducesResponseType(typeof(ProblemDetails), 404)]
-        [ProducesResponseType(typeof(ProblemDetails), 403)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ValidationErrorResponse(HttpStatusCode.BadRequest)]
+        [ErrorResponse(HttpStatusCode.NotFound)]
+        [ErrorResponse(HttpStatusCode.Forbidden)]
         public async Task<ActionResult<GetFlickEntryResponse>> Action(
             int profileId,
             int flickId,
@@ -98,7 +98,8 @@ namespace MyFlickList.Api.Endpoints.Profiles
                 );
             }
 
-            return Ok(
+            return Success(
+                HttpStatusCode.OK,
                 _mapper.Map<GetFlickEntryResponse>(flickEntry)
             );
         }

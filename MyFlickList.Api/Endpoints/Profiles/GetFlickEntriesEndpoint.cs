@@ -38,14 +38,6 @@ namespace MyFlickList.Api.Endpoints.Profiles
         public int? FlickCoverImageId { get; set; }
     }
 
-    public class GetFlickEntriesResponse : PaginatedResponse<GetFlickEntriesResponseItem>
-    {
-        public GetFlickEntriesResponse(IReadOnlyList<GetFlickEntriesResponseItem> items, int page, int totalPages)
-            : base(items, page, totalPages)
-        {
-        }
-    }
-
     public class GetFlickEntriesMapping : Profile
     {
         public GetFlickEntriesMapping()
@@ -70,11 +62,11 @@ namespace MyFlickList.Api.Endpoints.Profiles
         [OpenApiTag("Profiles")]
         [OpenApiOperation("getFlickEntries")]
         [HttpGet("profiles/{profileId}/flicks")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-        [ProducesResponseType(typeof(ProblemDetails), 404)]
-        [ProducesResponseType(typeof(ProblemDetails), 403)]
-        public async Task<ActionResult<GetFlickEntriesResponse>> Action(
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ValidationErrorResponse(HttpStatusCode.BadRequest)]
+        [ErrorResponse(HttpStatusCode.NotFound)]
+        [ErrorResponse(HttpStatusCode.Forbidden)]
+        public async Task<ActionResult<PaginatedResponse<GetFlickEntriesResponseItem>>> Action(
             int profileId,
             CancellationToken cancellationToken = default)
         {
@@ -100,7 +92,8 @@ namespace MyFlickList.Api.Endpoints.Profiles
             }
 
             // TODO: pagination
-            return Ok(
+            return Success(
+                HttpStatusCode.OK,
                 PaginatedResponse.Create(_mapper.Map<GetFlickEntriesResponseItem[]>(profile.FlickEntries), 1, 1)
             );
         }

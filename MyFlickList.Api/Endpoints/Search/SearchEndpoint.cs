@@ -89,8 +89,8 @@ namespace MyFlickList.Api.Endpoints.Search
         [OpenApiTag("Search")]
         [OpenApiOperation("search")]
         [HttpGet("search")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(ProblemDetails), 400)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ValidationErrorResponse(HttpStatusCode.BadRequest)]
         public async Task<ActionResult<SearchResponse>> Action(
             string query,
             CancellationToken cancellationToken = default)
@@ -129,7 +129,7 @@ namespace MyFlickList.Api.Endpoints.Search
                 .ProjectTo<SearchResponseProfileItem>(_mapper.ConfigurationProvider)
                 .ToArrayAsync(cancellationToken);
 
-            return Ok(new SearchResponse
+            return Success(HttpStatusCode.OK, new SearchResponse
             {
                 Flicks = flicks,
                 Profiles = profiles

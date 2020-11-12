@@ -61,9 +61,9 @@ namespace MyFlickList.Api.Endpoints.Profiles
         [OpenApiTag("Profiles")]
         [OpenApiOperation("getProfile")]
         [HttpGet("profiles/{profileId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(ProblemDetails), 404)]
-        [ProducesResponseType(typeof(ProblemDetails), 403)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ErrorResponse(HttpStatusCode.NotFound)]
+        [ErrorResponse(HttpStatusCode.Forbidden)]
         public async Task<ActionResult<GetProfileResponse>> Action(
             int profileId,
             CancellationToken cancellationToken = default)
@@ -88,7 +88,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
                 );
             }
 
-            return Ok(profile);
+            return Success(HttpStatusCode.OK, profile);
         }
     }
 }

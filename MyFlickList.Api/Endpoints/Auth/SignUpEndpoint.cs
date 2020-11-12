@@ -40,8 +40,8 @@ namespace MyFlickList.Api.Endpoints.Auth
         [OpenApiTag("Auth")]
         [OpenApiOperation("signUp")]
         [HttpPost("auth/signup")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ValidationErrorResponse(HttpStatusCode.BadRequest)]
         public async Task<ActionResult> Action(
             SignUpRequest request,
             CancellationToken cancellationToken = default)
@@ -68,7 +68,7 @@ namespace MyFlickList.Api.Endpoints.Auth
                 );
             }
 
-            return Ok();
+            return Success(HttpStatusCode.OK);
         }
     }
 }

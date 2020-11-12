@@ -219,9 +219,9 @@ namespace MyFlickList.Api.Endpoints.Flicks
         [OpenApiOperation("addFlick")]
         [HttpPost("flicks")]
         [Authorize]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ValidationErrorResponse(HttpStatusCode.BadRequest)]
+        [ErrorResponse(HttpStatusCode.NotFound)]
         public async Task<ActionResult<AddFlickResponse>> Action(
             AddFlickRequest request,
             CancellationToken cancellationToken = default)
@@ -244,7 +244,7 @@ namespace MyFlickList.Api.Endpoints.Flicks
                 );
             }
 
-            return Ok(new AddFlickResponse
+            return Success(HttpStatusCode.OK, new AddFlickResponse
             {
                 FlickId = flickId.Value
             });

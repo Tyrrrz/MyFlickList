@@ -42,9 +42,9 @@ namespace MyFlickList.Api.Endpoints.Auth
         [OpenApiTag("Auth")]
         [OpenApiOperation("signIn")]
         [HttpPost("auth/signin")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-        [ProducesResponseType(typeof(ProblemDetails), 401)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ValidationErrorResponse(HttpStatusCode.BadRequest)]
+        [ErrorResponse(HttpStatusCode.Unauthorized)]
         public async Task<ActionResult<SignInResponse>> Action(
             SignInRequest request,
             CancellationToken cancellationToken = default)
@@ -76,7 +76,7 @@ namespace MyFlickList.Api.Endpoints.Auth
                 new Claim("preferred_username", user.Username),
                 new Claim("email", user.Email),
                 new Claim("email_verified", user.IsEmailConfirmed.ToString()),
-                new Claim("mfl_profile_id", user.Profile!.Id.ToString()),
+                new Claim(Jwt.ProfileIdClaimType, user.Profile!.Id.ToString()),
             };
 
             var token = Jwt.Generate(
@@ -86,7 +86,7 @@ namespace MyFlickList.Api.Endpoints.Auth
                 claims
             );
 
-            return Ok(new SignInResponse
+            return Success(HttpStatusCode.OK, new SignInResponse
             {
                 Token = token
             });

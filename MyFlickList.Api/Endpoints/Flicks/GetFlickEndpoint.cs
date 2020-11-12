@@ -71,8 +71,8 @@ namespace MyFlickList.Api.Endpoints.Flicks
         [OpenApiTag("Flicks")]
         [OpenApiOperation("getFlick")]
         [HttpGet("flicks/{flickId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ErrorResponse(HttpStatusCode.NotFound)]
         public async Task<ActionResult<GetFlickResponse>> Action(
             int flickId,
             CancellationToken cancellationToken = default)
@@ -89,7 +89,7 @@ namespace MyFlickList.Api.Endpoints.Flicks
                 );
             }
 
-            return Ok(flick);
+            return Success(HttpStatusCode.OK, flick);
         }
     }
 }

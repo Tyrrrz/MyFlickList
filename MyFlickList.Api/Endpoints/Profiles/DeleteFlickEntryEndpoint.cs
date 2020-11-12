@@ -23,10 +23,10 @@ namespace MyFlickList.Api.Endpoints.Profiles
         [OpenApiOperation("deleteFlickEntry")]
         [HttpDelete("profiles/{profileId}/flicks/{flickId}")]
         [Authorize]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), 400)]
-        [ProducesResponseType(typeof(ProblemDetails), 404)]
-        [ProducesResponseType(typeof(ProblemDetails), 403)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ValidationErrorResponse(HttpStatusCode.BadRequest)]
+        [ErrorResponse(HttpStatusCode.NotFound)]
+        [ErrorResponse(HttpStatusCode.Forbidden)]
         public async Task<ActionResult> Action(
             int profileId,
             int flickId,
@@ -61,7 +61,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
                 await _database.SaveChangesAsync(cancellationToken);
             }
 
-            return Ok();
+            return Success(HttpStatusCode.OK);
         }
     }
 }

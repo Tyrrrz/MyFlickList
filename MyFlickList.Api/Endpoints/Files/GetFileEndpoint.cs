@@ -20,8 +20,8 @@ namespace MyFlickList.Api.Endpoints.Files
         [OpenApiTag("Files")]
         [OpenApiOperation("getFile")]
         [HttpGet("files/{fileId}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
+        [SuccessResponse(HttpStatusCode.OK)]
+        [ErrorResponse(HttpStatusCode.NotFound)]
         [ResponseCache(Duration = Durations.SecondsIn.OneDay)]
         public async Task<ActionResult> Action(
             int fileId,
@@ -38,7 +38,7 @@ namespace MyFlickList.Api.Endpoints.Files
                 );
             }
 
-            return File(file.Data, file.ContentType);
+            return Success(HttpStatusCode.OK, file.ContentType, file.Data);
         }
     }
 }

@@ -11,6 +11,8 @@ namespace MyFlickList.Api.Endpoints
 {
     public static class Jwt
     {
+        public const string ProfileIdClaimType = "mfl_profile_id";
+
         public static string Generate(
             string issuer,
             byte[] secret,
@@ -38,7 +40,7 @@ namespace MyFlickList.Api.Endpoints
 
         public static int? TryGetProfileId(this ClaimsPrincipal claimsPrincipal) =>
             claimsPrincipal
-                .FindFirstValue("mfl_profile_id")?
+                .FindFirstValue(ProfileIdClaimType)?
                 .Pipe(s => int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
                     ? result
                     : (int?) null);

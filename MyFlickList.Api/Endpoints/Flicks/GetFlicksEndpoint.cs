@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -46,14 +47,6 @@ namespace MyFlickList.Api.Endpoints.Flicks
         public int? CoverImageId { get; set; }
     }
 
-    public class GetFlicksResponse : PaginatedResponse<GetFlicksResponseItem>
-    {
-        public GetFlicksResponse(IReadOnlyList<GetFlicksResponseItem> items, int page, int totalPages)
-            : base(items, page, totalPages)
-        {
-        }
-    }
-
     public class GetFlicksMapping : Profile
     {
         public GetFlicksMapping()
@@ -76,8 +69,8 @@ namespace MyFlickList.Api.Endpoints.Flicks
         [OpenApiTag("Flicks")]
         [OpenApiOperation("getFlicks")]
         [HttpGet("flicks")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<GetFlicksResponse>> Action(
+        [SuccessResponse(HttpStatusCode.OK)]
+        public async Task<ActionResult<PaginatedResponse<GetFlicksResponseItem>>> Action(
             GetFlicksOrder order = GetFlicksOrder.Top,
             string? filterTag = null,
             int page = 1,
@@ -114,7 +107,8 @@ namespace MyFlickList.Api.Endpoints.Flicks
             var flicks = flicksFiltered
                 .ProjectTo<GetFlicksResponseItem>(_mapper.ConfigurationProvider);
 
-            return Ok(
+            return Success(
+                HttpStatusCode.OK,
                 await PaginatedResponse.FromQueryAsync(flicks, page, 10, cancellationToken)
             );
         }
