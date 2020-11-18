@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,9 @@ namespace MyFlickList.CatalogPopulator.Commands
         [CommandOption("api-url", 'u', Description = "MFL API URL.")]
         public string ApiUrl { get; set; } = "http://localhost:5000";
 
+        [CommandOption("api-token", 't', IsRequired = true, Description = "MFL API Token.")]
+        public string ApiToken { get; set; } = default!;
+
         [CommandOption("tmdb-key", 'k', IsRequired = true, EnvironmentVariableName = "ApiKeys__Tmdb", Description = "TMDB API Key.")]
         public string TmdbApiKey { get; set; } = default!;
 
@@ -30,6 +34,8 @@ namespace MyFlickList.CatalogPopulator.Commands
             {
                 Content = new StringContent($"{{ \"sourceUrl\": \"https://imdb.com/title/{imdbId}\" }}", Encoding.UTF8, "application/json")
             };
+
+            request.Headers.Authorization = AuthenticationHeaderValue.Parse($"Bearer {ApiToken}");
 
             using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 

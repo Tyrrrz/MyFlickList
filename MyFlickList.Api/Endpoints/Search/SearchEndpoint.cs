@@ -106,14 +106,10 @@ namespace MyFlickList.Api.Endpoints.Search
             }
 
             var flicks = await _database.Flicks
-                // Match flick titles that contain the query (strip accents for "Pokemon" -> "Pokémon")
-                // TODO: replace with collations
                 .Where(f =>
-                    Postgres.Functions.Unaccent(f.Title.ToLower()).Contains(Postgres.Functions.Unaccent(queryNormalized)) ||
-                    f.OriginalTitle != null && Postgres.Functions.Unaccent(f.OriginalTitle.ToLower())
-                        .Contains(Postgres.Functions.Unaccent(queryNormalized))
+                    EF.Functions.ILike(EF.Functions.Unaccent(f.Title), EF.Functions.Unaccent($"%{queryNormalized}%")) ||
+                    EF.Functions.ILike(EF.Functions.Unaccent(f.OriginalTitle), EF.Functions.Unaccent($"%{queryNormalized}%"))
                 )
-                // Order by how similar the strings are, in terms of length
                 .OrderBy(f => f.Title.Length - queryNormalized.Length)
                 .Take(10)
                 .ProjectTo<SearchResponseFlickItem>(_mapper.ConfigurationProvider)
@@ -121,9 +117,7 @@ namespace MyFlickList.Api.Endpoints.Search
 
             var profiles = await _database.Profiles
                 .Where(p => p.IsPublic)
-                // TODO: replace with collations
-                .Where(p => p.User!.Username.ToLower().Contains(queryNormalized))
-                // Order by how similar the strings are, in terms of length
+                .Where(p => EF.Functions.ILike(p.User!.Username, $"%{queryNormalized}%"))
                 .OrderBy(p => p.User!.Username.Length - queryNormalized.Length)
                 .Take(10)
                 .ProjectTo<SearchResponseProfileItem>(_mapper.ConfigurationProvider)

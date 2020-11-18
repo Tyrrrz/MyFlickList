@@ -4,37 +4,40 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace MyFlickList.Api.Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20201030192908_SimplifyDb")]
-    partial class SimplifyDb
+    [Migration("20201118220626_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Npgsql:PostgresExtension:unaccent", ",,")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.9")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasPostgresExtension("unaccent")
+                .UseIdentityByDefaultColumns()
+                .HasAnnotation("Relational:MaxIdentifierLength", 63)
+                .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("MyFlickList.Api.Entities.Auth.UserEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Database.Auth.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("character varying(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("EmailNormalized")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsEmailConfirmed")
                         .HasColumnType("boolean");
@@ -48,26 +51,30 @@ namespace MyFlickList.Api.Database.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("character varying(48)")
-                        .HasMaxLength(48);
+                        .HasMaxLength(48)
+                        .HasColumnType("character varying(48)");
+
+                    b.Property<string>("UsernameNormalized")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Email")
+                    b.HasIndex("EmailNormalized")
                         .IsUnique();
 
-                    b.HasIndex("Username")
+                    b.HasIndex("UsernameNormalized")
                         .IsUnique();
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("MyFlickList.Api.Entities.Files.FileEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Database.Files.FileEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<string>("ContentType")
                         .IsRequired()
@@ -82,12 +89,12 @@ namespace MyFlickList.Api.Database.Migrations
                     b.ToTable("Files");
                 });
 
-            modelBuilder.Entity("MyFlickList.Api.Entities.Flicks.FlickEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Database.Flicks.FlickEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<int?>("CoverImageId")
                         .HasColumnType("integer");
@@ -110,8 +117,8 @@ namespace MyFlickList.Api.Database.Migrations
 
                     b.Property<string>("ImdbId")
                         .IsRequired()
-                        .HasColumnType("character varying(12)")
-                        .HasMaxLength(12);
+                        .HasMaxLength(12)
+                        .HasColumnType("character varying(12)");
 
                     b.Property<byte>("Kind")
                         .HasColumnType("smallint");
@@ -144,12 +151,12 @@ namespace MyFlickList.Api.Database.Migrations
                     b.ToTable("Flicks");
                 });
 
-            modelBuilder.Entity("MyFlickList.Api.Entities.Profiles.ProfileEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Database.Profiles.ProfileEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .UseIdentityByDefaultColumn();
 
                     b.Property<int?>("AvatarImageId")
                         .HasColumnType("integer");
@@ -178,13 +185,90 @@ namespace MyFlickList.Api.Database.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("MyFlickList.Api.Entities.Profiles.ProfileEntity", b =>
+            modelBuilder.Entity("MyFlickList.Api.Database.Profiles.ProfileFlickEntryEntity", b =>
                 {
-                    b.HasOne("MyFlickList.Api.Entities.Auth.UserEntity", "User")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .UseIdentityByDefaultColumn();
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("EpisodeCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("FlickId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("integer");
+
+                    b.Property<double?>("Rating")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Review")
+                        .HasMaxLength(20000)
+                        .HasColumnType("character varying(20000)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("Updated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FlickId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("ProfileFlickEntries");
+                });
+
+            modelBuilder.Entity("MyFlickList.Api.Database.Profiles.ProfileEntity", b =>
+                {
+                    b.HasOne("MyFlickList.Api.Database.Auth.UserEntity", "User")
                         .WithOne("Profile")
-                        .HasForeignKey("MyFlickList.Api.Entities.Profiles.ProfileEntity", "UserId")
+                        .HasForeignKey("MyFlickList.Api.Database.Profiles.ProfileEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MyFlickList.Api.Database.Profiles.ProfileFlickEntryEntity", b =>
+                {
+                    b.HasOne("MyFlickList.Api.Database.Flicks.FlickEntity", "Flick")
+                        .WithMany("ProfileEntries")
+                        .HasForeignKey("FlickId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyFlickList.Api.Database.Profiles.ProfileEntity", "Profile")
+                        .WithMany("FlickEntries")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Flick");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("MyFlickList.Api.Database.Auth.UserEntity", b =>
+                {
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("MyFlickList.Api.Database.Flicks.FlickEntity", b =>
+                {
+                    b.Navigation("ProfileEntries");
+                });
+
+            modelBuilder.Entity("MyFlickList.Api.Database.Profiles.ProfileEntity", b =>
+                {
+                    b.Navigation("FlickEntries");
                 });
 #pragma warning restore 612, 618
         }

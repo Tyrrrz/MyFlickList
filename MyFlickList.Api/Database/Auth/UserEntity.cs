@@ -17,7 +17,11 @@ namespace MyFlickList.Api.Database.Auth
 
         public string Username { get; set; } = default!;
 
+        public string UsernameNormalized { get; set; } = default!;
+
         public string Email { get; set; } = default!;
+
+        public string EmailNormalized { get; set; } = default!;
 
         public bool IsEmailConfirmed { get; set; }
 
@@ -30,18 +34,25 @@ namespace MyFlickList.Api.Database.Auth
     {
         public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            // TODO: case-insensitive collation (.NET 5)
-            builder.HasIndex(o => o.Username)
+            builder.HasIndex(o => o.UsernameNormalized)
                 .IsUnique();
 
-            builder.HasIndex(o => o.Email)
+            builder.HasIndex(o => o.EmailNormalized)
                 .IsUnique();
 
             builder.Property(o => o.Username)
                 .IsRequired()
                 .HasMaxLength(48);
 
+            builder.Property(o => o.UsernameNormalized)
+                .IsRequired()
+                .HasMaxLength(48);
+
             builder.Property(o => o.Email)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            builder.Property(o => o.EmailNormalized)
                 .IsRequired()
                 .HasMaxLength(256);
 

@@ -34,6 +34,7 @@ namespace MyFlickList.Api
             {
                 o.UseNpgsql(Configuration.GetDatabaseConnectionString());
                 o.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                o.EnableSensitiveDataLogging();
             }, 20);
 
             // Infrastructure

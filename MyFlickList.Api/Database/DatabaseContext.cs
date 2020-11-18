@@ -19,24 +19,13 @@ namespace MyFlickList.Api.Database
         public DbSet<ProfileFlickEntryEntity> ProfileFlickEntries { get; set; } = default!;
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
-            : base(options)
-        {
-        }
+            : base(options) {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // TODO: add collations with EFc5
-            // http://npgsql.org/efcore/misc/collations-and-case-sensitivity.html?tabs=data-annotations
-
-            // Unaccent extension (will not need when collations are added)
             modelBuilder.HasPostgresExtension("unaccent");
-            modelBuilder
-                .HasDbFunction(typeof(Postgres.Functions).GetMethod(nameof(Postgres.Functions.Unaccent))!)
-                .HasName("unaccent");
-
-            // Local configurations
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(DatabaseContext).Assembly);
         }
     }

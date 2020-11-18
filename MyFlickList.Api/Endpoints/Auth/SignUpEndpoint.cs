@@ -37,6 +37,25 @@ namespace MyFlickList.Api.Endpoints.Auth
             _database = database;
         }
 
+        private static string NormalizeUsername(string username) =>
+            username.ToLowerInvariant();
+
+        private static string NormalizeEmail(string email)
+        {
+            var normalized = email.ToLowerInvariant();
+
+            // Remove characters between + and @
+            var plusPos = normalized.IndexOf('+');
+            var atPos = normalized.IndexOf('@');
+            if (plusPos > 0 && atPos > plusPos)
+            {
+                // TODO: test this
+                return normalized.Substring(0, plusPos) + normalized.Substring(atPos);
+            }
+
+            return normalized;
+        }
+
         [OpenApiTag("Auth")]
         [OpenApiOperation("signUp")]
         [HttpPost("auth/signup")]
@@ -49,7 +68,9 @@ namespace MyFlickList.Api.Endpoints.Auth
             var user = new UserEntity
             {
                 Username = request.Username,
+                UsernameNormalized = NormalizeUsername(request.Username),
                 Email = request.Email,
+                EmailNormalized = NormalizeEmail(request.Email),
                 PasswordHash = PasswordHash.Generate(request.Password),
                 Profile = new ProfileEntity()
             };
