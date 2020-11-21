@@ -17,17 +17,29 @@ export default function Footer() {
         'hover:opacity-100'
       )}
     >
-      <Link href="https://twitter.com/My_Flick_List">Twitter</Link>
+      <Link href="https://twitter.com/My_Flick_List" underline="hover">
+        Twitter
+      </Link>
       {' • '}
-      <Link href="https://discord.gg/hgVa7qS">Discord</Link>
+      <Link href="https://discord.gg/hgVa7qS" underline="hover">
+        Discord
+      </Link>
       {' • '}
-      <Link href="https://github.com/Tyrrrz/MyFlickList">Source</Link>
+      <Link href="https://github.com/Tyrrrz/MyFlickList" underline="hover">
+        Source
+      </Link>
       {' • '}
-      <Link href={routes.misc.credits()}>Credits</Link>
+      <Link href={routes.misc.credits()} underline="hover">
+        Credits
+      </Link>
       {' • '}
-      <Link href={routes.misc.feedback()}>Feedback</Link>
+      <Link href={routes.misc.feedback()} underline="hover">
+        Feedback
+      </Link>
       {' • '}
-      <Link href={routes.misc.donate()}>Donate</Link>
+      <Link href={routes.misc.donate()} underline="hover">
+        Donate
+      </Link>
     </footer>
   );
 }

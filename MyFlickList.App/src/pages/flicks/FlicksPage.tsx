@@ -90,7 +90,7 @@ export default function FlicksPage() {
       </Section>
 
       {/* Flicks */}
-      <Section>
+      <Section title={`Flicks (page ${page})`}>
         {flicks.items.map((flick) => (
           <div key={flick.id} className={classnames('flex', 'space-x-3')}>
             <div>

@@ -97,7 +97,7 @@ export default function Pagination({ currentPage, lastPage, getPageHref }: Pagin
   }
 
   return (
-    <nav className={classnames('mt-3', 'flex', 'justify-center', 'space-x-1', 'text-xl')}>
+    <nav className={classnames('pt-3', 'flex', 'justify-center', 'space-x-1', 'text-xl')}>
       {pageButtons}
     </nav>
   );

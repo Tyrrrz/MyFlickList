@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
-import { AiOutlineReddit } from 'react-icons/ai';
 import { FiCalendar, FiClock, FiFacebook, FiFilm, FiStar, FiTwitter } from 'react-icons/fi';
+import { IoLogoReddit } from 'react-icons/io';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Alert from '../../components/Alert';
 import HorizontalSeparator from '../../components/HorizontalSeparator';
@@ -45,6 +45,8 @@ export default function FlickPage() {
   useCanonicalUrl(selfUrl);
 
   const coverImageUrl = flick.coverImageId ? getFileUrl(flick.coverImageId) : posterFallbackAsset;
+
+  // TODO: hide additional info under a spoiler
 
   return (
     <Page
@@ -150,7 +152,7 @@ export default function FlickPage() {
                   related: config.appUrl
                 })}
               >
-                <FiTwitter />
+                <FiTwitter strokeWidth={1} />
               </Link>
 
               <Link
@@ -158,7 +160,7 @@ export default function FlickPage() {
                   title: flick.title
                 })}
               >
-                <AiOutlineReddit />
+                <IoLogoReddit strokeWidth={1} />
               </Link>
 
               <Link
@@ -166,7 +168,7 @@ export default function FlickPage() {
                   title: flick.title
                 })}
               >
-                <FiFacebook />
+                <FiFacebook strokeWidth={1} />
               </Link>
             </div>
           </div>
