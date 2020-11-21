@@ -47,7 +47,7 @@ function SearchResultsSection({ query }: { query: string }) {
                       flickId: flick.id,
                       flickTitle: slugify(flick.title)
                     })}
-                    underline={false}
+                    underline="hover"
                   >
                     {flick.title}
                   </Link>
@@ -113,7 +113,7 @@ function SearchResultsSection({ query }: { query: string }) {
                       profileId: profile.id,
                       profileName: profile.name
                     })}
-                    underline={false}
+                    underline="hover"
                   >
                     {profile.name}
                   </Link>

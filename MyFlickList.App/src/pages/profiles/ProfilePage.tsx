@@ -194,7 +194,7 @@ export default function ProfilePage() {
                       flickId: entry.flickId,
                       flickTitle: slugify(entry.flickTitle)
                     })}
-                    underline={false}
+                    underline="hover"
                   >
                     {entry.flickTitle}
                   </Link>

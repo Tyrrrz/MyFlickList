@@ -6,6 +6,7 @@ import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
+import FormSelect from '../../components/FormSelect';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Pagination from '../../components/Pagination';
@@ -58,7 +59,7 @@ export default function FlicksPage() {
   ]);
 
   // TODO: form inputs are not properly updated when navigating
-  // TODO: replace inputs with selects with autocomplete
+  // TODO: add autocomplete
   const defaultFormValues: FormValues = { order, tag };
 
   return (
@@ -72,8 +73,18 @@ export default function FlicksPage() {
             history.push(routes.flicks.all(data));
           }}
         >
-          <FormInput name="order" label="Order" />
-          <FormInput name="tag" label="Tag" />
+          <FormSelect
+            name="order"
+            label="List order"
+            options={[
+              { label: 'Top Flicks', value: 'Top' },
+              { label: 'Trending Flicks', value: 'Trending' },
+              { label: 'New Flicks', value: 'New' }
+            ]}
+          />
+
+          <FormInput name="tag" label="Tag filter" />
+
           <FormButton isSubmit={true}>Show</FormButton>
         </Form>
       </Section>
@@ -100,7 +111,7 @@ export default function FlicksPage() {
                     flickId: flick.id,
                     flickTitle: slugify(flick.title)
                   })}
-                  underline={false}
+                  underline="hover"
                 >
                   {flick.title}
                 </Link>

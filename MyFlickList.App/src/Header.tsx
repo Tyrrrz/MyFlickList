@@ -17,7 +17,7 @@ function HeaderUserBox() {
   // Not signed in
   if (!auth.token) {
     return (
-      <Link className={classnames('font-semibold')} href={routes.auth.signIn()} underline={false}>
+      <Link className={classnames('font-semibold')} href={routes.auth.signIn()} underline="hover">
         Sign in
       </Link>
     );
@@ -29,12 +29,12 @@ function HeaderUserBox() {
       <Link
         className={classnames('font-semibold')}
         href={routes.profiles.current()}
-        underline={false}
+        underline="hover"
       >
         {auth.token.getUsername()}
       </Link>
 
-      <Link href={routes.auth.signOut()} underline={false}>
+      <Link href={routes.auth.signOut()} underline="hover">
         Sign out
       </Link>
     </HStack>
@@ -62,7 +62,7 @@ export default function Header() {
     <header className={classnames(['flex', 'flex-row', 'items-center'])}>
       {/* Brand */}
       <div>
-        <Link className="text-2xl text-black tracking-wide" href={routes.home()} underline={false}>
+        <Link className="text-2xl text-black tracking-wide" href={routes.home()} underline="never">
           <HStack>
             <FiTv />
             <div className="ml-2">MyFlickList</div>
@@ -75,16 +75,16 @@ export default function Header() {
 
       {/* Navigation */}
       <nav className="text-xl space-x-4">
-        <Link href={routes.flicks.all({})} underline={false}>
+        <Link href={routes.flicks.all({})} underline="hover">
           Flicks
         </Link>
-        <Link href={routes.flicks.all({})} underline={false}>
+        <Link href={routes.flicks.all({})} underline="hover">
           Characters
         </Link>
-        <Link href={routes.flicks.all({})} underline={false}>
+        <Link href={routes.flicks.all({})} underline="hover">
           Actors
         </Link>
-        <Link href={routes.flicks.all({})} underline={false}>
+        <Link href={routes.flicks.all({})} underline="hover">
           Network
         </Link>
       </nav>

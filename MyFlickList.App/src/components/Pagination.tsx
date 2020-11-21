@@ -38,7 +38,7 @@ function PageButton({ href, isActive, children }: PageButtonProps) {
           'bg-gray-200'
         )}
         href={href}
-        underline={false}
+        underline="never"
       >
         {children}
       </Link>
@@ -57,7 +57,7 @@ function PageButton({ href, isActive, children }: PageButtonProps) {
         'hover:bg-gray-300'
       )}
       href={href}
-      underline={false}
+      underline="never"
       onClick={() => window.scrollTo(0, 0)}
     >
       {children}

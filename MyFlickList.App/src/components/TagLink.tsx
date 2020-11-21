@@ -21,7 +21,7 @@ export default function TagLink({ className, href, children }: TagLinkProps) {
         'font-semibold'
       )}
     >
-      <Link className={classnames('hover:underline')} href={href} underline={false}>
+      <Link href={href} underline="hover">
         {children}
       </Link>
     </div>
