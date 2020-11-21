@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import copy from 'copy-to-clipboard';
 import React from 'react';
-import { FiEdit, FiLink, FiMapPin, FiPlus, FiStar } from 'react-icons/fi';
+import { FiEdit, FiLink, FiMapPin, FiStar } from 'react-icons/fi';
 import { Redirect } from 'react-router';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Link from '../../components/Link';
@@ -161,14 +161,6 @@ export default function ProfilePage() {
 
       {/* Flicks */}
       <Section title="Flicks">
-        <div className={classnames('text-2xl')}>
-          {isAuthUserProfile && (
-            <Link href={routes.profiles.addFlick()}>
-              <FiPlus />
-            </Link>
-          )}
-        </div>
-
         {flickEntries.items && flickEntries.items.length > 0 ? (
           flickEntries.items.map((entry) => (
             <div key={entry.flickId} className={classnames('flex', 'space-x-3')}>
@@ -227,7 +219,7 @@ export default function ProfilePage() {
             </div>
           ))
         ) : (
-          <div>This user hasn&apos;t added any flicks yet</div>
+          <div>This user hasn&apos;t added any flicks yet...</div>
         )}
       </Section>
     </Page>

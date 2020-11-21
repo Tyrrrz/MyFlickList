@@ -69,7 +69,7 @@ export default function EditProfilePage() {
           <FormTextArea name="externalLinks" label="External links" />
 
           <div className="flex flex-row items-center space-x-2">
-            <FormButton isSubmit={true}>Save</FormButton>
+            <FormButton type="submit">Save</FormButton>
 
             <FormButton
               onClick={(e) => {

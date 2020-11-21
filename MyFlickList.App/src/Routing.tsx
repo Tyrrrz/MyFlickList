@@ -11,7 +11,6 @@ import CreditsPage from './pages/misc/CreditsPage';
 import DonatePage from './pages/misc/DonatePage';
 import FeedbackPage from './pages/misc/FeedbackPage';
 import NotFoundPage from './pages/NotFoundPage';
-import AddFlickEntryPage from './pages/profiles/AddFlickEntryPage';
 import DeleteFlickEntryPage from './pages/profiles/DeleteFlickEntryPage';
 import EditFlickEntryPage from './pages/profiles/EditFlickEntryPage';
 import EditProfilePage from './pages/profiles/EditProfilePage';
@@ -36,7 +35,6 @@ export default function Routing() {
       <Route exact path={routes.profiles.specific.path} component={ProfilePage} />
       <Route exact path={routes.profiles.current.path} component={ProfilePage} />
       <Route exact path={routes.profiles.edit.path} component={EditProfilePage} />
-      <Route exact path={routes.profiles.addFlick.path} component={AddFlickEntryPage} />
       <Route exact path={routes.profiles.editFlick.path} component={EditFlickEntryPage} />
       <Route exact path={routes.profiles.deleteFlick.path} component={DeleteFlickEntryPage} />
 

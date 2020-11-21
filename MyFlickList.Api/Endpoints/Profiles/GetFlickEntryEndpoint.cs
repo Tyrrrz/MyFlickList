@@ -94,7 +94,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
             {
                 return Error(
                     HttpStatusCode.NotFound,
-                    $"Entry for flick '{flickId}' on profile '{flickId}' not found"
+                    $"Entry for flick '{flickId}' on profile '{profileId}' not found"
                 );
             }
 

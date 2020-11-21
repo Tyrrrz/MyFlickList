@@ -32,8 +32,8 @@ export default function DeleteFlickEntryPage() {
   }
 
   return (
-    <Page title="Profile - Remove Flick">
-      <Section title="Remove Flick">
+    <Page title={`Entry - ${flickEntry.flickTitle}`}>
+      <Section title="Delete Flick Entry">
         <Form
           onSubmit={async () => {
             await api
@@ -45,12 +45,12 @@ export default function DeleteFlickEntryPage() {
           }}
         >
           <p>
-            Are you sure you want to remove{' '}
+            Are you sure you want to delete{' '}
             <span className="font-semibold">{flickEntry.flickTitle}</span> from your profile?
           </p>
 
           <div className="flex flex-row items-center space-x-2">
-            <FormButton isSubmit={true}>Delete</FormButton>
+            <FormButton type="submit">Delete</FormButton>
 
             <FormButton
               onClick={(e) => {

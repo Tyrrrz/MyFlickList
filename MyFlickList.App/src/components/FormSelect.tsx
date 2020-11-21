@@ -26,6 +26,7 @@ export default function FormSelect<TOption>({
   icon,
   label,
   options,
+  required,
   ...props
 }: FormSelectProps<TOption>) {
   const form = useFormContext();
@@ -46,6 +47,7 @@ export default function FormSelect<TOption>({
         >
           {icon}
           <div>{label}</div>
+          {required && <div className={classnames('text-red-500')}>*</div>}
         </label>
       )}
 
@@ -67,6 +69,7 @@ export default function FormSelect<TOption>({
           'disabled:cursor-not-allowed'
         )}
         name={name}
+        required={required}
         ref={form.register}
       >
         {options.map((option) => (

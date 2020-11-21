@@ -1,6 +1,17 @@
 import classnames from 'classnames';
 import React from 'react';
-import { FiCalendar, FiClock, FiFacebook, FiFilm, FiStar, FiTwitter } from 'react-icons/fi';
+import {
+  FiCalendar,
+  FiCheck,
+  FiClock,
+  FiFacebook,
+  FiFilm,
+  FiList,
+  FiPlayCircle,
+  FiStar,
+  FiTwitter,
+  FiXOctagon
+} from 'react-icons/fi';
 import { IoLogoReddit } from 'react-icons/io';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Alert from '../../components/Alert';
@@ -25,6 +36,7 @@ import {
   formatRuntime,
   formatYears
 } from '../../internal/flickHelpers';
+import { getAvatarImageUrl } from '../../internal/profileHelpers';
 import {
   createFacebookShareLink,
   createRedditShareLink,
@@ -35,9 +47,25 @@ import routes from '../../routes';
 
 export default function FlickPage() {
   const flickId = useParam('flickId', Number);
+
   const auth = useAuth();
+  const profileId = auth.token?.getProfileId();
 
   const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(flickId), ['flick', flickId]);
+  const flickEntry = useQuery(async () => {
+    try {
+      return await api.profiles(auth.token?.value).getFlickEntry(profileId!, flickId);
+    } catch {
+      return null;
+    }
+  }, ['flickEntry', profileId, flickId]);
+  const profile = useQuery(async () => {
+    try {
+      return await api.profiles(auth.token?.value).getProfile(profileId!);
+    } catch {
+      return null;
+    }
+  }, ['profile', profileId]);
 
   const selfUrl = routes.flicks.specific({ flickId: flick.id, flickTitle: slugify(flick.title) });
   const selfUrlAbsolute = getAbsoluteUrl(config.appUrl, selfUrl);
@@ -186,10 +214,93 @@ export default function FlickPage() {
         </div>
       </Section>
 
-      {/* User listing */}
-      <Alert title={`Have you watched this ${flick.kind.toLowerCase()}?`}>
-        <Link href={routes.auth.signIn()}>Sign in</Link> to add it to your list!
-      </Alert>
+      {/* Flick entry */}
+      {profile ? (
+        <Section title="Your Entry">
+          <div className={classnames('flex', 'items-center', 'space-x-5')}>
+            {/* Avatar */}
+            <div style={{ minWidth: 'max-content' }}>
+              <img
+                className={classnames('rounded-full', 'shadow')}
+                alt={`${profile.name}'s avatar`}
+                src={getAvatarImageUrl(profile)}
+                width={100}
+                height={100}
+              />
+            </div>
+
+            <div>
+              {flickEntry ? (
+                <div>
+                  {/* Status */}
+                  <div
+                    className={classnames(
+                      'flex',
+                      'items-center',
+                      'text-lg',
+                      'font-semibold',
+                      'space-x-1'
+                    )}
+                  >
+                    {
+                      {
+                        Planned: <FiList />,
+                        Watching: <FiPlayCircle />,
+                        Watched: <FiCheck />,
+                        Dropped: <FiXOctagon />
+                      }[flickEntry.status]
+                    }
+                    <div>{flickEntry.status}</div>
+                  </div>
+
+                  {/* Episodes */}
+                  {flick.episodeCount && (
+                    <div>
+                      <span>Episodes: </span>
+                      <span className={classnames('font-semibold')}>{flickEntry.episodeCount}</span>
+                      <span>/{flick.episodeCount}</span>
+                    </div>
+                  )}
+
+                  {/* Rating */}
+                  <div>
+                    <span>Rating: </span>
+                    <span className={classnames('font-semibold')}>{flickEntry.rating}</span>
+                    <span>/10 ★</span>
+                  </div>
+
+                  {/* Links */}
+                  <div className={classnames('py-1', 'flex', 'space-x-3')}>
+                    {/* Edit */}
+                    <div>
+                      <Link href={routes.profiles.editFlick({ flickId })}>Edit</Link>
+                    </div>
+
+                    {/* Delete */}
+                    <div>
+                      <Link href={routes.profiles.deleteFlick({ flickId })}>Delete</Link>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className={classnames('text-lg')}>
+                    <span className={classnames('font-semibold')}>{flick.title}</span> is not on
+                    your list yet.
+                  </div>
+                  <div>
+                    Click <Link href={routes.profiles.editFlick({ flickId })}>here</Link> to add it.
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </Section>
+      ) : (
+        <Alert title={`Have you watched this ${flick.kind.toLowerCase()}?`}>
+          <Link href={routes.auth.signIn()}>Sign in</Link> to add it to your list!
+        </Alert>
+      )}
     </Page>
   );
 }

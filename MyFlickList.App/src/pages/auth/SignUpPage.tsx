@@ -84,7 +84,7 @@ export default function SignUpPage() {
             placeholder="••••••"
           />
 
-          <FormButton className={classnames(['w-full'])} isSubmit={true}>
+          <FormButton className={classnames(['w-full'])} type="submit">
             Submit
           </FormButton>
         </Form>

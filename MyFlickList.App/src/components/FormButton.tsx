@@ -3,9 +3,11 @@ import React, { MouseEventHandler } from 'react';
 import { useFormContext } from 'react-hook-form';
 import Spinner from './Spinner';
 
+type ButtonType = 'custom' | 'submit';
+
 interface ButtonProps {
   className?: string;
-  isSubmit?: boolean;
+  type?: ButtonType;
   disabled?: boolean;
   hidden?: boolean;
   onClick?: MouseEventHandler;
@@ -14,12 +16,14 @@ interface ButtonProps {
 
 export default function FormButton({
   className,
-  isSubmit,
+  type = 'custom',
   disabled,
   children,
   ...props
 }: ButtonProps) {
   const form = useFormContext();
+
+  const isSubmit = type === 'submit';
 
   return (
     <button

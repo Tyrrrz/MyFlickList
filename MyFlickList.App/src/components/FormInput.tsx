@@ -12,13 +12,22 @@ interface FormInputProps {
   required?: boolean;
   minLength?: number;
   maxLength?: number;
+  min?: number;
+  max?: number;
   pattern?: string;
   placeholder?: string;
   disabled?: boolean;
   hidden?: boolean;
 }
 
-export default function FormInput({ className, name, icon, label, ...props }: FormInputProps) {
+export default function FormInput({
+  className,
+  name,
+  icon,
+  label,
+  required,
+  ...props
+}: FormInputProps) {
   const form = useFormContext();
 
   return (
@@ -38,6 +47,7 @@ export default function FormInput({ className, name, icon, label, ...props }: Fo
         >
           {icon}
           <div>{label}</div>
+          {required && <div className={classnames('text-red-500')}>*</div>}
         </label>
       )}
 
@@ -59,6 +69,7 @@ export default function FormInput({ className, name, icon, label, ...props }: Fo
           'disabled:cursor-not-allowed'
         )}
         name={name}
+        required={required}
         ref={form.register}
       />
     </div>

@@ -37,6 +37,7 @@ export default function SignInPage() {
             name="username"
             placeholder="Username"
             autoFocus
+            required
           />
 
           <FormInput
@@ -44,9 +45,10 @@ export default function SignInPage() {
             type="password"
             name="password"
             placeholder="Password"
+            required
           />
 
-          <FormButton className={classnames(['w-full'])} isSubmit={true}>
+          <FormButton className={classnames(['w-full'])} type="submit">
             Submit
           </FormButton>
         </Form>

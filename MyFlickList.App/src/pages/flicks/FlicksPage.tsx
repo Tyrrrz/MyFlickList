@@ -85,7 +85,7 @@ export default function FlicksPage() {
 
           <FormInput name="tag" label="Tag filter" />
 
-          <FormButton isSubmit={true}>Show</FormButton>
+          <FormButton type="submit">Show</FormButton>
         </Form>
       </Section>
 

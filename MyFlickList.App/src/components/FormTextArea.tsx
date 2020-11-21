@@ -21,6 +21,7 @@ export default function FormTextArea({
   name,
   icon,
   label,
+  required,
   ...props
 }: FormTextAreaProps) {
   const form = useFormContext();
@@ -41,6 +42,7 @@ export default function FormTextArea({
         >
           {icon}
           <div>{label}</div>
+          {required && <div className={classnames('text-red-500')}>*</div>}
         </label>
       )}
 
@@ -64,6 +66,7 @@ export default function FormTextArea({
         style={{ minHeight: '6rem' }}
         rows={5}
         name={name}
+        required={required}
         ref={form.register}
       />
     </div>

@@ -164,7 +164,7 @@ export default function SearchPage() {
             placeholder="Search"
           />
 
-          <FormButton isSubmit={true}>Search</FormButton>
+          <FormButton type="submit">Search</FormButton>
         </Form>
 
         <div className={classnames('text-lg', 'text-center', 'font-thin')}>

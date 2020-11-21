@@ -1,11 +1,14 @@
+import classnames from 'classnames';
 import React from 'react';
 import { useQueryCache } from 'react-query';
 import { Redirect, useHistory } from 'react-router';
+import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Form from '../../components/Form';
 import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import FormSelect from '../../components/FormSelect';
 import FormTextArea from '../../components/FormTextArea';
+import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
@@ -13,6 +16,8 @@ import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import { ProfileFlickEntryStatus } from '../../internal/api.generated';
+import { getFileUrl } from '../../internal/fileHelpers';
+import { slugify } from '../../internal/utils';
 import routes from '../../routes';
 
 interface FormValues {
@@ -31,34 +36,70 @@ export default function EditFlickEntryPage() {
 
   const profileId = auth.token?.getProfileId() || -1;
 
-  const flickEntry = useQuery(
-    () => api.profiles(auth.token?.value).getFlickEntry(profileId, flickId),
-    ['flickEntry', profileId, flickId]
-  );
+  const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(flickId), ['flick', flickId]);
+
+  const flickEntry = useQuery(async () => {
+    try {
+      return await api.profiles(auth.token?.value).getFlickEntry(profileId!, flickId);
+    } catch {
+      return null;
+    }
+  }, ['flickEntry', profileId, flickId]);
 
   // If not signed in, redirect to sign in page
   if (!auth.token) {
     return <Redirect to={routes.auth.signIn()} />;
   }
 
-  const defaultFormValues: FormValues = { ...flickEntry };
+  const defaultFormValues: FormValues = {
+    ...flickEntry
+  };
 
   return (
-    <Page title="Profile - Edit Flick">
-      <Section title="Edit Flick">
+    <Page title={`Entry - ${flick.title}`}>
+      <Section title="Edit Flick Entry">
+        <div className={classnames('flex', 'space-x-3')}>
+          {/* Cover */}
+          <div style={{ minWidth: 'max-content' }}>
+            <img
+              className={classnames('rounded-md', 'shadow')}
+              alt={flick.title}
+              src={flick.coverImageId ? getFileUrl(flick.coverImageId) : posterFallbackAsset}
+              width={70}
+              height={105}
+            />
+          </div>
+
+          {/* Metadata */}
+          <div>
+            <div className={classnames('text-xl')}>
+              <Link
+                href={routes.flicks.specific({
+                  flickId: flick.id,
+                  flickTitle: slugify(flick.title)
+                })}
+                underline="hover"
+              >
+                {flick.title}
+              </Link>
+            </div>
+            <div>{flick.kind}</div>
+            {flick.episodeCount && <div>{flick.episodeCount} episodes</div>}
+          </div>
+        </div>
+
         <Form
           defaultValues={defaultFormValues}
           onSubmit={async (data) => {
-            await api
-              .profiles(auth.token?.value)
-              .putFlickEntry(flickEntry.profileId, flickEntry.flickId, data);
+            await api.profiles(auth.token?.value).putFlickEntry(profileId, flickId, data);
 
             queryCache.clear();
-            history.push(routes.profiles.current());
+
+            history.push(
+              routes.flicks.specific({ flickId: flick.id, flickTitle: slugify(flick.title) })
+            );
           }}
         >
-          <FormInput name="flickId" label="Flick ID" disabled />
-
           <FormSelect
             name="status"
             label="Status"
@@ -70,7 +111,16 @@ export default function EditFlickEntryPage() {
             ]}
           />
 
-          <FormInput name="episodeCount" label="Episodes" />
+          {flick.episodeCount && (
+            <FormInput
+              type="number"
+              name="episodeCount"
+              label="Episodes"
+              min={0}
+              max={flick.episodeCount}
+              placeholder="How many episodes have you watched so far?"
+            />
+          )}
 
           <FormSelect
             name="rating"
@@ -90,10 +140,23 @@ export default function EditFlickEntryPage() {
             ]}
           />
 
-          <FormTextArea name="review" label="Review" />
+          <FormTextArea
+            name="review"
+            label="Review"
+            placeholder={`What did you think about ${flick.title}?`}
+          />
 
           <div className="flex flex-row items-center space-x-2">
-            <FormButton isSubmit={true}>Save</FormButton>
+            <FormButton type="submit">Save</FormButton>
+
+            <FormButton
+              onClick={(e) => {
+                e.preventDefault();
+                history.push(routes.profiles.deleteFlick({ flickId: flick.id }));
+              }}
+            >
+              Delete
+            </FormButton>
 
             <FormButton
               onClick={(e) => {

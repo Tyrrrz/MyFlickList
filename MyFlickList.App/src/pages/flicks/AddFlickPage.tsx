@@ -42,7 +42,7 @@ export default function AddFlickPage() {
             required
           />
 
-          <FormButton isSubmit={true} disabled={!auth.token}>
+          <FormButton type="submit" disabled={!auth.token}>
             Pull
           </FormButton>
         </Form>
