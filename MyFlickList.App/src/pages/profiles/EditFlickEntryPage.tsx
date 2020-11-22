@@ -152,15 +152,6 @@ export default function EditFlickEntryPage() {
             <FormButton
               onClick={(e) => {
                 e.preventDefault();
-                history.push(routes.profiles.deleteFlick({ flickId: flick.id }));
-              }}
-            >
-              Delete
-            </FormButton>
-
-            <FormButton
-              onClick={(e) => {
-                e.preventDefault();
                 history.goBack();
               }}
             >

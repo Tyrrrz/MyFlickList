@@ -47,8 +47,7 @@ export default {
     settings: route('/profile/settings'),
     edit: route('/profile/edit'),
 
-    editFlick: route<FlickParams>('/profile/flicks/:flickId/edit'),
-    deleteFlick: route<FlickParams>('/profile/flicks/:flickId/delete')
+    editFlick: route<FlickParams>('/profile/flicks/:flickId/edit')
   },
 
   misc: {

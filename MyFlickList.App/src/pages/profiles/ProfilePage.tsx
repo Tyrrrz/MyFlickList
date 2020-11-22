@@ -11,7 +11,8 @@ import {
   FiSettings,
   FiXOctagon
 } from 'react-icons/fi';
-import { Redirect } from 'react-router';
+import { useQueryCache } from 'react-query';
+import { Redirect, useHistory } from 'react-router';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
@@ -29,9 +30,12 @@ import routes from '../../routes';
 
 export default function ProfilePage() {
   const profileId = useParam('profileId', Number);
+  const history = useHistory();
   const auth = useAuth();
 
   const actualProfileId = profileId || auth.token?.getProfileId();
+
+  const queryCache = useQueryCache();
 
   // TODO: make this cleaner when `actualProfileId` is undefined
   const profile = useQuery(
@@ -247,7 +251,25 @@ export default function ProfilePage() {
 
                   {/* Delete */}
                   <div>
-                    <Link href={routes.profiles.deleteFlick({ flickId: entry.flickId })}>
+                    <Link
+                      href="#"
+                      onClick={async (e) => {
+                        e.preventDefault();
+
+                        if (
+                          window.confirm(
+                            `Are you sure you want to delete ${entry.flickTitle} from your profile?`
+                          )
+                        ) {
+                          await api
+                            .profiles(auth.token?.value)
+                            .deleteFlickEntry(actualProfileId, entry.flickId);
+
+                          queryCache.clear();
+                          history.go(0);
+                        }
+                      }}
+                    >
                       Delete
                     </Link>
                   </div>

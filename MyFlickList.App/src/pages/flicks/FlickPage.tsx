@@ -13,6 +13,7 @@ import {
   FiXOctagon
 } from 'react-icons/fi';
 import { IoLogoReddit } from 'react-icons/io';
+import { useQueryCache } from 'react-query';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Alert from '../../components/Alert';
 import HorizontalSeparator from '../../components/HorizontalSeparator';
@@ -50,6 +51,8 @@ export default function FlickPage() {
 
   const auth = useAuth();
   const profileId = auth.token?.getProfileId();
+
+  const queryCache = useQueryCache();
 
   const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(flickId), ['flick', flickId]);
   const flickEntry = useQuery(async () => {
@@ -278,7 +281,27 @@ export default function FlickPage() {
 
                     {/* Delete */}
                     <div>
-                      <Link href={routes.profiles.deleteFlick({ flickId })}>Delete</Link>
+                      <Link
+                        href="#"
+                        onClick={async (e) => {
+                          e.preventDefault();
+
+                          if (
+                            window.confirm(
+                              `Are you sure you want to delete ${flick.title} from your profile?`
+                            )
+                          ) {
+                            await api
+                              .profiles(auth.token?.value)
+                              .deleteFlickEntry(profileId!, flick.id);
+
+                            queryCache.clear();
+                            history.go(0);
+                          }
+                        }}
+                      >
+                        Delete
+                      </Link>
                     </div>
                   </div>
                 </div>
