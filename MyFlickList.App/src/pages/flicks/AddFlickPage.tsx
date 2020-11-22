@@ -49,8 +49,7 @@ export default function AddFlickPage() {
 
         {!auth.token && (
           <Alert className={classnames('mt-3')} type="error">
-            You need to be <Link href={routes.auth.signIn()}>signed in</Link> in order to request a
-            new flick
+            You need to be <Link href={routes.auth.signIn()}>signed in</Link> to request a new flick
           </Alert>
         )}
       </Section>

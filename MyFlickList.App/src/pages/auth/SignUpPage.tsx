@@ -30,8 +30,8 @@ export default function SignUpPage() {
             password: '',
             passwordConfirm: ''
           }}
-          onSubmit={async (data) => {
-            if (data.password !== data.passwordConfirm) {
+          onSubmit={async ({ passwordConfirm, ...data }) => {
+            if (data.password !== passwordConfirm) {
               throw Error('Passwords must match');
             }
 

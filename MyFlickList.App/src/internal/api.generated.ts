@@ -49,7 +49,7 @@ export class SearchClient {
         } else if (status === 400) {
             return response.text().then((_responseText) => {
             let result400: any = null;
-            result400 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = _responseText === "" ? null : <ValidationProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
             return throwException("A server side error occurred.", status, _responseText, _headers, result400);
             });
         } else if (status !== 200 && status !== 204) {
@@ -240,7 +240,7 @@ export class ProfilesClient {
         return Promise.resolve<void>(<any>null);
     }
 
-    getFlickEntries(profileId: number): Promise<GetFlickEntriesResponse> {
+    getFlickEntries(profileId: number): Promise<PaginatedResponseOfGetFlickEntriesResponseItem> {
         let url_ = this.baseUrl + "/profiles/{profileId}/flicks";
         if (profileId === undefined || profileId === null)
             throw new Error("The parameter 'profileId' must be defined.");
@@ -259,13 +259,13 @@ export class ProfilesClient {
         });
     }
 
-    protected processGetFlickEntries(response: Response): Promise<GetFlickEntriesResponse> {
+    protected processGetFlickEntries(response: Response): Promise<PaginatedResponseOfGetFlickEntriesResponseItem> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <GetFlickEntriesResponse>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <PaginatedResponseOfGetFlickEntriesResponseItem>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
         } else if (status === 400) {
@@ -291,7 +291,7 @@ export class ProfilesClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<GetFlickEntriesResponse>(<any>null);
+        return Promise.resolve<PaginatedResponseOfGetFlickEntriesResponseItem>(<any>null);
     }
 
     getProfile(profileId: number): Promise<GetProfileResponse> {
@@ -457,7 +457,7 @@ export class FlicksClient {
         return Promise.resolve<AddFlickResponse>(<any>null);
     }
 
-    getFlicks(order?: GetFlicksOrder | undefined, filterTag?: string | null | undefined, page?: number | undefined): Promise<GetFlicksResponse> {
+    getFlicks(order?: GetFlicksOrder | undefined, filterTag?: string | null | undefined, page?: number | undefined): Promise<PaginatedResponseOfGetFlicksResponseItem> {
         let url_ = this.baseUrl + "/flicks?";
         if (order === null)
             throw new Error("The parameter 'order' cannot be null.");
@@ -483,13 +483,13 @@ export class FlicksClient {
         });
     }
 
-    protected processGetFlicks(response: Response): Promise<GetFlicksResponse> {
+    protected processGetFlicks(response: Response): Promise<PaginatedResponseOfGetFlicksResponseItem> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <GetFlicksResponse>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <PaginatedResponseOfGetFlicksResponseItem>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -497,7 +497,7 @@ export class FlicksClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<GetFlicksResponse>(<any>null);
+        return Promise.resolve<PaginatedResponseOfGetFlicksResponseItem>(<any>null);
     }
 
     getFlick(flickId: number): Promise<GetFlickResponse> {
@@ -601,6 +601,52 @@ export class AuthClient {
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
         this.http = http ? http : <any>window;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    }
+
+    changePassword(request: ChangePasswordRequest): Promise<void> {
+        let url_ = this.baseUrl + "/auth/changePassword";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processChangePassword(_response);
+        });
+    }
+
+    protected processChangePassword(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            result400 = _responseText === "" ? null : <ValidationProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result400);
+            });
+        } else if (status === 401) {
+            return response.text().then((_responseText) => {
+            let result401: any = null;
+            result401 = _responseText === "" ? null : <ProblemDetails>JSON.parse(_responseText, this.jsonParseReviver);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result401);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
     }
 
     signIn(request: SignInRequest): Promise<SignInResponse> {
@@ -739,9 +785,6 @@ export interface PaginatedResponseOfGetFlickEntriesResponseItem {
     totalPages: number;
 }
 
-export interface GetFlickEntriesResponse extends PaginatedResponseOfGetFlickEntriesResponseItem {
-}
-
 export interface GetFlickEntriesResponseItem {
     status: ProfileFlickEntryStatus;
     episodeCount?: number | undefined;
@@ -824,9 +867,6 @@ export interface PaginatedResponseOfGetFlicksResponseItem {
     totalPages: number;
 }
 
-export interface GetFlicksResponse extends PaginatedResponseOfGetFlicksResponseItem {
-}
-
 export interface GetFlicksResponseItem {
     id: number;
     kind: FlickKind;
@@ -841,6 +881,11 @@ export interface GetFlicksResponseItem {
 }
 
 export type GetFlicksOrder = "Top" | "Trending" | "New";
+
+export interface ChangePasswordRequest {
+    oldPassword: string;
+    newPassword: string;
+}
 
 export interface SignInResponse {
     token: string;

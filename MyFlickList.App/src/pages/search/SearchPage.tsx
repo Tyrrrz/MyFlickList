@@ -86,7 +86,7 @@ function SearchResultsSection({ query }: { query: string }) {
             </div>
           ))
         ) : (
-          <div>Not found</div>
+          <div>None found</div>
         )}
       </Section>
 
@@ -134,7 +134,7 @@ function SearchResultsSection({ query }: { query: string }) {
             </div>
           ))
         ) : (
-          <div>Not found</div>
+          <div>None found</div>
         )}
       </Section>
     </>

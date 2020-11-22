@@ -15,6 +15,7 @@ import DeleteFlickEntryPage from './pages/profiles/DeleteFlickEntryPage';
 import EditFlickEntryPage from './pages/profiles/EditFlickEntryPage';
 import EditProfilePage from './pages/profiles/EditProfilePage';
 import ProfilePage from './pages/profiles/ProfilePage';
+import SettingsPage from './pages/profiles/SettingsPage';
 import SearchPage from './pages/search/SearchPage';
 import routes from './routes';
 
@@ -34,6 +35,7 @@ export default function Routing() {
 
       <Route exact path={routes.profiles.specific.path} component={ProfilePage} />
       <Route exact path={routes.profiles.current.path} component={ProfilePage} />
+      <Route exact path={routes.profiles.settings.path} component={SettingsPage} />
       <Route exact path={routes.profiles.edit.path} component={EditProfilePage} />
       <Route exact path={routes.profiles.editFlick.path} component={EditFlickEntryPage} />
       <Route exact path={routes.profiles.deleteFlick.path} component={DeleteFlickEntryPage} />

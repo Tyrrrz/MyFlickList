@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import copy from 'copy-to-clipboard';
 import React from 'react';
-import { FiEdit, FiLink, FiMapPin, FiStar } from 'react-icons/fi';
+import { FiEdit, FiLink, FiMapPin, FiSettings, FiStar } from 'react-icons/fi';
 import { Redirect } from 'react-router';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Link from '../../components/Link';
@@ -111,6 +111,17 @@ export default function ProfilePage() {
 
           {/* Buttons */}
           <div>
+            {/* Settings */}
+            {isAuthUserProfile && (
+              <Link
+                className={classnames('flex', 'items-center', 'space-x-1')}
+                href={routes.profiles.settings()}
+              >
+                <FiSettings />
+                <div>Settings</div>
+              </Link>
+            )}
+
             {/* Edit */}
             {isAuthUserProfile && (
               <Link

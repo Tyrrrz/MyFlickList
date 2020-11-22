@@ -44,6 +44,7 @@ export default {
     specific: route<ProfileParams>('/profiles/:profileId/:profileName?'),
 
     current: route('/profile'),
+    settings: route('/profile/settings'),
     edit: route('/profile/edit'),
 
     editFlick: route<FlickParams>('/profile/flicks/:flickId/edit'),
