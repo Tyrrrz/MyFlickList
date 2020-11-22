@@ -1,7 +1,16 @@
 import classnames from 'classnames';
 import copy from 'copy-to-clipboard';
 import React from 'react';
-import { FiEdit, FiLink, FiMapPin, FiSettings, FiStar } from 'react-icons/fi';
+import {
+  FiCheck,
+  FiEdit,
+  FiLink,
+  FiList,
+  FiMapPin,
+  FiPlayCircle,
+  FiSettings,
+  FiXOctagon
+} from 'react-icons/fi';
 import { Redirect } from 'react-router';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Link from '../../components/Link';
@@ -14,7 +23,6 @@ import useQuery from '../../context/useQuery';
 import api from '../../internal/api';
 import config from '../../internal/config';
 import { getFileUrl } from '../../internal/fileHelpers';
-import { formatRating } from '../../internal/flickHelpers';
 import { getAvatarImageUrl } from '../../internal/profileHelpers';
 import { getAbsoluteUrl, slugify } from '../../internal/utils';
 import routes from '../../routes';
@@ -203,28 +211,46 @@ export default function ProfilePage() {
                   </Link>
                 </div>
 
-                {/* Rating */}
+                {/* Status */}
                 <div className={classnames('flex', 'items-center', 'space-x-1')}>
-                  <FiStar strokeWidth={1} />
-                  <div>{formatRating(entry)}</div>
+                  {
+                    {
+                      Planned: <FiList />,
+                      Watching: <FiPlayCircle />,
+                      Watched: <FiCheck />,
+                      Dropped: <FiXOctagon />
+                    }[entry.status]
+                  }
+                  <div>{entry.status}</div>
                 </div>
 
-                {/* Controls */}
-                <div className={classnames('flex', 'items-center', 'space-x-1')}>
-                  <Link
-                    href={routes.profiles.editFlick({
-                      flickId: entry.flickId
-                    })}
-                  >
-                    Edit
-                  </Link>
-                  <Link
-                    href={routes.profiles.deleteFlick({
-                      flickId: entry.flickId
-                    })}
-                  >
-                    Delete
-                  </Link>
+                {/* Episodes */}
+                <div>
+                  <span>Episodes: </span>
+                  <span className={classnames('font-semibold')}>{entry.episodeCount}</span>
+                  <span>/???</span>
+                </div>
+
+                {/* Rating */}
+                <div>
+                  <span>Rating: </span>
+                  <span className={classnames('font-semibold')}>{entry.rating}</span>
+                  <span>/10 ★</span>
+                </div>
+
+                {/* Links */}
+                <div className={classnames('py-1', 'flex', 'space-x-3')}>
+                  {/* Edit */}
+                  <div>
+                    <Link href={routes.profiles.editFlick({ flickId: entry.flickId })}>Edit</Link>
+                  </div>
+
+                  {/* Delete */}
+                  <div>
+                    <Link href={routes.profiles.deleteFlick({ flickId: entry.flickId })}>
+                      Delete
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
