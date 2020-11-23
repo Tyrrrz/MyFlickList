@@ -16,17 +16,16 @@ import { IoLogoReddit } from 'react-icons/io';
 import { useQueryCache } from 'react-query';
 import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Alert from '../../components/Alert';
-import HorizontalSeparator from '../../components/HorizontalSeparator';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import Separator from '../../components/Separator';
 import TagLink from '../../components/TagLink';
-import VerticalSeparator from '../../components/VerticalSeparator';
+import useApi from '../../context/useApi';
 import useAuth from '../../context/useAuth';
 import useCanonicalUrl from '../../context/useCanonicalUrl';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
-import api from '../../internal/api';
 import config from '../../internal/config';
 import { getFileUrl } from '../../internal/fileHelpers';
 import {
@@ -50,27 +49,28 @@ export default function FlickPage() {
   const flickId = useParam('flickId', Number);
 
   const auth = useAuth();
-  const profileId = auth.token?.getProfileId();
+  const api = useApi();
 
+  const profileId = auth.token?.getProfileId();
   const queryCache = useQueryCache();
 
-  const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(flickId), ['flick', flickId]);
+  const flick = useQuery(() => api.flicks.getFlick(flickId), ['flick', flickId]);
   const flickEntry = useQuery(async () => {
     try {
-      return await api.profiles(auth.token?.value).getFlickEntry(profileId!, flickId);
+      return await api.profiles.getFlickEntry(profileId!, flickId);
     } catch {
       return null;
     }
   }, ['flickEntry', profileId, flickId]);
   const profile = useQuery(async () => {
     try {
-      return await api.profiles(auth.token?.value).getProfile(profileId!);
+      return await api.profiles.getProfile(profileId!);
     } catch {
       return null;
     }
   }, ['profile', profileId]);
 
-  const selfUrl = routes.flicks.specific({ flickId: flick.id, flickTitle: slugify(flick.title) });
+  const selfUrl = routes.flicks.one({ flickId: flick.id, flickTitle: slugify(flick.title) });
   const selfUrlAbsolute = getAbsoluteUrl(config.appUrl, selfUrl);
 
   useCanonicalUrl(selfUrl);
@@ -103,7 +103,7 @@ export default function FlickPage() {
                 </div>
 
                 {/* Separator */}
-                <VerticalSeparator />
+                <Separator type="vertical" />
 
                 {/* Runtime */}
                 <div className={classnames('flex', 'items-center', 'space-x-2')}>
@@ -112,7 +112,7 @@ export default function FlickPage() {
                 </div>
 
                 {/* Separator */}
-                <VerticalSeparator />
+                <Separator type="vertical" />
 
                 {/* Years */}
                 <div className={classnames('flex', 'items-center', 'space-x-2')}>
@@ -121,7 +121,7 @@ export default function FlickPage() {
                 </div>
 
                 {/* Separator */}
-                <VerticalSeparator />
+                <Separator type="vertical" />
 
                 {/* Rating */}
                 <div className={classnames('flex', 'items-center', 'space-x-2', 'font-normal')}>
@@ -144,7 +144,7 @@ export default function FlickPage() {
             </div>
 
             {/* Separator */}
-            <HorizontalSeparator />
+            <Separator />
 
             {/* Additional info */}
             <div className={classnames('text-sm')}>
@@ -291,9 +291,7 @@ export default function FlickPage() {
                               `Are you sure you want to delete ${flick.title} from your profile?`
                             )
                           ) {
-                            await api
-                              .profiles(auth.token?.value)
-                              .deleteFlickEntry(profileId!, flick.id);
+                            await api.profiles.deleteFlickEntry(profileId!, flick.id);
 
                             queryCache.clear();
                             history.go(0);

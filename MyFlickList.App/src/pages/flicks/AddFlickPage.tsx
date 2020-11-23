@@ -8,13 +8,14 @@ import FormInput from '../../components/FormInput';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import useApi from '../../context/useApi';
 import useAuth from '../../context/useAuth';
-import api from '../../internal/api';
 import routes from '../../routes';
 
 export default function AddFlickPage() {
   const history = useHistory();
   const auth = useAuth();
+  const api = useApi();
 
   return (
     <Page title="Add Flick">
@@ -29,8 +30,8 @@ export default function AddFlickPage() {
           orientation="horizontal"
           defaultValues={{ sourceUrl: '' }}
           onSubmit={async (data) => {
-            const { flickId } = await api.flicks(auth.token?.value).addFlick(data);
-            history.push(routes.flicks.specific({ flickId }));
+            const { flickId } = await api.flicks.addFlick(data);
+            history.push(routes.flicks.one({ flickId }));
           }}
         >
           <FormInput

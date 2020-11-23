@@ -17,11 +17,11 @@ import posterFallbackAsset from '../../assets/poster-fallback.png';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import useApi from '../../context/useApi';
 import useAuth from '../../context/useAuth';
 import useCanonicalUrl from '../../context/useCanonicalUrl';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
-import api from '../../internal/api';
 import config from '../../internal/config';
 import { getFileUrl } from '../../internal/fileHelpers';
 import { getAvatarImageUrl } from '../../internal/profileHelpers';
@@ -32,26 +32,27 @@ export default function ProfilePage() {
   const profileId = useParam('profileId', Number);
   const history = useHistory();
   const auth = useAuth();
+  const api = useApi();
 
   const actualProfileId = profileId || auth.token?.getProfileId();
 
   const queryCache = useQueryCache();
 
   // TODO: make this cleaner when `actualProfileId` is undefined
-  const profile = useQuery(
-    () => api.profiles(auth.token?.value).getProfile(actualProfileId || -1),
-    ['profile', profileId]
-  );
+  const profile = useQuery(() => api.profiles.getProfile(actualProfileId || -1), [
+    'profile',
+    profileId
+  ]);
 
-  const flickEntries = useQuery(
-    () => api.profiles(auth.token?.value).getFlickEntries(actualProfileId || -1),
-    ['profileFlickEntries', profileId]
-  );
+  const flickEntries = useQuery(() => api.profiles.getFlickEntries(actualProfileId || -1), [
+    'profileFlickEntries',
+    profileId
+  ]);
 
   useCanonicalUrl(
     // Normalize based on the type of route that was used
     profileId
-      ? routes.profiles.specific({ profileId: profile.id, profileName: profile.name })
+      ? routes.profiles.one({ profileId: profile.id, profileName: profile.name })
       : routes.profiles.current()
   );
 
@@ -149,7 +150,7 @@ export default function ProfilePage() {
             {isAuthUserProfile && (
               <Link
                 className={classnames('flex', 'items-center', 'space-x-1')}
-                href={routes.profiles.specific({
+                href={routes.profiles.one({
                   profileId: profile.id,
                   profileName: profile.name
                 })}
@@ -159,7 +160,7 @@ export default function ProfilePage() {
                   copy(
                     getAbsoluteUrl(
                       config.appUrl,
-                      routes.profiles.specific({
+                      routes.profiles.one({
                         profileId: profile.id,
                         profileName: profile.name
                       })
@@ -205,7 +206,7 @@ export default function ProfilePage() {
                 <div>
                   <Link
                     className={classnames('text-lg', 'font-semibold', 'truncate')}
-                    href={routes.flicks.specific({
+                    href={routes.flicks.one({
                       flickId: entry.flickId,
                       flickTitle: slugify(entry.flickTitle)
                     })}
@@ -261,9 +262,7 @@ export default function ProfilePage() {
                             `Are you sure you want to delete ${entry.flickTitle} from your profile?`
                           )
                         ) {
-                          await api
-                            .profiles(auth.token?.value)
-                            .deleteFlickEntry(actualProfileId, entry.flickId);
+                          await api.profiles.deleteFlickEntry(actualProfileId, entry.flickId);
 
                           queryCache.clear();
                           history.go(0);

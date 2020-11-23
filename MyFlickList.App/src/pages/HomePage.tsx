@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import posterFallbackAsset from '../assets/poster-fallback.png';
+import images from '../assets/images';
 import Link from '../components/Link';
 import Page from '../components/Page';
+import useApi from '../context/useApi';
 import useQuery from '../context/useQuery';
-import api from '../internal/api';
 import { GetFlicksResponseItem } from '../internal/api.generated';
 import { getFileUrl } from '../internal/fileHelpers';
 import { slugify } from '../internal/utils';
@@ -29,13 +29,13 @@ function FlickSpotlightItem({ flick, position }: FlickSpotlightItemProps) {
       }}
     >
       <Link
-        href={routes.flicks.specific({ flickId: flick.id, flickTitle: slugify(flick.title) })}
+        href={routes.flicks.one({ flickId: flick.id, flickTitle: slugify(flick.title) })}
         title={flick.title}
       >
         <img
           className="shadow rounded-md"
           alt={flick.title}
-          src={flick.coverImageId ? getFileUrl(flick.coverImageId) : posterFallbackAsset}
+          src={flick.coverImageId ? getFileUrl(flick.coverImageId) : images.posterFallback}
           width={500}
           height={750}
         />
@@ -45,7 +45,8 @@ function FlickSpotlightItem({ flick, position }: FlickSpotlightItemProps) {
 }
 
 export default function HomePage() {
-  const flicks = useQuery(() => api.flicks().getFlicks('Top'), ['home top flicks']);
+  const api = useApi();
+  const flicks = useQuery(() => api.flicks.getFlicks('Top'), ['home top flicks']);
 
   return (
     <Page>

@@ -7,12 +7,13 @@ import FormInput from '../../components/FormInput';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import useApi from '../../context/useApi';
 import useAuth from '../../context/useAuth';
-import api from '../../internal/api';
 import routes from '../../routes';
 
 export default function SignInPage() {
   const auth = useAuth();
+  const api = useApi();
 
   // If already signed in, redirect to profile
   if (auth.token) {
@@ -20,15 +21,15 @@ export default function SignInPage() {
   }
 
   return (
-    <Page title="Sign in">
-      <Section className={classnames(['w-1/2', 'mx-auto'])} title="Sign in">
+    <Page title="Sign In">
+      <Section className={classnames(['w-1/2', 'mx-auto'])} title="Sign In">
         <Form
           defaultValues={{
             username: '',
             password: ''
           }}
           onSubmit={async (data) => {
-            const res = await api.auth().signIn(data);
+            const res = await api.auth.signIn(data);
             auth.setToken(res.token);
           }}
         >

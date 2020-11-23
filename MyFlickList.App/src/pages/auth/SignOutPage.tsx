@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React, { useEffect } from 'react';
 import { Redirect } from 'react-router';
 import Page from '../../components/Page';
+import Section from '../../components/Section';
 import useAuth from '../../context/useAuth';
 import routes from '../../routes';
 
@@ -19,8 +20,10 @@ export default function SignOutPage() {
   }
 
   return (
-    <Page title="Sign out">
-      <div className={classnames('text-xl')}>Signing out...</div>
+    <Page title="Sign Out">
+      <Section title="Sign Out" className={classnames('text-xl')}>
+        Signing out...
+      </Section>
     </Page>
   );
 }

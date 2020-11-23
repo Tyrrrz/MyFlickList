@@ -10,9 +10,9 @@ import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
 import TagLink from '../../components/TagLink';
+import useApi from '../../context/useApi';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
-import api from '../../internal/api';
 import { getFileUrl } from '../../internal/fileHelpers';
 import { formatKind, formatRating, formatYears } from '../../internal/flickHelpers';
 import { getAvatarImageUrl } from '../../internal/profileHelpers';
@@ -20,7 +20,8 @@ import { slugify } from '../../internal/utils';
 import routes from '../../routes';
 
 function SearchResultsSection({ query }: { query: string }) {
-  const results = useQuery(() => api.search().search(query), ['search', query]);
+  const api = useApi();
+  const results = useQuery(() => api.search.search(query), ['search', query]);
 
   return (
     <>
@@ -43,7 +44,7 @@ function SearchResultsSection({ query }: { query: string }) {
                 <div>
                   <Link
                     className={classnames('text-lg', 'font-semibold', 'truncate')}
-                    href={routes.flicks.specific({
+                    href={routes.flicks.one({
                       flickId: flick.id,
                       flickTitle: slugify(flick.title)
                     })}
@@ -109,7 +110,7 @@ function SearchResultsSection({ query }: { query: string }) {
                 <div>
                   <Link
                     className={classnames('text-lg', 'font-semibold', 'truncate')}
-                    href={routes.profiles.specific({
+                    href={routes.profiles.one({
                       profileId: profile.id,
                       profileName: profile.name
                     })}

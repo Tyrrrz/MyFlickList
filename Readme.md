@@ -69,4 +69,4 @@ Steps:
 - Change directory to `/MyFlickList.App`
 - Execute `npm run generate-client`
 
-The generated client is placed in `src/infra/api.generated.ts`. Some editors may not load the type definitions immediately and you might need to open the file yourself to help.
+The generated client is placed in `src/internal/api.generated.ts`. Some editors may not load the type definitions immediately and you might need to open the file yourself to help.

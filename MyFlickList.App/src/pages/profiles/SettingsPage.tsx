@@ -7,13 +7,14 @@ import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import useApi from '../../context/useApi';
 import useAuth from '../../context/useAuth';
-import api from '../../internal/api';
 import routes from '../../routes';
 
 export default function SettingsPage() {
   const history = useHistory();
   const auth = useAuth();
+  const api = useApi();
   const queryCache = useQueryCache();
 
   // If not signed in, redirect to sign in page
@@ -31,7 +32,7 @@ export default function SettingsPage() {
               throw Error('Passwords must match');
             }
 
-            await api.auth(auth.token?.value).changePassword(data);
+            await api.auth.changePassword(data);
 
             queryCache.clear();
             history.push(routes.profiles.current());

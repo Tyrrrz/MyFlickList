@@ -12,10 +12,9 @@ import Page from '../../components/Page';
 import Pagination from '../../components/Pagination';
 import Section from '../../components/Section';
 import TagLink from '../../components/TagLink';
-import useAuth from '../../context/useAuth';
+import useApi from '../../context/useApi';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
-import api from '../../internal/api';
 import { getFileUrl } from '../../internal/fileHelpers';
 import { formatKind, formatRating, formatYears } from '../../internal/flickHelpers';
 import { slugify } from '../../internal/utils';
@@ -49,9 +48,9 @@ export default function FlicksPage() {
   const page = useParam('page', parsePage);
 
   const history = useHistory();
-  const auth = useAuth();
+  const api = useApi();
 
-  const flicks = useQuery(() => api.flicks(auth.token?.value).getFlicks(order, tag, page), [
+  const flicks = useQuery(() => api.flicks.getFlicks(order, tag, page), [
     'flicks',
     order,
     tag,
@@ -107,7 +106,7 @@ export default function FlicksPage() {
               <div>
                 <Link
                   className={classnames('text-lg', 'font-semibold', 'truncate')}
-                  href={routes.flicks.specific({
+                  href={routes.flicks.one({
                     flickId: flick.id,
                     flickTitle: slugify(flick.title)
                   })}

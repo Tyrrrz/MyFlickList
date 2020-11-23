@@ -8,9 +8,9 @@ import FormSelect from '../../components/FormSelect';
 import FormTextArea from '../../components/FormTextArea';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import useApi from '../../context/useApi';
 import useAuth from '../../context/useAuth';
 import useQuery from '../../context/useQuery';
-import api from '../../internal/api';
 import routes from '../../routes';
 
 interface FormValues {
@@ -23,14 +23,12 @@ interface FormValues {
 export default function EditProfilePage() {
   const history = useHistory();
   const auth = useAuth();
+  const api = useApi();
   const queryCache = useQueryCache();
 
   const profileId = auth.token?.getProfileId() || -1;
 
-  const profile = useQuery(() => api.profiles(auth.token?.value).getProfile(profileId), [
-    'profile',
-    profileId
-  ]);
+  const profile = useQuery(() => api.profiles.getProfile(profileId), ['profile', profileId]);
 
   // If not signed in, redirect to sign in page
   if (!auth.token) {
@@ -45,7 +43,7 @@ export default function EditProfilePage() {
         <Form
           defaultValues={defaultFormValues}
           onSubmit={async (data) => {
-            await api.profiles(auth.token?.value).putProfile(profile.id, data);
+            await api.profiles.putProfile(profile.id, data);
 
             queryCache.clear();
             history.push(routes.profiles.current());

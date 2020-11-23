@@ -30,9 +30,9 @@ export default function Routing() {
 
       <Route exact path={routes.flicks.all.path} component={FlicksPage} />
       <Route exact path={routes.flicks.add.path} component={AddFlickPage} />
-      <Route exact path={routes.flicks.specific.path} component={FlickPage} />
+      <Route exact path={routes.flicks.one.path} component={FlickPage} />
 
-      <Route exact path={routes.profiles.specific.path} component={ProfilePage} />
+      <Route exact path={routes.profiles.one.path} component={ProfilePage} />
       <Route exact path={routes.profiles.current.path} component={ProfilePage} />
       <Route exact path={routes.profiles.settings.path} component={SettingsPage} />
       <Route exact path={routes.profiles.edit.path} component={EditProfilePage} />

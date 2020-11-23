@@ -11,10 +11,10 @@ import FormTextArea from '../../components/FormTextArea';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import useApi from '../../context/useApi';
 import useAuth from '../../context/useAuth';
 import useParam from '../../context/useParam';
 import useQuery from '../../context/useQuery';
-import api from '../../internal/api';
 import { ProfileFlickEntryStatus } from '../../internal/api.generated';
 import { getFileUrl } from '../../internal/fileHelpers';
 import { slugify } from '../../internal/utils';
@@ -32,15 +32,17 @@ export default function EditFlickEntryPage() {
 
   const history = useHistory();
   const auth = useAuth();
+
+  const api = useApi();
   const queryCache = useQueryCache();
 
   const profileId = auth.token?.getProfileId() || -1;
 
-  const flick = useQuery(() => api.flicks(auth.token?.value).getFlick(flickId), ['flick', flickId]);
+  const flick = useQuery(() => api.flicks.getFlick(flickId), ['flick', flickId]);
 
   const flickEntry = useQuery(async () => {
     try {
-      return await api.profiles(auth.token?.value).getFlickEntry(profileId!, flickId);
+      return await api.profiles.getFlickEntry(profileId!, flickId);
     } catch {
       return null;
     }
@@ -74,7 +76,7 @@ export default function EditFlickEntryPage() {
           <div>
             <div className={classnames('text-xl')}>
               <Link
-                href={routes.flicks.specific({
+                href={routes.flicks.one({
                   flickId: flick.id,
                   flickTitle: slugify(flick.title)
                 })}
@@ -91,12 +93,12 @@ export default function EditFlickEntryPage() {
         <Form
           defaultValues={defaultFormValues}
           onSubmit={async (data) => {
-            await api.profiles(auth.token?.value).putFlickEntry(profileId, flickId, data);
+            await api.profiles.putFlickEntry(profileId, flickId, data);
 
             queryCache.clear();
 
             history.push(
-              routes.flicks.specific({ flickId: flick.id, flickTitle: slugify(flick.title) })
+              routes.flicks.one({ flickId: flick.id, flickTitle: slugify(flick.title) })
             );
           }}
         >

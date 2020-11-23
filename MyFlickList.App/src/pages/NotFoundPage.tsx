@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
 import { useLocation } from 'react-router';
-import dinoDizzyAsset from '../assets/dino-dizzy.png';
+import images from '../assets/images';
 import Alert from '../components/Alert';
 import Link from '../components/Link';
 import Page from '../components/Page';
@@ -18,7 +18,12 @@ export default function NotFoundPage() {
             Go home
           </Link>
 
-          <img className={classnames('opacity-25')} src={dinoDizzyAsset} width={100} height={100} />
+          <img
+            className={classnames('opacity-25')}
+            src={images.dinoDizzy}
+            width={100}
+            height={100}
+          />
         </div>
       </Alert>
     </Page>

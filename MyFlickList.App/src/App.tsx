@@ -12,7 +12,7 @@ import Header from './Header';
 import config from './internal/config';
 import { normalizeError } from './internal/errorHelpers';
 import Routing from './Routing';
-import './tailwind.generated.css';
+import './styles.generated.css';
 
 // Init Google Analytics
 if (config.googleAnalyticsToken) {

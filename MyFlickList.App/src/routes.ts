@@ -1,32 +1,8 @@
 import { route } from 'route-descriptor';
-import { GetFlicksOrder } from './internal/api.generated';
-
-interface PaginationParams {
-  page?: number;
-}
-
-interface SearchParams {
-  query?: string;
-}
-
-interface FlicksParams extends PaginationParams {
-  order?: GetFlicksOrder;
-  tag?: string;
-}
-
-interface FlickParams {
-  flickId: number;
-  flickTitle?: string; // only used for human-friendly URLs
-}
-
-interface ProfileParams {
-  profileId: number;
-  profileName?: string; // only used for human-friendly URLs
-}
 
 export default {
   home: route('/'),
-  search: route<SearchParams>('/search'),
+  search: route<{ query?: string }>('/search'),
 
   auth: {
     signIn: route('/auth/signin'),
@@ -35,19 +11,17 @@ export default {
   },
 
   flicks: {
-    specific: route<FlickParams>('/flicks/:flickId/:flickTitle?'),
-    all: route<FlicksParams>('/flicks'),
+    one: route<{ flickId: number; flickTitle?: string }>('/flicks/:flickId/:flickTitle?'),
+    all: route<{ order?: 'Top' | 'Trending' | 'New'; tag?: string; page?: number }>('/flicks'),
     add: route('/flicks/add')
   },
 
   profiles: {
-    specific: route<ProfileParams>('/profiles/:profileId/:profileName?'),
-
+    one: route<{ profileId: number; profileName?: string }>('/profiles/:profileId/:profileName?'),
     current: route('/profile'),
-    settings: route('/profile/settings'),
     edit: route('/profile/edit'),
-
-    editFlick: route<FlickParams>('/profile/flicks/:flickId/edit')
+    settings: route('/profile/settings'),
+    editFlick: route<{ flickId: number }>('/profile/flicks/:flickId/edit')
   },
 
   misc: {

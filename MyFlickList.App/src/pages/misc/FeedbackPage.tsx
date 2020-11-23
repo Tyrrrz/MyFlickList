@@ -1,8 +1,8 @@
 import React from 'react';
-import HorizontalSeparator from '../../components/HorizontalSeparator';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import Separator from '../../components/Separator';
 
 export default function DonatePage() {
   return (
@@ -18,7 +18,7 @@ export default function DonatePage() {
           on the official Discord server. Please avoid creating new issues for questions.
         </p>
 
-        <HorizontalSeparator />
+        <Separator />
 
         <div className="grid grid-cols-2 gap-4">
           {/* Bugs & features */}

@@ -42,7 +42,7 @@
   },
   "scripts": {
     "generate-client": "nswag run /runtime:netcore31",
-    "generate-tailwind": "tailwindcss build ./src/tailwind.css -o ./src/tailwind.generated.css",
+    "generate-tailwind": "tailwindcss build ./src/styles.css -o ./src/styles.generated.css",
     "prestart": "npm run generate-tailwind",
     "prebuild": "npm run generate-tailwind",
     "start": "react-scripts start",

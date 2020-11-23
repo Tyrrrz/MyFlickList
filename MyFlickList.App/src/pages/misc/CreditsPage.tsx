@@ -1,8 +1,8 @@
 import React from 'react';
-import HorizontalSeparator from '../../components/HorizontalSeparator';
 import Link from '../../components/Link';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import Separator from '../../components/Separator';
 
 export default function CreditsPage() {
   return (
@@ -13,7 +13,7 @@ export default function CreditsPage() {
           along with their corresponding licenses.
         </p>
 
-        <HorizontalSeparator />
+        <Separator />
 
         {/* Graphics */}
         <div className="grid grid-cols-2 gap-4">

@@ -7,13 +7,14 @@ import FormButton from '../../components/FormButton';
 import FormInput from '../../components/FormInput';
 import Page from '../../components/Page';
 import Section from '../../components/Section';
+import useApi from '../../context/useApi';
 import useAuth from '../../context/useAuth';
-import api from '../../internal/api';
 import routes from '../../routes';
 
 export default function SignUpPage() {
   const history = useHistory();
   const auth = useAuth();
+  const api = useApi();
 
   // If already signed in, redirect to profile
   if (auth.token) {
@@ -21,8 +22,8 @@ export default function SignUpPage() {
   }
 
   return (
-    <Page title="Sign up">
-      <Section className={classnames(['w-1/2', 'mx-auto'])} title="Sign up">
+    <Page title="Sign Up">
+      <Section className={classnames(['w-1/2', 'mx-auto'])} title="Sign Up">
         <Form
           defaultValues={{
             username: '',
@@ -35,7 +36,7 @@ export default function SignUpPage() {
               throw Error('Passwords must match');
             }
 
-            await api.auth().signUp(data);
+            await api.auth.signUp(data);
             history.push(routes.auth.signIn());
           }}
         >
