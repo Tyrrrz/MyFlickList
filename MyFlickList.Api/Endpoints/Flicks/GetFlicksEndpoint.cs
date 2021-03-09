@@ -78,7 +78,7 @@ namespace MyFlickList.Api.Endpoints.Flicks
         {
             IQueryable<FlickEntity> GetTopFlicks() =>
                 _database.Flicks
-                    .Where(f => f.ExternalRating != null)
+                    .Where(f => f.ExternalRating is not null)
                     .OrderByDescending(f => f.ExternalRating);
 
             // TODO: actually sort by trendiness
@@ -88,7 +88,7 @@ namespace MyFlickList.Api.Endpoints.Flicks
 
             IQueryable<FlickEntity> GetNewFlicks() =>
                 _database.Flicks
-                    .Where(f => f.FirstAired != null)
+                    .Where(f => f.FirstAired is not null)
                     .OrderByDescending(f => f.FirstAired);
 
             var flicksSource = order switch

@@ -102,9 +102,9 @@ namespace MyFlickList.Api.Endpoints.Flicks
             var existing = await _database.Flicks
                 .FirstOrDefaultAsync(f => f.ImdbId == flickEntity.ImdbId, cancellationToken);
 
-            if (existing != null)
+            if (existing is not null)
             {
-                if (existing.CoverImageId != null)
+                if (existing.CoverImageId is not null)
                     _database.Files.RemoveRange(_database.Files.Where(f => f.Id == existing.CoverImageId));
 
                 flickEntity.Id = existing.Id;
@@ -188,7 +188,7 @@ namespace MyFlickList.Api.Endpoints.Flicks
             var movieMatch = item.MovieResults.FirstOrDefault();
             var seriesMatch = item.TvResults.FirstOrDefault();
 
-            if (movieMatch != null)
+            if (movieMatch is not null)
             {
                 await using var transaction = await _database.Database.BeginTransactionAsync(cancellationToken);
 
@@ -200,7 +200,7 @@ namespace MyFlickList.Api.Endpoints.Flicks
                 return flickEntity.Id;
             }
 
-            if (seriesMatch != null)
+            if (seriesMatch is not null)
             {
                 await using var transaction = await _database.Database.BeginTransactionAsync(cancellationToken);
 
@@ -236,7 +236,7 @@ namespace MyFlickList.Api.Endpoints.Flicks
             }
 
             var flickId = await PopulateFlickAsync(imdbId, cancellationToken);
-            if (flickId == null)
+            if (flickId is null)
             {
                 return Error(
                     HttpStatusCode.NotFound,

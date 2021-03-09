@@ -81,7 +81,7 @@ namespace MyFlickList.Api.Endpoints.Flicks
                 .ProjectTo<GetFlickResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(f => f.Id == flickId, cancellationToken);
 
-            if (flick == null)
+            if (flick is null)
             {
                 return Error(
                     HttpStatusCode.NotFound,

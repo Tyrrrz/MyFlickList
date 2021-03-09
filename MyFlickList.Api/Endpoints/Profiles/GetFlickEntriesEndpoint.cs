@@ -75,7 +75,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
                 .ThenInclude(f => f.Flick)
                 .FirstOrDefaultAsync(p => p.Id == profileId, cancellationToken);
 
-            if (profile == null)
+            if (profile is null)
             {
                 return Error(
                     HttpStatusCode.NotFound,

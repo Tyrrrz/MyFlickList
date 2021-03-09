@@ -50,7 +50,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
                 .FirstOrDefaultAsync(p => p.Id == profileId, cancellationToken);
 
             // TODO: the following can be extracted
-            if (profile == null)
+            if (profile is null)
             {
                 return Error(
                     HttpStatusCode.NotFound,

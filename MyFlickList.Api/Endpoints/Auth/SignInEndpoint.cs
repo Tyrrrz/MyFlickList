@@ -53,7 +53,7 @@ namespace MyFlickList.Api.Endpoints.Auth
                 .Include(u => u.Profile)
                 .FirstOrDefaultAsync(u => u.Username == request.Username, cancellationToken);
 
-            if (user == null)
+            if (user is null)
             {
                 return Error(
                     HttpStatusCode.Unauthorized,

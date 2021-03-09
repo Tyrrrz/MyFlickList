@@ -30,7 +30,7 @@ namespace MyFlickList.Api.Endpoints.Files
             var file = await _database.Files
                 .FirstOrDefaultAsync(f => f.Id == fileId, cancellationToken);
 
-            if (file == null)
+            if (file is null)
             {
                 return Error(
                     HttpStatusCode.NotFound,

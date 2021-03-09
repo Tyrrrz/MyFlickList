@@ -72,7 +72,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
                 .ProjectTo<GetProfileResponse>(_mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(p => p.Id == profileId, cancellationToken);
 
-            if (profile == null)
+            if (profile is null)
             {
                 return Error(
                     HttpStatusCode.NotFound,

@@ -46,7 +46,7 @@ namespace MyFlickList.Api.Endpoints.Auth
                 .AsTracking()
                 .FirstOrDefaultAsync(u => u.Profile!.Id == profileId, cancellationToken);
 
-            if (user == null)
+            if (user is null)
             {
                 return Error(
                     HttpStatusCode.Unauthorized,

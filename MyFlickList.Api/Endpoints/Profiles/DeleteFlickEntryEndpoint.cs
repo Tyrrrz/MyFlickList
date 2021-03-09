@@ -37,7 +37,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
                 .Include(p => p.FlickEntries)
                 .FirstOrDefaultAsync(p => p.Id == profileId, cancellationToken);
 
-            if (profile == null)
+            if (profile is null)
             {
                 return Error(
                     HttpStatusCode.NotFound,
@@ -54,7 +54,7 @@ namespace MyFlickList.Api.Endpoints.Profiles
             }
 
             var flickEntry = profile.FlickEntries.FirstOrDefault(f => f.FlickId == flickId);
-            if (flickEntry != null)
+            if (flickEntry is not null)
             {
                 profile.FlickEntries.Remove(flickEntry);
                 _database.ProfileFlickEntries.Remove(flickEntry);

@@ -10,7 +10,7 @@ namespace MyFlickList.Api.Endpoints
         {
             // Make sure that properties marked as [Required] are actually required to be bound
             // on top of just not being null.
-            if (context.PropertyAttributes != null && context.PropertyAttributes.OfType<RequiredAttribute>().Any())
+            if (context.PropertyAttributes is not null && context.PropertyAttributes.OfType<RequiredAttribute>().Any())
             {
                 context.BindingMetadata.IsBindingRequired = true;
             }
