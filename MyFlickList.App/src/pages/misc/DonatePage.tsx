@@ -10,7 +10,7 @@ export default function DonatePage() {
       <Section title="Donate">
         <p>
           MyFlickList is a personal project built and maintained by{' '}
-          <Link href="https://tyrrrz.me">Alexey Golub</Link>. Besides occupying a significant amount
+          <Link href="https://tyrrrz.me">Oleksii Holub</Link>. Besides occupying a significant amount
           of time, there are some financial costs associated as well. These include hosting, domain,
           development tools, hardware, and more.
         </p>
