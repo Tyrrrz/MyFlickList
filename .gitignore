@@ -1,16 +1,16 @@
-# User-specific files
-.idea/
-*.suo
-*.user
+# editor
+.vscode/
 
-# Dependencies
+# dependencies
 node_modules/
 
-# Build output
-bin/
-obj/
-build/
-*.generated.css
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+lerna-debug.log*
+*.tsbuildinfo
 
-# Coverage
-*.opencover.xml
+# environment
+.env*

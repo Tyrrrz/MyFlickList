@@ -1,0 +1,14 @@
+{
+  "root": true,
+  "private": true,
+  "engines": {
+    "node": ">=16"
+  },
+  "workspaces": [
+    "data",
+    "web"
+  ],
+  "scripts": {
+    "start:web": "cd web && yarn run start"
+  }
+}
