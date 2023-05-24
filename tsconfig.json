@@ -1,10 +1,13 @@
 {
-  "compilerOptions": {
+"compilerOptions": {
     "target": "es5",
     "lib": [
+      "dom",
+      "dom.iterable",
       "esnext"
     ],
-    "module": "commonjs",
+    "module": "esnext",
+    
     "moduleResolution": "node",
     "jsx": "preserve",
     "allowJs": true,
@@ -18,7 +21,17 @@
     "pretty": true,
     "incremental": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+"paths": {
+      "~/*": [
+        "./*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "**/*"

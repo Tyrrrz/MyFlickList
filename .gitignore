@@ -14,3 +14,14 @@ lerna-debug.log*
 
 # environment
 .env*
+
+# next.js
+/.next/
+/build/
+/next-env.d.ts
+
+# next-pwa
+/public/fallback-*.js*
+/public/workbox-*.js*
+/public/sw.js*
+/public/worker-*.js*

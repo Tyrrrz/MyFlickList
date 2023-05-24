@@ -1,6 +1,6 @@
-import type { User } from 'mfl-data/user';
 import NextAuth from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
+import { User, addUser } from '~/pages/api/user';
 import { getGitHubCredentials } from '~/utils/env';
 
 export type Session = {
@@ -11,20 +11,31 @@ export type Session = {
 export default NextAuth({
   providers: [GitHubProvider(getGitHubCredentials())],
   callbacks: {
-    signIn: ({ user }) => {
-      // TODO: save the user's name and email to the database
-      // when signing in for the first time.
-      console.log(user);
+    jwt: async ({ profile, token }) => {
+      if (profile) {
+        if (!profile.name || typeof profile.name !== 'string') {
+          throw new Error(`Missing or invalid 'profile.name'`);
+        }
 
-      return true;
-    },
-    jwt: ({ token }) => {
-      // Add domain-specific information to the token
-      token.id = 42;
+        if (!profile.email || typeof profile.email !== 'string') {
+          throw new Error(`Missing or invalid 'profile.email'`);
+        }
+
+        // Add the user to the database, if they don't already exist
+        const user = await addUser({
+          name: profile.name,
+          email: profile.email
+        });
+
+        // Inject domain-specific information into the token
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+      }
 
       return token;
     },
-    session: ({ session, token }) => {
+    session: ({ token, session }) => {
       if (!token.id || typeof token.id !== 'number') {
         throw new Error(`Missing or invalid 'token.id'`);
       }
@@ -40,7 +51,7 @@ export default NextAuth({
       return {
         ...session,
         user: {
-          // Add domain-specific data to the user
+          // Inject domain-specific data into the session
           id: token.id,
           name: token.name,
           email: token.email

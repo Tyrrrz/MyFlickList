@@ -1,4 +1,4 @@
-import type { DateString } from './shared';
+import type { DateString } from '~/pages/api/shared';
 
 type SharedProps = {
   id: number;

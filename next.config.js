@@ -6,8 +6,6 @@ const runtimeCaching = require('next-pwa/cache');
 const config = {
   reactStrictMode: true,
 
-  transpilePackages: ['mfl-data'],
-
   env: {
     BUILD_ID: [
       spawnSync('git', ['rev-parse', '--short', 'HEAD']).stdout.toString().trim(),
