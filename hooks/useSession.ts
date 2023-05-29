@@ -3,12 +3,14 @@ import { Session } from '~/pages/api/auth/[...nextauth]';
 
 // Custom hook that coerces the session into our own type
 const useSession = () => {
-  const { data, status, update } = useRawSession();
+  const { data, status, ...session } = useRawSession();
+
+  const actualData = status === 'authenticated' ? (data as Session) : null;
 
   return {
-    data: data as Session,
-    status,
-    update
+    ...session,
+    data: actualData,
+    status
   };
 };
 

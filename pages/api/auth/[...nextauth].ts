@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
-import { User, addUser } from '~/pages/api/user';
+import { addUser, User } from '~/pages/api/user';
 import { getGitHubCredentials } from '~/utils/env';
 
 export type Session = {

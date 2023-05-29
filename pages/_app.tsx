@@ -2,6 +2,7 @@ import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { FC } from 'react';
 import Layout from '~/components/layout';
+import '~/pages/globals.css';
 
 const App: FC<AppProps> = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (

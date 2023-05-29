@@ -1,5 +1,7 @@
 import db from '~/utils/db';
 
+export const config = { rpc: true };
+
 export type UserData = {
   name: string;
   email: string;
@@ -70,5 +72,3 @@ export const updateUser = async (user: User) => {
     );
   });
 };
-
-export const config = { rpc: true };

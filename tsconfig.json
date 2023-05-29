@@ -1,5 +1,5 @@
 {
-"compilerOptions": {
+  "compilerOptions": {
     "target": "es5",
     "lib": [
       "dom",
@@ -7,13 +7,13 @@
       "esnext"
     ],
     "module": "esnext",
-    
     "moduleResolution": "node",
     "jsx": "preserve",
     "allowJs": true,
     "strict": true,
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
+    "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -22,7 +22,8 @@
     "incremental": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-"paths": {
+    "baseUrl": ".",
+    "paths": {
       "~/*": [
         "./*"
       ]
