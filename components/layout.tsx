@@ -1,17 +1,17 @@
 import { Analytics } from '@vercel/analytics/react';
 import c from 'classnames';
-import { signIn, signOut } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { FC, PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import FadeIn from 'react-fade-in';
-import { FiMenu } from 'react-icons/fi';
-import { RxPerson } from 'react-icons/rx';
+import { RxCommit, RxDesktop, RxHeart, RxTwitterLogo } from 'react-icons/rx';
 import Inline from '~/components/inline';
 import Link from '~/components/link';
 import Meta from '~/components/meta';
 import useDebounce from '~/hooks/useDebounce';
 import useRouterStatus from '~/hooks/useRouterStatus';
 import useSession from '~/hooks/useSession';
+import { getBuildId } from '~/utils/env';
 
 const Loader: FC = () => {
   // Only show the loading indicator if the navigation takes a while.
@@ -56,131 +56,96 @@ const UserBar: FC = () => {
 
   if (data) {
     return (
-      <Inline>
-        <RxPerson />
-        <div>{data.user.name}</div> (
-        <Link button onClick={() => signOut()}>
-          Sign out
+      <div className={c('text-lg', 'font-semibold')}>
+        <Link variant="discreet" href={`/u/${data.user.id}`}>
+          {data.user.name}
         </Link>
-        )
-      </Inline>
+      </div>
     );
   }
 
   return (
-    <Inline>
-      <RxPerson />
-      <Link button onClick={() => signIn()}>
-        <div>Sign in</div>
-      </Link>
-    </Inline>
-  );
-};
-
-type NavLinkProps = PropsWithChildren<{
-  href: string;
-}>;
-
-const NavLink: FC<NavLinkProps> = ({ href, children }) => {
-  const router = useRouter();
-  const isActive = router.route === href || router.route.startsWith(href + '/');
-
-  return (
-    <div
-      className={c(
-        'px-2',
-        'py-1',
-        'rounded',
-        'border-2',
-        {
-          'border-transparent': !isActive,
-          'border-blue-500': isActive
-        },
-        {
-          'bg-blue-100': isActive
-        },
-        'transition-colors',
-        'duration-300'
-      )}
-    >
-      <Link variant="discreet" href={href}>
-        {children}
+    <div className={c('text-lg', 'font-semibold')}>
+      <Link button variant="discreet" onClick={() => signIn()}>
+        Sign in
       </Link>
     </div>
   );
 };
 
-const Header: FC = () => {
-  const links = [
-    { href: '/', label: 'home' },
-    { href: '/flicks', label: 'flicks' }
-  ];
-
-  const [isMenuVisible, setIsMenuVisible] = useState(false);
-
+const SearchBar: FC = () => {
   return (
-    <header>
-      <div
-        className={c(
-          'flex',
-          'mx-auto',
-          'p-4',
-          'border-b-2',
-          'border-neutral-100',
-          'items-center',
-          'justify-between'
-        )}
+    <input
+      className={c(
+        'px-4',
+        'py-2',
+        'border',
+        'border-neutral-300',
+        'hover:border-blue-500',
+        'rounded-md',
+        'bg-white',
+        'appearance-none',
+        'focus:outline-none'
+      )}
+      type="search"
+      placeholder="Search"
+    />
+  );
+};
+
+const Header: FC = () => {
+  return (
+    <div className={c('border-b-2', 'border-neutral-100', 'bg-white')}>
+      <header
+        className={c('flex', 'container', 'max-w-5xl', 'mx-auto', 'p-4', 'items-center', 'gap-4')}
       >
         {/* Logo */}
-        <div className={c('my-1', 'text-xl', 'font-semibold', 'tracking-wide')}>
+        <div className={c('text-2xl', 'tracking-wide')}>
           <Link variant="hidden" href="/">
-            MyFlickList
+            <Inline>
+              <RxDesktop />
+              <div className={c('ml-1')}>MyFlickList</div>
+            </Inline>
           </Link>
         </div>
 
-        {/* Full nav */}
-        <nav className={c('hidden', 'sm:flex', 'px-2', 'gap-x-2', 'text-lg')}>
-          {links.map((link, i) => (
-            <NavLink key={i} href={link.href}>
-              {link.label}
-            </NavLink>
-          ))}
+        {/* Separator */}
+        <div className={c('w-px', 'h-8', 'mt-1', 'border', 'border-neutral-200')} />
+
+        {/* Navigation bar */}
+        <nav className={c('flex', 'flex-grow', 'gap-4', 'text-lg')}>
+          <div>
+            <Link variant="discreet" href="/flicks">
+              Flicks
+            </Link>
+          </div>
+
+          <div>
+            <Link variant="discreet" href="/flicks">
+              Clicks
+            </Link>
+          </div>
+
+          <div>
+            <Link variant="discreet" href="/flicks">
+              Shlicks
+            </Link>
+          </div>
+
+          <div>
+            <Link variant="discreet" href="/flicks">
+              Dicks
+            </Link>
+          </div>
         </nav>
 
         {/* User bar */}
         <UserBar />
 
-        {/* Mobile nav button */}
-        <button
-          className={c('sm:hidden', 'text-2xl', { 'text-blue-500': isMenuVisible })}
-          onClick={() => setIsMenuVisible((v) => !v)}
-        >
-          <FiMenu />
-        </button>
-      </div>
-
-      {/* Mobile nav */}
-      <div className={c('sm:hidden', 'overflow-hidden')}>
-        <nav
-          className={c(
-            { '-mt-[100%]': !isMenuVisible },
-            'p-2',
-            'border-b-2',
-            'border-neutral-100',
-            'space-y-1',
-            'text-lg',
-            'transition-all',
-            'duration-300'
-          )}
-        >
-          {links.map((link, i) => (
-            <NavLink key={i} href={link.href}>
-              <div>{link.label}</div>
-            </NavLink>
-          ))}
-        </nav>
-      </div>
-    </header>
+        {/* Search bar */}
+        <SearchBar />
+      </header>
+    </div>
   );
 };
 
@@ -190,9 +155,51 @@ const Main: FC<PropsWithChildren> = ({ children }) => {
   const fadeKey = useMemo(() => Math.random().toString() + router.pathname, [router.pathname]);
 
   return (
-    <main className={c('mx-4', 'mt-6', 'mb-20')}>
+    <main className={c('flex-grow', 'container', 'max-w-5xl', 'mx-auto', 'mt-6', 'mb-8', 'px-4')}>
       <FadeIn key={fadeKey}>{children}</FadeIn>
     </main>
+  );
+};
+
+const Footer: FC = () => {
+  return (
+    <footer
+      className={c(
+        'flex',
+        'flex-wrap',
+        'p-4',
+        'gap-3',
+        'place-content-center',
+        'text-sm',
+        'text-neutral-400',
+        'font-light'
+      )}
+    >
+      <Link variant="discreet" href={`https://github.com/Tyrrrz/MyFlickList/tree/${getBuildId()}`}>
+        <Inline>
+          <RxCommit />
+          <span className={c('font-mono')}>{getBuildId()}</span>
+        </Inline>
+      </Link>
+
+      <div>&bull;</div>
+
+      <Link variant="discreet" href="https://twitter.com/tyrrrz">
+        <Inline>
+          <RxTwitterLogo />
+          <div>Twitter</div>
+        </Inline>
+      </Link>
+
+      <div>&bull;</div>
+
+      <Link variant="discreet" href="https://tyrrrz.me/donate">
+        <Inline>
+          <RxHeart />
+          <div>Donate</div>
+        </Inline>
+      </Link>
+    </footer>
   );
 };
 
@@ -200,17 +207,16 @@ type LayoutProps = PropsWithChildren;
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   return (
-    <>
+    <div className={c('flex', 'flex-col', 'min-h-screen', 'bg-neutral-50')}>
       <Meta />
       <Analytics />
 
       <Loader />
 
-      <div className={c('container', 'max-w-4xl', 'mx-auto')}>
-        <Header />
-        <Main>{children}</Main>
-      </div>
-    </>
+      <Header />
+      <Main>{children}</Main>
+      <Footer />
+    </div>
   );
 };
 
