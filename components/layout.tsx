@@ -184,7 +184,7 @@ const Footer: FC = () => {
 
       <div>&bull;</div>
 
-      <Link variant="discreet" href="https://twitter.com/tyrrrz">
+      <Link variant="discreet" href="https://twitter.com/Tyrrrz">
         <Inline>
           <RxTwitterLogo />
           <div>Twitter</div>
