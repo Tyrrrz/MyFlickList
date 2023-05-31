@@ -178,7 +178,7 @@ const Footer: FC = () => {
       <Link variant="discreet" href={`https://github.com/Tyrrrz/MyFlickList/tree/${getBuildId()}`}>
         <Inline>
           <RxCommit />
-          <span className={c('font-mono')}>{getBuildId()}</span>
+          <div className={c('font-mono')}>{getBuildId()}</div>
         </Inline>
       </Link>
 
