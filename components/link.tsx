@@ -37,17 +37,17 @@ const Link: FC<LinkProps> = ({ variant = 'normal', children, ...props }) => {
     );
   } else {
     const { href, external = isAbsoluteUrl(href) } = props;
-    const RawLink = external ? 'a' : NextLink;
+    const Proxy = external ? 'a' : NextLink;
 
     return (
-      <RawLink
+      <Proxy
         className={className}
         href={href}
         target={external ? '_blank' : undefined}
         rel="noreferrer"
       >
         {children}
-      </RawLink>
+      </Proxy>
     );
   }
 };
